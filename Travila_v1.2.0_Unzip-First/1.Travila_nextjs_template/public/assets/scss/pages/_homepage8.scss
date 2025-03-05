@@ -1,0 +1,146 @@
+.box-button-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 65px;
+}
+.box-faqs-type-2 {
+    background-image: none;
+    &::before {
+        display: none;
+    }
+}
+.box-logos-4 {
+    .item-logo-payment {
+        text-align: center;
+    }
+}
+.box-testimonials-5 {
+    background-image: none;
+    padding-top: 30px;
+    border-bottom: 0px;
+    padding-bottom: 0px;
+    &::before {
+        display: none;
+    }
+    .block-testimonials {
+        padding-top: 20px;
+    }
+}
+.box-our-services {
+    background-image: url(../imgs/page/homepage8/bg-service.png);
+    background-repeat: no-repeat;
+    background-position: bottom 30px left;
+    padding-bottom: 70px;
+}
+ul.list-steps {
+    padding-top: 30px;
+    li {
+        display: flex;
+        align-items: flex-start;
+        margin-bottom: 45px;
+        .step-no {
+            width: 44px;
+            min-width: 44px;
+            margin-right: 19px;
+            span {
+                display: inline-block;
+                height: 44px;
+                width: 44px;
+                border-radius: 50%;
+                background-color: var(--bs-button-bg-2) ;
+                color: var(--bs-button-text-2) ;
+                font-size: 24px;
+                line-height: 32px;
+                font-weight: bold;
+                text-align: center;
+                line-height: 44px;
+            }
+        }
+        .step-info {
+            .text-xl-bold {
+                margin-bottom: 8px;
+            }
+        }
+        &:hover {
+            .step-no {
+                span {
+                    background-color: var(--bs-button-bg) ;
+                    color: var(--bs-button-text) ;
+                }
+            }
+        }
+    }
+}
+.box-how-it-work-2 {
+    padding: 99px 0px;
+}
+.box-image-how {
+    position: relative;
+    margin-top: 35px;
+}
+.img-arrow {
+    position: absolute;
+    top: 55px;
+    right: 12%;
+    z-index: 12;
+}
+.img-dot {
+    position: absolute;
+    bottom: 65px;
+    left: -5px;
+    z-index: 12;
+}
+.box-image-3-col {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin: 0px -7px;
+    .img-col {
+        padding: 0px 7px;
+        width: 33.33%;
+        img {
+            display: block;
+            border-radius: 56px;
+            margin-bottom: 13px;
+        }
+    }
+}
+.box-best-car {
+    padding: 59px 0px 29px 0px;
+    background-color: var(--bs-background-1000);
+}
+.title-best-car {
+    margin-top: 22px;
+    margin-bottom: 22px;
+}
+.box-faqs-type-3 {
+    border-bottom-width: 0px;
+}
+.box-image-banner-home8 {
+    position: absolute;
+    right: 0px;
+    top: 50%;
+    transform: translateY(-50%);
+    max-width: 51%;
+}
+.box-banner-home8 {
+    padding: 110px 0px 319px 0px;
+    position: relative;
+    background-image: url(../imgs/page/homepage8/bg-banner.png);
+    background-repeat: no-repeat;
+    background-position: top center;
+    background-size: 100% 100%;
+}
+.dot-banner {
+    position: absolute;
+    top: -40px;
+    left: 50px;
+    z-index: 12;
+}
+.box-banner-home8-search .box-search-advance {
+    top: -190px;
+}
+.box-logos-4 {
+    margin-top: -150px;
+}

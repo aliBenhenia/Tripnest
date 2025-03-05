@@ -1,0 +1,174 @@
+.box-border-bottom {
+    border-bottom: 1px solid var(--bs-border-color);
+}
+.box-input-date {
+    margin-bottom: 15px;
+    .input-calendar {
+        svg {
+            left: 15px;
+            right: auto;
+            height: 14px;
+            top: 18px;
+        }
+        input {
+            padding-left: 40px;
+            font-size: 14px;
+            color: var(--bs-neutral-500);
+        }
+    }
+}
+.clear-input {
+    height: 19px;
+    width: 19px;
+    position: absolute;
+    top: 16px;
+    right: 15px;
+    z-index: 12;
+    background-image: url(../imgs/page/activities/close.svg);
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.text-found {
+    color: var(--bs-color-700);
+}
+.slider-nav-thumbnails-activities-detail {
+    .banner-slide {
+        padding: 12px;
+        img {
+            border-radius: 8px;
+            display: block;
+            width: 100%;
+        }
+    }
+}
+.slider-thumnail-activities {
+    margin: 12px -12px 0px -12px;
+    padding-bottom: 12px;
+    .slick-next, .slick-prev {
+        display: none !important;
+    }
+}
+.box-banner-activities {
+    position: relative;
+    .slick-prev {
+        position: absolute;
+        top: 50%;
+        margin-top: -25px;
+        z-index: 12;
+        left: 38px;
+    }
+    .slick-next {
+        position: absolute;
+        top: 50%;
+        margin-top: -25px;
+        z-index: 12;
+        right: 38px;
+        left: auto;
+    }
+    .banner-slide-activity {
+        img {
+            border-radius: 8px;
+        }
+    }
+}
+.container-banner-activities {
+    .box-button-abs {
+        position: absolute;
+        bottom: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        .btn {
+            margin: 0px 10px 20px 10px;
+            svg, img {
+                margin-left: 0px;
+                margin-right: 8px;
+                fill: var(--bs-neutral-1000);
+                display: inline-block;
+                vertical-align: middle;
+                width: auto;
+                min-width: auto;
+                min-height: auto;
+            }
+        }
+    }
+}
+
+.banne-activities-3 {
+    display: flex;
+    align-items: center;
+    margin: 0px -12px;
+    flex-wrap: wrap;
+    .banner-col-1, .banner-col-2, .banner-col-3 {
+        padding: 0px 12px;
+        width: 33.33%;
+        img {
+            border-radius: 8px;
+            width: 100%;
+        }
+    }
+}
+.container-banner-activities .box-button-abs-right {
+    justify-content: end;
+    width: auto;
+    right: 27px;
+    left: 0px;
+    .btn-white-md {
+        height: 50px;
+        width: 50px;
+        border-radius: 50%;
+        padding: 0px;
+        line-height: 45px;
+        text-align: center;
+    }
+    .btn {
+        margin-left: 4px;
+        margin-right: 4px;
+    }
+}
+.box-banner-activities-detail-4 {
+    position: relative;
+    margin-bottom: 35px;
+    img {
+        border-radius: 8px;
+    }
+    .container-banner-activities {
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        right: 0px;
+        bottom: 0px;
+        z-index: 2;
+        .box-button-abs-right {
+            top: 0px;
+            bottom: 0px;
+            left: 0px;
+            right: 0px;
+            .btn-brand-secondary {
+                position: absolute;
+                bottom: 13px;
+                right: 27px;
+            }
+            .btn-play {
+                width: 72px;
+                height: 79px;
+                position: absolute;
+                top: 0px;
+                bottom: 0px;
+                left: 0px;
+                right: 0px;
+                margin: auto auto auto auto;
+            }
+        }
+    }
+}
+.block-banner-activities {
+    background-image: url(../imgs/page/activities/banner-activities-1.png);
+}
+.block-banner-activities-2 {
+    background-image: url(../imgs/page/activities/banner-activities-2.png);
+}
+.block-banner-activities-3 {
+    background-image: url(../imgs/page/activities/banner-activities-3.png);
+}

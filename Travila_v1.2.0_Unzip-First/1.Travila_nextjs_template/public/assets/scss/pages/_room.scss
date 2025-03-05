@@ -1,0 +1,89 @@
+.box-banner-room {
+    position: relative;
+    padding: 0px 60px 130px 60px;
+}
+.block-room-banner-inner {
+    position: relative;
+    overflow: hidden;
+    border-radius: 16px;
+    .swiper-button-next-style-1 {
+        right: 40px;
+    }
+    .swiper-button-prev-style-1 {
+        left: 40px;
+    }
+}
+.block-room-features {
+    position: absolute;
+    bottom: 0px;
+    left: 0px;
+    right: 0px;
+    z-index: 2;
+}
+.box-room-features {
+    background-color: var(--bs-background-body);
+    border-radius: 16px;
+    padding: 35px 13px 15px 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    box-shadow: $box-shadow-2;
+}
+.item-room-feature {
+    background-color: var(--bs-background-card);
+    border-radius: 8px;
+    padding: 15px 15px;
+    margin: 0px 10px 20px 10px;
+    border: 1px solid var(--bs-border-color);
+    width: 100%;
+    max-width: 12.28%;
+    &:hover {
+        box-shadow: $box-shadow-2;
+    }
+    .item-image {
+        margin-bottom: 8px;
+    }
+}
+.box-download-app {
+    padding-top: 45px;
+    margin-top: 40px;
+    border-top: 1px solid var(--bs-neutral-500);
+    padding-bottom: 50px;
+    .download-apps {
+        margin-top: 24px;
+    }
+}
+.box-sidebar-content {
+    padding-top: 25px;
+}
+.box-phone-help {
+    padding-left: 29px;
+    background-image: url(../imgs/page/room/phone.svg);
+    background-repeat: no-repeat;
+    background-position: left top 5px;
+    .phone-help {
+        margin-bottom: 7px;
+    }
+    h6 {
+        margin-bottom: 3px;
+    }
+}
+.box-buttons-room-detail-2 {
+    .box-button-faq {
+        padding-left: 130px;
+        padding-right: 130px;
+    }
+}
+.box-you-might-interested {
+    padding: 90px 0px;
+    border-top: 1px solid var(--bs-border-color);
+}
+.box-content-room-detail {
+    padding-bottom: 90px;
+}
+.box-banner-room {
+    img {
+        display: block;
+    }
+}

@@ -1,0 +1,327 @@
+// home 1
+.text-unlock {
+    margin-right: 32px;
+    display: inline-block;
+    padding: 2px 0px 2px 20px;
+    background: url(../imgs/template/icons/icon1.svg) no-repeat left center;
+}
+.box-filter-search {
+    padding-top: 24px;
+    border-bottom: 1px solid var(--bs-neutral-200);
+    padding-bottom: 30px;
+}
+.category-link {
+    display: inline-block;
+    padding: 8px 18px;
+    border-radius: 50px;
+    color: var(--bs-neutral-1000);
+    margin: 0px 4px 0px 0px;
+    &:hover, &.active {
+        background-color: var(--bs-neutral-1000);
+        color: var(--bs-neutral-0);
+    }
+}
+.block-filter-search {
+    border-radius: 50px;
+    border: 1px solid var(--bs-border-color);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    margin-bottom: 16px;
+    .filter-left {
+        width: 60%;
+    }
+    .filter-right {
+        width: 40%;
+        text-align: center;
+    }
+    .form-control {
+        background-color: var(--bs-neutral-100);
+        border-radius: 0px;
+        border: 0px;
+        font-size: 18px;
+        line-height: 28px;
+        font-weight: 700;
+        height: 75px;
+        padding: 15px 15px 15px 69px;
+        background-image: url(../imgs/template/icons/search.svg);
+        background-repeat: no-repeat;
+        background-position: left 29px center;
+        &::placeholder {
+            font-size: 18px;
+            line-height: 28px;
+            font-weight: 700;
+            color: var(--bs-neutral-500);
+        }
+    }
+}
+.block-dropdown-filter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.left-dropdown-filter {
+    display: flex;
+    align-items: center;
+    .btn {
+        margin: 8px 8px 8px 0;
+    }
+}
+.swiper-button-prev-style-1 {
+    height: 40px;
+    width: 40px;
+    line-height: 38px;
+    text-align: center;
+    border-radius: 50%;
+    background-color: var(--bs-neutral-200);
+    svg {
+        stroke: var(--bs-neutral-1000);
+    }
+    &:after {
+        display: none;
+    }
+    &:hover {
+        background-color: var(--bs-neutral-1000);
+        svg {
+            stroke: var(--bs-neutral-0);
+        }
+    }
+}
+.swiper-button-next-style-1 {
+    height: 40px;
+    width: 40px;
+    line-height: 38px;
+    text-align: center;
+    border-radius: 50%;
+    background-color: var(--bs-neutral-200);
+    svg {
+        stroke: var(--bs-neutral-1000);
+    }
+    &:after {
+        display: none;
+    }
+    &:hover {
+        background-color: var(--bs-neutral-1000);
+        svg {
+            stroke: var(--bs-neutral-0);
+        }
+    }
+}
+.box-button-slider-team {
+    text-align: right;
+    .swiper-button-prev-style-1 {
+        position: relative;
+        left: auto;
+        top: auto;
+        right: auto;
+        margin: 0px 4px 0px 0px;
+        display: inline-block;
+    }
+    .swiper-button-next-style-1 {
+        position: relative;
+        left: auto;
+        right: auto;
+        top: auto;
+        margin: 0px;
+        display: inline-block;
+    }
+}
+.swiper-group-journey {
+    padding-bottom: 40px;
+    padding-top: 20px;
+    .swiper-slide {
+        width: auto;
+    }
+}
+.container-slider {
+    padding-left: 30px;
+}
+.popular-categories {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    .dropdown-filter {
+        margin-left: 8px;
+        margin-bottom: 8px;
+    }
+}
+.box-top-rated {
+    background-color: $background-bg-1;
+    padding: 80px 0px 50px 0px;
+    background-image: url(../imgs/page/homepage1/bg-top.png);
+    background-position: top center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.title-why {
+    margin-top: 8px;
+    margin-bottom: 24px;
+}
+.download-apps {
+    margin-top: 64px;
+}
+.box-category {
+    .container-slider {
+        padding-left: 40px;
+    }
+}
+.block-subscriber {
+    display: flex;
+    align-items: center;
+    background-color: var(--bs-background-3);
+    border-radius: 32px;
+    border: 1px solid var(--bs-border-color);
+    .subscriber-left {
+        width: 50%;
+        padding: 0px 76px;
+    }
+    .subscriber-right {
+        width: 50%;
+        background: url(../imgs/template/subscriber.png) no-repeat center;
+        height: 484px;
+        background-size: cover;
+        border-radius: 0px 32px 32px 0;
+    }
+}
+.box-left-payment {
+    padding-left: 110px;
+}
+.box-testimonials {
+    padding: 45px 0px 79px 0px;
+    background-color: var(--bs-background-2);
+}
+.block-testimonials {
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+    padding-top: 0px;
+    .testimonials-left {
+        max-width: 688px;
+        width: 40%;
+        margin-right: 80px;
+        position: relative;
+        &::before {
+            content: "";
+            position: absolute;
+            top: -100px;
+            right: -100px;
+            width: 264px;
+            height: 140px;
+            background: url(../imgs/page/homepage1/plane.png) no-repeat center;
+            background-size: cover;
+            z-index: 1;
+        }
+    } 
+    .testimonials-right {
+        width: 60%;
+    }
+}
+.box-news {
+    padding: 91px 0px 110px 0px;
+}
+.box-list-news {
+    margin-top: 54px;
+}
+.box-payments {
+    padding: 80px 0px;
+}
+.box-why-choose-us {
+    border-bottom: 1px solid var(--bs-border-color);
+    padding-bottom: 70px;
+    padding-top: 110px;
+}
+.box-flights {
+    padding-top: 90px;
+    padding-bottom: 51px;
+    border-bottom: 1px solid var(--bs-border-color);
+}
+.box-category {
+    padding-top: 51px;
+}
+.form-subscriber {
+    display: flex;
+    align-items: center;
+    position: relative;
+    .form-control {
+        height: 60px;
+        width: 100%;
+        border-radius: 50px;
+        border: 1px solid var(--bs-border-color);
+        padding: 21px 31px;
+    }
+    .btn-submit {
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        height: 60px;
+        background-color: var(--bs-neutral-1000);
+        border-radius: 50px;
+        padding: 19px 35px;
+        color: var(--bs-neutral-0);
+        width: auto;
+        font-size: 14px;
+        line-height: 22px;
+        font-weight: 700;
+        &:hover {
+            background-color: var(--bs-neutral-200);
+            color: var(--bs-neutral-1000);
+        }
+    }
+}
+.box-author-testimonials {
+    display: inline-block;
+    padding: 10px 12px;
+    border-radius: 50px;
+    background-color: var(--bs-neutral-0);
+    color: var(--bs-neutral-1000);
+    font-size: 14px;
+    line-height: 22px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    width: fit-content;
+    z-index: 123;
+    position: relative;
+    border: 1px solid var(--bs-border-color);
+    img {
+        border: 1px solid var(--bs-neutral-0);
+        border-radius: 50%;
+        height: 26px;
+        width: 26px;
+        margin-right: -13px;
+        &:last-child {
+            margin-right: 8px;
+        }
+    }
+}
+.mt-8 {
+    margin-top: 8px;
+}
+#dropdownSort {
+    padding-right: 40px;
+    background: url(../imgs/template/icons/sort.svg) no-repeat right 16px center;
+}
+.box-your-journey {
+    padding: 43px 0 0 0;
+}
+.box-popular-destinations {
+    padding-bottom: 68px;
+}
+.box-list-populars {
+    margin-top: 25px;
+}
+.download-apps {
+    img {
+        margin-right: 8px;
+    }
+}
+.payment-method {
+    max-width: 475px;
+    .btn {
+        margin-bottom: 10px;
+        min-width: 111px;
+    }
+}
+.box-subscriber {
+    padding-bottom: 100px;
+}

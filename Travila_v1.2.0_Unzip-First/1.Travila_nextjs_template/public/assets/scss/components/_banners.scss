@@ -1,0 +1,147 @@
+.banner-hero {
+    &.hero-1 {
+        // background-image: url(../imgs/page/homepage6/bg-banner-main.png);
+        background-repeat: no-repeat;
+        background-position: top center;
+        background-size: cover;
+        position: relative;
+        .heading-banner, .banner-description {
+            color: $color-white;
+        }
+        .bg-icon-banner {
+            position: absolute;
+            bottom: 91px;
+            z-index: 1;
+            height: 132px;
+            width: 140px;
+            left: 50px;
+            // background: url(../imgs/page/homepage6/bg-banner.png) no-repeat right center;
+            background-size: auto;
+        }
+        .banner-inner {
+            padding-top: 200px;
+            padding-bottom: 176px;
+            position: relative;
+            span.bg-circle {
+                position: absolute;
+                top: 25%;
+                z-index: 1;
+                height: 490px;
+                width: 35%;
+                right: 120px;
+                // background: url(../imgs/page/homepage6/bg-banner2.png) no-repeat right center;
+                background-size: contain;
+            }
+            .container {
+                position: relative;
+                z-index: 2;
+            }
+        }
+    }
+    &.hero-2 {
+        background-image: url(../imgs/page/homepage5/bg-banner.png);
+        background-repeat: no-repeat;
+        background-position: top center;
+        background-size: cover;
+        position: relative;
+        .banner-inner {
+            padding-top: 200px;
+            padding-bottom: 0px;
+            position: relative;
+            h1 {
+                color: var(--bs-neutral-0);
+                margin-bottom: 100px;
+            }
+            .bg-banner {
+                position: absolute;
+                bottom: 0%;
+                top: 150px;
+                z-index: 1;
+                width: 100%;
+                max-width: 777px;
+                right: 120px;
+                background: url(../imgs/page/homepage5/banner.png) no-repeat bottom center;
+                background-size: contain;
+            }
+            .block-banner {
+                padding-bottom: 90px;
+            }
+            .container {
+                position: relative;
+                z-index: 2;
+            }
+        }
+    }
+}
+.cards-banner {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 701px;
+    .card-banner-1 {
+        width: calc(35% - 24px);
+        padding: 27px;
+        margin-right: 24px;
+        border-radius: 34px;
+        margin-bottom: 24px;
+    }
+    .card-banner-2 {
+        width: 65%;
+        padding: 27px;
+        border-radius: 34px;
+        margin-bottom: 24px;
+    }
+}
+@keyframes hero-thumb-animation {
+    0% {
+        transform: translateY(-20px);
+    }
+    100% {
+        transform: translateY(0px);
+    }
+}
+@keyframes hero-thumb-sm-animation {
+    0% {
+        -webkit-transform: translateY(0px) translateX(50px);
+        -moz-transform: translateY(0px) translateX(50px);
+        -ms-transform: translateY(0px) translateX(50px);
+        transform: translateY(0px) translateX(50px);
+    }
+    100% {
+        -webkit-transform: translateY(0px) translateX(0px);
+        -moz-transform: translateY(0px) translateX(0px);
+        -ms-transform: translateY(0px) translateX(0px);
+        transform: translateY(0px) translateX(0px);
+    }
+}
+@keyframes hero-thumb-sm-2-animation {
+    0% {
+        -webkit-transform: translateY(-50px);
+        -moz-transform: translateY(-50px);
+        -ms-transform: translateY(-50px);
+        transform: translateY(-50px);
+    }
+    100% {
+        -webkit-transform: translateY(0px);
+        -moz-transform: translateY(0px);
+        -ms-transform: translateY(0px);
+        transform: translateY(0px);
+    }
+}
+.shape-1 {
+    -webkit-animation: hero-thumb-animation 2s linear infinite alternate;
+    -moz-animation: hero-thumb-animation 2s linear infinite alternate;
+    -o-animation: hero-thumb-animation 2s linear infinite alternate;
+    animation: hero-thumb-animation 2s linear infinite alternate;
+}
+.shape-2 {
+    -webkit-animation: hero-thumb-sm-animation 4s linear infinite alternate;
+    -moz-animation: hero-thumb-sm-animation 4s linear infinite alternate;
+    -o-animation: hero-thumb-sm-animation 4s linear infinite alternate;
+    animation: hero-thumb-sm-animation 4s linear infinite alternate;
+}
+.shape-3 {
+    -webkit-animation: hero-thumb-sm-2-animation 4s linear infinite alternate;
+    -moz-animation: hero-thumb-sm-2-animation 4s linear infinite alternate;
+    -o-animation: hero-thumb-sm-2-animation 4s linear infinite alternate;
+    animation: hero-thumb-sm-2-animation 4s linear infinite alternate;
+}

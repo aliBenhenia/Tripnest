@@ -1,0 +1,180 @@
+.box-logos-tickets {
+    padding: 50px 0px;
+    border-bottom: 1px solid var(--bs-border-color);
+}
+.box-apply-filter {
+    padding-top: 25px;
+    margin-top: 35px;
+    border-top: 1px solid var(--bs-border-color);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.btn-clear-filter {
+    background: url(../imgs/template/icons/close-filter.svg) no-repeat left center;
+    font-size: 14px;
+    line-height: 22px;
+    font-weight: 500;
+    color: var(--bs-neutral-1000);
+    padding: 0px 0px 0px 25px;
+}
+.block-banner-tickets {
+    padding: 113px 0px;
+    background: url(../imgs/page/tickets/banner.png) no-repeat top center;
+    background-size: cover;
+}
+.box-list-tickets {
+    .card-flight {
+        min-width: 100%;
+    }
+}
+.box-image-book {
+    position: relative;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 41px;
+    display: inline-block;
+    width: 100%;
+    img {
+        display: block;
+    }
+}
+.btn-logo {
+    padding: 25px 22px;
+    border-radius: 8px;
+    background-color: var(--bs-background-card);
+    position: absolute;
+    bottom: 25px;
+    left: 25px;
+    z-index: 12;
+}
+.content-booking-form .item-line-booking.item-line-booking-2 {
+    border-bottom: 0px;
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    border-bottom: 0px;
+}
+.input-calendar {
+    label {
+        display: flex;
+        align-items: center;
+        font-size: 16px;
+        line-height: 26px;
+        font-weight: 500;
+        color: var(--bs-neutral-1000);
+        margin-left: 20px;
+        input {
+            width: auto;
+            margin: 0px 5px 0px 0px;
+        }
+    }
+}
+.input-radio-type {
+    display: flex;
+}
+.box-stop {
+    display: flex;
+    padding: 30px;
+    border: 1px solid var(--bs-border-color);
+    border-radius: 8px;
+    background-color: var(--bs-neutral-100);
+    .box-stop-left {
+        min-width: 24px;
+        margin-right: 14px;
+    }
+    .box-stop-right {
+        position: relative;
+        p {
+            margin-bottom: 9px;
+        }
+    }
+}
+.box-timeline {
+    padding: 35px 0px 0px 0px;
+    .item-timeline {
+        position: relative;
+        padding: 0px 0px 25px 85px;
+        &::before {
+            content: "";
+            height: 15px;
+            width: 15px;
+            border-radius: 50%;
+            position: absolute;
+            top: 10px;
+            left: 33px;
+            background-color: var(--bs-neutral-1000);
+            z-index: 3;
+        }
+        &:after {
+            content: "";
+            height: 100%;
+            width: 1px;
+            background-color: var(--bs-border-color);
+            position: absolute;
+            left: 40px;
+            top: 10px;
+            z-index: 1;
+        }
+        &:last-child {
+            &:after {
+                display: none;
+            }
+        }
+    }
+}
+.box-content-tickets-detail {
+    border-radius: 8px;
+    background-color: var(--bs-background-card);
+    padding: 25px 38px;
+    border: 1px solid var(--bs-border-color);
+}
+.text-ads-middle {
+    position: absolute;
+    left: -15px;
+    top: 50%;
+    transform: translateY(-50%) rotate(-90deg);
+    color: var(--bs-neutral-1000);
+}
+.item-line-timeline {
+    display: flex;
+    align-items: center;
+    margin-bottom: 25px;
+    .time-flight {
+        margin-right: 24px;
+        .icon-time {
+            background: url(../imgs/page/tickets/clock.png) no-repeat left center;
+            padding: 0px 0px 0px 20px;
+        }
+    }
+}
+.item-info-flight {
+    border: 1px solid var(--bs-border-color);
+    padding: 35px;
+    border-radius: 8px;
+}
+.list-flight-facilities {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    margin: 25px -15px 0px -15px;
+    list-style: none;
+    padding: 0px;
+    li {
+        width: 50%;
+        padding: 0px 15px;
+        display: flex;
+        align-items: center;
+        margin-bottom: 16px;
+        color: var(--bs-neutral-1000);
+        svg {
+            fill: var(--bs-neutral-1000);
+            margin-right: 15px;
+        }
+    }
+}
+.box-list-flights-2 {
+    position: relative;
+}
+.box-list-flights-2 .item-flight .flight-price {
+    padding-left: 10px;
+}

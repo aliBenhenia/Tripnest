@@ -1,0 +1,136 @@
+//1.FONT
+// @import url(https://fonts.bunny.net/css?family=manrope:400,500,700,800|merienda-one:400);
+
+// @import url("https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&family=Merienda:wght@300..900&display=swap");
+
+$font-heading: "Montserrat", sans-serif;
+$font-text: "Urbanist", sans-serif;
+$font-urbanist: "Urbanist", sans-serif;
+$font-manrope: "Manrope", sans-serif;
+$font-merienda: "Merienda", cursive;
+
+:root {
+    --manrope: "Manrope", sans-serif;
+    --merienda: "Merienda", cursive;
+}
+
+$font-3xs: 10px;
+$font-xxs: 12px;
+$font-xs: 13px;
+$font-sm: 14px;
+$font-md: 16px;
+$font-md-2: 15px;
+$font-lg: 18px;
+$font-xl: 20px;
+$font-2xl: 22px;
+$font-3xl: 58px;
+//2.COLOR
+// New
+$brand-primary: #000000;
+$brand-secondary: #fefa17;
+$neutral-0: #ffffff;
+$neutral-100: #f2f4f6;
+$neutral-200: #e4e6e8;
+$neutral-300: #d6d7d8;
+$neutral-400: #8e8e8e;
+$neutral-500: #737373;
+$neutral-600: #575756;
+$neutral-700: #4d4d4d;
+$neutral-800: #454545;
+$neutral-900: #313131;
+$neutral-1000: #000000;
+$button-bg: #000000;
+$button-bg-2: #f2f4f6;
+$button-text: #f2f4f6;
+$button-text-2: #000000;
+$button-bg-dark: #313131;
+$button-bg-2-dark: #222222;
+$button-text-dark: #ededed;
+$button-text-2-dark: #afafaf;
+$neutral-0-dark: #000000;
+$neutral-100-dark: #313131;
+$neutral-200-dark: #454545;
+$neutral-300-dark: #4d4d4d;
+$neutral-400-dark: #575756;
+$neutral-500-dark: #737373;
+$neutral-600-dark: #8e8e8e;
+$neutral-700-dark: #d6d7d8;
+$neutral-800-dark: #e4e6e8;
+$neutral-900-dark: #f2f4f6;
+$neutral-1000-dark: #f2f2f2;
+$brand-primary-dark: #ffffff;
+$brand-secondary-dark: #fefa17;
+$warning: #f09814;
+$success: #3dc262;
+$danger: #d63e29;
+$border: #e4e6e8;
+$border-dark: #313131;
+$brand-1: #8acfff;
+$color-grey: #afafaf;
+// End
+$color-1: #22d1ee;
+$color-2: #c5ff41;
+$color-grey-2: #f0f0f0;
+$color-black: #000000;
+$neutral-950: #1e1e1e;
+$brand-1-1: #52b8aa;
+$brand-2: #9761dc;
+$brand-3: #52b8aa;
+$brand-4: #c5ff41;
+$brand-5: #3b4725;
+$brand-6: #967dff;
+$green: #319f1f;
+$color-white: #ffffff;
+// End
+//3.Boxshadow
+$box-shadow-1: 0px 2px 7px 0px rgba(0, 0, 0, 0.07);
+$box-shadow-2: 0px 6px 22px 0px rgba(0, 0, 0, 0.09);
+$box-shadow-3: 0px 10px 20px 0px rgba(0, 0, 0, 0.05);
+$box-shadow-4: 0px 22px 120px 0px rgba(0, 0, 0, 0.05);
+$box-shadow-5: 0px 9px 26px 0px rgba(31, 31, 51, 0.06);
+//4. Border
+$border-color: #ececec;
+//5. Background
+$background-white: #ffffff;
+$background-body: #ffffff;
+$background-1: #fff0ec;
+$background-2: #e4f9f9;
+$background-3: #e3f0ff;
+$background-4: #efefeb;
+$background-bg-1: #fff0ec;
+$background-5: #ffec88;
+$background-6: #9dd3fb;
+$background-7: #fcf2fa;
+$background-8: #f6f3fc;
+$background-9: #fcfcf3;
+$background-10: #a8baf9;
+$background-11: #d4f6c0;
+$background-12: #a8e2ef;
+$background-13: #8cd8e9;
+$background-card: #ffffff;
+$background-card-dark: #191919;
+$background-body-dark: #171717;
+$background-1-dark: #242120;
+$background-2-dark: #111515;
+$background-3-dark: #1d2024;
+$background-4-dark: #242226;
+$background-5-dark: #ffdc88;
+$background-6-dark: #93dced;
+$background-7-dark: #1e1c1d;
+$background-8-dark: #121d20;
+$background-9-dark: #212114;
+// 6. text-shadow
+$text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+// 7. breakpoints
+$grid-breakpoints: (
+    xxxxs: 340px,
+    xxxs: 375px,
+    xxs: 450px,
+    xs: 500px,
+    sm: 576px,
+    md: 768px,
+    lg: 992px,
+    xl: 1200px,
+    xxl: 1400px,
+    xxxl: 1600px,
+);

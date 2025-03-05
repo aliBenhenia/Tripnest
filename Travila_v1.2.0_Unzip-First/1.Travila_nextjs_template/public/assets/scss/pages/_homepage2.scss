@@ -1,0 +1,260 @@
+.container-banner {
+    position: relative;
+    width: 100%;
+}
+.banner-image {
+    min-height: 769px;
+    padding-bottom: 250px;
+    background: url(../imgs/page/homepage2/banner.png) no-repeat top center;
+}
+.banner-main {
+    .banner-image {
+        .container {
+            padding-top: 136px;
+        }
+    }
+}
+.slick-prev, .slick-next {
+    position: absolute;
+    top: auto;
+    bottom: 163px;
+    transform: translateY(-50%);
+    left: 15px;
+    z-index: 123;
+    height: 40px;
+    width: 40px;
+    border: 0px;
+    border-radius: 50%;
+    background-color: var(--bs-neutral-200);
+    svg {
+        stroke: var(--bs-neutral-1000);
+    }
+    &:hover {
+        background-color: var(--bs-neutral-1000);
+        svg {
+            stroke: var(--bs-neutral-0);
+        }
+    }
+}
+.slick-next {
+    right: auto;
+    left: 60px;
+}
+.slider-thumnail {
+    top: 60px;
+    position: absolute;
+    width: 247px;
+    z-index: 110;
+    right: 0px;
+    .slick-next, .slick-prev {
+        display: none !important;
+    }
+}
+.slider-nav-thumbnails .banner-slide {
+    margin-bottom: 16px;
+    border: 3px solid var(--bs-neutral-0);
+    border-radius: 16px;
+    overflow: hidden;
+    &.slick-current {
+        border-color: var(--bs-brand-secondary);
+    }
+}
+.banner-main .banner-image .container {
+    padding-right: 250px;
+}
+.box-search-advance {
+    border: 1px solid var(--bs-border-color);
+    border-radius: 16px;
+    background-color: var(--bs-neutral-0);
+    padding: 28px;
+    position: relative;
+    top: -143px;
+    z-index: 12;
+    margin-bottom: -50px;
+    box-shadow: $box-shadow-3;
+    .box-top-search {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .box-bottom-search {
+        border: 1px solid var(--bs-border-color);
+        border-radius: 16px;
+        background-color: var(--bs-neutral-0);
+        padding: 21px 0px;
+        margin-top: 28px;
+        display: flex;
+        align-items: flex-end;
+        .item-search {
+            width: 20%;
+            position: relative;
+            padding: 0px 27px;
+            &::before {
+                content: "";
+                height: 58px;
+                right: 10px;
+                width: 1px;
+                background-color: var(--bs-border-color);
+                position: absolute;
+                top: 1px;
+            }
+            &.bd-none {
+                &::before {
+                    display: none;
+                }
+            }
+        }
+        .btn-black-lg {
+            padding: 15px 32px !important;
+            svg {
+                margin: 0px 10px 0px 0px;
+            }
+        }
+    }
+}
+.need-some-help {
+    background: url(../imgs/page/homepage2/user.svg) no-repeat left center;
+    font-size: 14px;
+    line-height: 22px;
+    font-weight: 500;
+    color: var(--bs-neutral-500);
+    display: inline-block;
+    padding: 0px 0px 0px 20px;
+}
+.location-search {
+    padding-left: 22px !important;
+    background: url(../imgs/page/homepage2/location.svg) no-repeat left center;
+}
+.calendar-search {
+    padding-left: 22px !important;
+    background: url(../imgs/page/homepage2/calendar.svg) no-repeat left center;
+}
+.passenger-search {
+    padding-left: 22px !important;
+    background: url(../imgs/page/homepage2/user.svg) no-repeat left center;
+}
+.box-payment-style-2 {
+    border-radius: 16px;
+    background-color: var(--bs-background-4);
+    padding: 52px;
+}
+.box-image-payment-2 {
+    img {
+        border-radius: 56px;
+    }
+}
+.box-list-brand-car {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    .item-brand {
+        padding: 15px 25px;
+        background-color: var(--bs-neutral-0);
+        border-radius: 16px;
+        margin-right: 24px;
+        margin-bottom: 24px;
+        img {
+            display: block;
+            max-height: 28px;
+        }
+        &:last-child {
+            margin-right: 0px;
+        }
+    }
+}
+.box-recent-lauched-car {
+    background-color: var(--bs-background-2);
+    padding: 89px 0px 112px 0px;
+}
+.mb-16 {
+    margin-bottom: 16px !important;
+}
+.box-search-category {
+    margin-top: 35px;
+}
+.box-list-brand-car {
+    margin-top: 64px;
+}
+.box-why-travel-us {
+    padding: 30px 0px 100px 0px;
+}
+.box-testimonials-2 {
+    position: relative;
+    padding: 112px 0px 118px 0px;
+    background: url(../imgs/page/homepage2/bg-testimonials.png) no-repeat top 100px right 40px;
+    border-bottom: 1px solid var(--bs-border-color);
+    .container-slider {
+        padding-left: 0px;
+    }
+    .box-author-testimonials {
+        background-color: var(--bs-brand-secondary);
+    }
+    &::before {
+        content: "";
+        bottom: 0px;
+        left: 0px;
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        z-index: 1;
+        background: url(../imgs/page/homepage2/bg-testimonials2.png) no-repeat left bottom;
+    }
+    .block-testimonials {
+        position: relative;
+        z-index: 2;
+    }
+    .container {
+        position: relative;
+        z-index: 2;
+    }
+    .card-testimonial {
+        .card-info {
+            .card-title {
+                margin-bottom: 9px;
+            }
+        }
+        .card-top {
+            border-bottom: 0px;
+            margin-bottom: 0px;
+            padding-bottom: 0px;
+            margin-top: 28px;
+        }
+    }
+}
+.box-top-category {
+    padding: 60px 0px;
+}
+.box-2-banner {
+    padding-bottom: 90px;
+}
+.form-newsletter {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    max-width: 505px;
+    width: 100%;
+    .form-control {
+        border-radius: 100px;
+        border: 1px solid var(--bs-neutral-500);
+        background-color: var(--bs-background-1000);
+        color: var(--bs-neutral-500);
+        padding: 19px 24px 19px 50px;
+        height: 60px;
+        width: 100%;
+        max-width: 360px;
+        margin-right: 8px;
+        background-image: url(../imgs/page/homepage2/email.svg);
+        background-repeat: no-repeat;
+        background-position: left 24px center;
+        &::placeholder {
+            color: var(--bs-neutral-500);
+        }
+    }
+    .btn-brand-secondary {
+        height: 60px;
+        color: var(--bs-background-1000)
+    }
+}
+.box-list-featured {
+    margin-top: 26px;
+}

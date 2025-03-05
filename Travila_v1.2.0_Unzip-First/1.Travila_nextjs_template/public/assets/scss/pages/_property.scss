@@ -1,0 +1,213 @@
+.box-grid-property {
+    .card-journey-small .card-info {
+        padding: 28px 15px 20px 15px;
+    }
+    .card-journey-small .card-image {
+        height: 235px;
+    }
+}
+.block-banner-property {
+    padding: 113px 0px;
+    background: url(../imgs/page/property/banner.png) no-repeat top center;
+    background-size: cover;
+}
+.box-slide-property {
+    padding: 71px 0px 47px 0px;
+    box-shadow: $box-shadow-3;
+    position: relative;
+}
+.list-number-choose {
+    display: flex;
+    align-items: center;
+    margin-top: 9px;
+    margin-left: -8px;
+    margin-right: -8px;
+    margin-bottom: 19px;
+    a {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        text-align: center;
+        font-size: 16px;
+        line-height: 40px;
+        font-weight: bold;
+        color: var(--bs-neutral-1000);
+        background-color: var(--bs-button-bg-2);
+        margin: 0px 4px;
+    }
+}
+.card-property.card-flight.card-hotel {
+    .card-info {
+        .card-title {
+            margin-bottom: 12px;
+        }
+    }
+    .card-facilities {
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap; 
+        .item-facilities {
+            width: 33.33%;
+            p {
+                background-repeat: no-repeat;
+                background-position: left center;
+                padding: 0px 0px 0px 30px;
+                margin-bottom: 13px;
+                &.speed {
+                    background-image: url(../imgs/page/homepage8/speed.svg);
+                }
+                &.gear {
+                    background-image: url(../imgs/page/homepage8/engineering.svg);
+                }
+                &.fuel {
+                    background-image: url(../imgs/page/homepage8/fuel.svg);
+                }
+                &.seats {
+                    background-image: url(../imgs/page/homepage8/seat.svg);
+                }
+                &.room {
+                    background-image: url(../imgs/page/homepage9/room.svg);
+                }
+                &.pax {
+                    background-image: url(../imgs/page/hotel/pax.svg);
+                }
+                &.size {
+                    background-image: url(../imgs/page/homepage9/size.svg);
+                }
+                &.bed {
+                    background-image: url(../imgs/page/homepage9/bed.svg);
+                }
+                &.bathroom {
+                    background-image: url(../imgs/page/homepage9/bathroom.svg);
+                }
+                &.parking {
+                    background-image: url(../imgs/page/property/parking.png);
+                }
+                &.pet {
+                    background-image: url(../imgs/page/property/pet.png);
+                }
+            }
+        }
+    }
+}
+.block-banner-property-detail {
+    .banner-property-detail-1 {
+        width: 100%;
+        height: 612px;
+        margin-bottom: 24px;
+        position: relative;
+        overflow: hidden;
+        border-radius: 8px;
+        .box-button-abs {
+            bottom: 37px;
+        }
+    }
+    .banner-property-detail-2, .banner-property-detail-3, .banner-property-detail-4, .banner-property-detail-5 {
+        width: 100%;
+        height: 294px;
+        margin-bottom: 24px;
+        overflow: hidden;
+        border-radius: 8px;
+    }
+    .banner-property-detail-1, .banner-property-detail-2, .banner-property-detail-3, .banner-property-detail-4, .banner-property-detail-5 {
+        img {
+            display: block;
+            height: auto;
+            width: auto;
+            max-width: none;
+            min-height: 100%;
+            max-height: 100%;
+            min-width: 100%;
+        }
+    }
+}
+.box-info-contact {
+    .mobile-phone {
+        padding: 0px 0px 0px 30px;
+        background-image: url(../imgs/page/property/phone.png);
+        background-position: left center;
+        background-repeat: no-repeat;
+    }
+    .email {
+        padding: 0px 0px 0px 30px;
+        background-image: url(../imgs/page/property/email.png);
+        background-position: left center;
+        background-repeat: no-repeat;
+    }
+    .whatsapp {
+        padding: 0px 0px 0px 30px;
+        background-image: url(../imgs/page/property/whatsapp.png);
+        background-position: left center;
+        background-repeat: no-repeat;
+    }
+    .fax {
+        padding: 0px 0px 0px 30px;
+        background-image: url(../imgs/page/property/fax.png);
+        background-position: left center;
+        background-repeat: no-repeat;
+    }
+}
+.card-author {
+    .card-author-image {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        margin-right: 12px;
+        img {
+            display: block;
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+        }
+    }
+    .card-author-info {
+        position: relative;
+    }
+}
+.box-info-contact {
+    margin-top: 25px;
+    margin-bottom: 35px;
+    p {
+        margin-bottom: 16px;
+    }
+}
+.box-link-bottom {
+    margin-bottom: 35px;
+}
+a.link-black {
+    font-size: 16px;
+    line-height: 26px;
+    font-weight: bold;
+    color: var(--bs-neutral-1000);
+    svg {
+        display: inline-block;
+        vertical-align: middle;
+        margin-left: 8px;
+        stroke: var(--bs-neutral-1000);
+    }
+    &:hover {
+        color: var(--bs-warning);
+        svg {
+            stroke: var(--bs-warning);
+        }
+    }
+}
+.box-buttons-property-detail {
+    border-bottom: 1px solid var(--bs-border-color);
+    padding-left: 60px;
+    padding-right: 60px;
+}
+.border-none {
+    border: 0px !important;
+}
+.card-journey-small-type-4 {
+    .card-image {
+        height: 247px;
+    }
+}
+.box-content-property-also-like {
+    padding-bottom: 60px;
+    padding-top: 90px;
+    border-top: 1px solid var(--bs-border-color);
+}

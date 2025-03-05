@@ -1,0 +1,296 @@
+.block-banner-tourlist {
+    padding: 113px 0px;
+    background: url(../imgs/page/tour/banner.png) no-repeat top center;
+    background-size: cover;
+}
+.box-search-advance-3 {
+    padding: 0px;
+    top: auto;
+    margin-bottom: 0px;
+    box-shadow: $box-shadow-3;
+    margin-top: 50px;
+    .box-bottom-search {
+        border: 0px;
+        margin-top: 0px;
+    }
+}
+.box-filters-sidebar {
+    .title-filter {
+        margin-bottom: 24px;
+        margin-top: 8px;
+    }
+    .block-filter {
+        border-top: 1px solid var(--bs-border-color);
+        padding: 42px 0px 10px 0px;
+        .head-filter {
+            margin-bottom: 20px;
+        }
+        &:first-child {
+            padding-top: 0px;
+            border-top: 0px;
+        }
+        .item-collapse {
+            margin-bottom: 20px;
+            background-image: url(../imgs/template/icons/arrow-up.svg);
+            background-position: right center;
+            background-repeat: no-repeat;
+            padding-right: 20px;
+            cursor: pointer;
+            &.collapsed-item {
+                background-image: url(../imgs/template/icons/arrow-down-filter.svg);
+            }
+        }
+        .list-sizes .item-size.active {
+            font-weight: 500;
+        }
+    } 
+}
+.box-collapse2 {
+    overflow: hidden;
+}
+.box-collapse {
+    margin-bottom: 35px;
+}
+.list-colors {
+    li {
+        margin-bottom: 12px;
+        cursor: pointer;
+        .box-colors {
+            label {
+                color: var(--bs-border-color);
+                font-size: 17px;
+                line-height: 24px;
+                font-weight: 400;
+            }
+            .item-color {
+                height: 24px;
+                width: 24px;
+                padding: 2px;
+                &::before {
+                    height: 18px;
+                    width: 18px;
+                    top: 2px;
+                    left: 2px;
+                }
+            }
+        }
+        &.active {
+            .box-colors {
+                label {
+                    font-weight: 500;
+                }
+                .item-color {
+                    border-color: var(--bs-border-color);
+                }
+            }
+        }
+    }
+}
+.box-value-price {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 8px;
+}
+.list-filter-checkbox {
+    li {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 18px;
+        .cb-container {
+            margin-bottom: 0px;
+            display: flex;
+            align-items: center;
+            color: var(--bs-neutral-1000);
+            img {
+                display: inline-block;
+                vertical-align: middle;
+                margin: 0px 1px;
+            }
+        }
+        .number-item {
+            min-width: 27px;
+            max-width: 27px;
+            border-radius: 7px;
+            padding: 3px;
+            font-size: 12px;
+            line-height: 18px;
+            font-weight: 500;
+            color: var(--bs-neutral-1000);
+            background-color: var(--bs-border-color);
+            text-align: center;
+        }
+    }
+}
+.sidebar-left {
+    padding: 29px 25px 0px 25px;
+    border: 1px solid var(--bs-border-color);
+    border-radius: 16px;
+    margin-bottom: 24px;
+}
+.box-content-main {
+    display: flex;
+    margin-left: -12px;
+    margin-right: -12px;
+    .content-left {
+        width: 100%;
+        padding: 0px 12px;
+        min-width: 295px;
+        max-width: 295px;
+    }
+    .content-right {
+        width: 100%;
+        padding: 0px 12px;
+    }
+}
+.box-content-main {
+    padding: 56px 0px 90px 0px;
+    #dropdownSort {
+        padding-right: 0px;
+        background-image: none;
+    }
+}
+.box-item-sort {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+.item-sort {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--bs-border-color);
+    border-radius: 4px;
+    padding: 7px;
+    margin-left: 4px;
+}
+.dropdown-sort {
+    top: -1px;
+    .dropdown-toggle, #dropdownSort {
+        padding: 0px;
+        font-size: 12px;
+        line-height: 18px;
+        font-weight: 500;
+        color: var(--bs-neutral-1000);
+        background-image: url(../imgs/template/icons/dropdown.svg);
+        background-position: right 1px center;
+        padding-right: 19px;
+        background-repeat: no-repeat;
+        border: 0;
+        &::after {
+            display: none;
+        }
+    }
+}
+.box-view-type {
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+}
+.display-type {
+    display: inline-block;
+    margin-right: 10px;
+    svg {
+        fill: var(--bs-neutral-500);
+    }
+    &.active {
+        svg {
+            fill: var(--bs-neutral-1000);
+        }
+    }
+}
+.number-found {
+    display: inline-block;
+    margin-left: 8px;
+}
+.box-list-tours, .box-grid-tours {
+    .card-journey-small {
+        margin-bottom: 24px;
+        max-width: 100%;
+        .card-info {
+            padding: 28px 21px;
+            border-radius: 24px;
+        }
+        .card-image {
+            height: 230px;
+            line-height: 230px;
+        }
+    }
+}
+.box-see-more {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 15px;
+}
+.link-see-more {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    color: var(--bs-neutral-1000);
+    font-size: 12px;
+    line-height: 18px;
+    font-weight: 500;
+    text-decoration: none;
+    svg {
+        margin-left: 5px;
+        fill: var(--bs-neutral-1000);
+    }
+}
+.box-popular-posts {
+    padding: 30px 0px 0px 0px;
+}
+.box-list-tours {
+    .card-journey-small .card-image .wish {
+        left: 26px;
+        top: 22px;
+    }
+}
+@media (min-width: 768px) {
+    .box-list-tours.list-tours {
+        .col-xl-4 {
+            flex: 0 0 auto;
+            width: 100%;
+        }
+        .card-journey-small {
+            display: flex;
+            align-items: center;
+            .card-image {
+                height: 298px;
+                min-width: 401px;
+                img {
+                    display: block;
+                    width: auto;
+                    height: 100%;
+                    min-width: 100%;
+                    max-width: none;
+                    min-height: 100%;
+                }
+            }
+            .card-info {
+                padding-top: 80px;
+                padding-left: 40px;
+                height: 298px;
+                width: 100%;
+                margin-top: 0px;
+                margin-left: -30px;
+                border-radius: 24px;
+                .card-rating {
+                    top: 30px;
+                    left: 40px;
+                    right: auto;
+                }
+                .card-title {
+                    a {
+                        font-size: 24px;
+                        line-height: 32px;
+                    }
+                }
+                .card-duration-tour {
+                    margin-bottom: 24px;
+                }
+            }
+        }
+    }
+}

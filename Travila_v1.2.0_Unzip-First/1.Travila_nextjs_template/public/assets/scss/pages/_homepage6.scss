@@ -1,0 +1,150 @@
+.block-banner-home6 {
+    padding: 100px 0px 150px 0px;
+    background: url(../imgs/page/homepage6/banner.png) no-repeat center;
+    background-size: cover;
+    position: relative;
+    &::before {
+        content: "";
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        background: url(../imgs/page/homepage5/trans.png);
+    }
+    .container {
+        position: relative;
+        z-index: 2;
+    }
+}
+.list-check-2-col {
+    display: flex;
+    align-items: center;
+    margin: 0px -10px;
+    flex-wrap: wrap;
+    li {
+        width: 50%;
+        padding: 0px 10px 0px 30px;
+    }
+}
+.box-our-featured-2 {
+    padding: 90px 0px 90px 0px;
+}
+.box-payments-3 {
+    position: relative;
+    padding: 113px 0px 90px 0px;
+    background-image: url(../imgs/page/homepage6/bg-payment-bottom.png);
+    background-position: bottom center;
+    background-repeat: no-repeat;
+    &::before {
+        content: "";
+        position: absolute;
+        top: 80px;
+        right: 140px;
+        width: 445px;
+        height: 106px;
+        background-image: url(../imgs/page/homepage6/bg-payment.svg);
+        background-position: center;
+        background-repeat: no-repeat;
+    }
+}
+.box-right-payment {
+    padding-left: 20px;
+    padding-top: 30px;
+}
+.box-image-payment-right {
+    margin-top: 50px;
+}
+.box-install-app-2 {
+    position: relative;
+    img {
+        display: block;
+    }
+}
+.box-item-download {
+    padding: 0px 0px 0px 77px;
+}
+.box-button-download {
+    a {
+        display: inline-block;
+        margin-right: 8px;
+    }
+}
+.box-why-book-travila-2 {
+    padding: 140px 0px 100px 0px;
+}
+.card-mw {
+    max-width: 46%;
+}
+.lbl-promotion {
+    background: url(../imgs/page/homepage6/promotion.svg) no-repeat left 18px center;
+    border-radius: 50px;
+    background-color: var(--bs-neutral-0);
+    padding: 10px 18px 10px 40px;
+    color: var(--bs-neutral-1000);
+    font-size: 14px;
+    line-height: 22px;
+    font-weight: bold;
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    z-index: 12;
+}
+.box-img-security {
+    position: relative;
+    text-align: center;
+}
+.text-phone {
+    position: absolute;
+    bottom: 150px;
+    left: 0px;
+    padding: 13px 26px;
+    background-color: var(--bs-neutral-0);
+    border-radius: 31px;
+    box-shadow: $box-shadow-2;
+    color: var(--bs-warning);
+    font-size: 16px;
+    line-height: 25px;
+    font-weight: bold;
+}
+.box-top-search-section {
+    padding: 25px 0px 90px 0px;
+}
+.box-security {
+    background-image: url(../imgs/page/homepage6/bg-security.png);
+    background-repeat: no-repeat;
+    background-position: bottom 110px center;
+    padding: 109px 0px 120px 0px;
+}
+.box-news-2 {
+    background-image: url(../imgs/page/homepage6/bg-news.png);
+    background-repeat: no-repeat;
+    background-position: top center;
+    background-size: cover;
+}
+.box-swiper-padding {
+    .card-news {
+        max-width: 400px;
+    }
+}
+.box-live-travel {
+    padding-bottom: 110px;
+}
+.box-send-message, .box-join, .box-footer-help {
+    display: flex;
+    align-items: center;
+    color: var(--bs-neutral-0);
+    img {
+        margin-right: 16px;
+    }
+}
+.list-numbers {
+    display: flex;
+    align-items: center;
+    margin: 0px -10px;
+    .item-number {
+        width: 100%;
+        padding: 0px 10px;
+    }
+}

@@ -1,0 +1,199 @@
+h1 span {
+    font-weight: 400;
+}
+.block-banner-9 {
+    position: relative;
+}
+.block-banner-9-inner {
+    min-height: 965px;
+    padding: 116px 0px 467px 0px;
+    position: relative;
+}
+.block-right-banner {
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    max-width: 40%;
+    width: 100%;
+    z-index: 12;
+    width: 100%;
+    background-position: top left;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+.item-support {
+    position: absolute;
+    top: 67px;
+    left: 67px;
+    background-color: var(--bs-neutral-0);
+    border-radius: 16px;
+    border: 1px solid var(--bs-border-color);
+    padding: 16px 28px;
+    display: flex;
+    align-items: center;
+    box-shadow: $box-shadow-2;
+    img {
+        margin-right: 18px;
+    }
+}
+.item-people-used {
+    position: absolute;
+    bottom: 178px;
+    left: -121px;
+    z-index: 123;
+    max-width: 253px;
+    .box-authors-partner {
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 30px;
+        width: fit-content;
+        .authors-partner-left {
+            width: 100%;
+            justify-content: center;
+            margin-bottom: 11px;
+        }
+        .authors-partner-right {
+            width: 100%;
+            text-align: center;
+        }
+    }
+}
+.box-numbers-home9 {
+    margin-top: 45px;
+}
+.image-banner-bottom {
+    position: absolute;
+    bottom: 0px;
+    left: 82px;
+    z-index: 1;
+    img {
+        border-radius: 32px;
+    }
+}
+.image-banner-top-left {
+    position: absolute;
+    top: 80px;
+    left: 120px;
+    z-index: 1;
+    img {
+        border-radius: 24px;
+    }
+}
+.block-why-choose-us {
+    .container {
+        position: relative;
+    }
+}
+.box-why-home9-inner {
+    position: relative;
+    background-color: var(--bs-neutral-0);
+    border-radius: 32px 32px 32px 32px;
+    background-image: url(../imgs/page/homepage9/img-why.png);
+    background-repeat: no-repeat;
+    background-position: left bottom;
+    z-index: 2;
+    border: 1px solid var(--bs-border-color);
+}
+.box-why-home9-inner-inner {
+    background-image: url(../imgs/page/homepage9/bg-why.png);
+    background-repeat: no-repeat;
+    background-position: bottom right;
+    padding: 30px 30px 30px 576px;
+    border-radius: 32px 32px 32px 32px;
+    box-shadow: $box-shadow-2;
+    position: relative;
+}
+.box-properties-area {
+    background-image: url(../imgs/page/homepage9/bg-area.png);
+    background-repeat: no-repeat;
+    padding: 100px 0px 70px 0px;
+}
+.box-explore {
+    padding: 100px 0px;
+}
+.box-featured-propoerties {
+    position: relative;
+    padding: 20px 0px 100px 0px;
+    background-image: url(../imgs/page/homepage9/bg-feature.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-position: top 60% center;
+    .card-journey-small {
+        max-width: 100%;
+    }
+}
+.box-list-why {
+    max-width: 326px;
+    .card-why-travel {
+        align-items: center;
+        margin-bottom: 32px;
+        .card-image {
+            margin-bottom: 0px;
+        }
+    }
+}
+.card-margin-left {
+    margin-left: 64px !important;
+}
+.bg-why {
+    position: absolute;
+    top: -55px;
+    right: -55px;
+    z-index: 1;
+}
+.bg-why-2 {
+    position: absolute;
+    bottom: -55px;
+    left: -55px;
+    z-index: 1;
+}
+.card-socials {
+    .link-social {
+        border-radius: 50%;
+        background-color: var(--bs-neutral-100);
+        text-align: center;
+        line-height: 27px;
+        height: 27px;
+        width: 27px;
+        display: inline-block;
+        margin-right: 6px;
+        img {
+            display: inline-block;
+            vertical-align: middle;
+        }
+        svg {
+            fill: var(--bs-neutral-1000);
+        }
+    }
+}
+.button-brand-2 {
+    background-color: var(--bs-brand-secondary);
+}
+.block-meet {
+    padding: 105px 0px 15px 0px;
+}
+.box-subscriber-2 {
+    position: relative;
+    padding-bottom: 0px;
+    &::before {
+        content: "";
+        height: 50%;
+        background-color: var(--bs-background-1000);
+        left: 0px;
+        right: 0px;
+        bottom: 0px;
+        z-index: 1;
+        position: absolute;
+    }
+    .block-subscriber {
+        position: relative;
+        z-index: 2;
+    }
+}
+.block-banner-9-inner {
+    .container {
+        position: relative;
+        z-index: 2;
+    }
+}

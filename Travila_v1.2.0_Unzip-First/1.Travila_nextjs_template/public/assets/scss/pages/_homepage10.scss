@@ -1,0 +1,339 @@
+.box-list-tags {
+    .btn {
+        margin-right: 12px;
+        margin-bottom: 12px;
+    }
+}
+.sidebar-area {
+    border: 1px solid var(--bs-border-color);
+    border-radius: 8px;
+    padding: 35px 31px;
+    box-shadow: $box-shadow-2;
+}
+.list-checkbox {
+    li {
+        margin-bottom: 4px;
+        label {
+            font-size: 14px;
+            line-height: 22px;
+            color: var(--bs-neutral-500);
+            input {
+                height: 25px;
+                width: 25px;
+                float: left;
+                margin: 0px 12px 0px 0px;
+            }
+        }
+        &.active {
+            label {
+                color: var(--bs-neutral-1000);
+            }
+        }
+    }
+}
+.box-how-it-work-3 {
+    position: relative;
+}
+.box-how-it-work-inner {
+    border-radius: 16px;
+    background-color: var(--bs-background-3);
+    background-image: url(../imgs/page/homepage10/bg-how.png);
+    background-repeat: no-repeat;
+    background-position: bottom right;
+    padding: 72px;
+}
+.list-steps-2-col {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    li {
+        width: 50%;
+    }
+}
+.box-skyward {
+    background-image: url(../imgs/page/homepage10/bg-skyward.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding: 89px 0px;
+}
+.box-image-sky {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    margin: 0px -6px;
+    .col-sky-1 {
+        width: 48%;
+        padding: 0px 6px;
+        img {
+            display: block;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+    }
+    .col-sky-2 {
+        width: 52%;
+        padding: 0px 6px;
+        img {
+            display: block;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+    }
+}
+.box-right-skyward {
+    padding-left: 40px;
+}
+.box-why-book-travila-3 {
+    padding: 100px 0px 60px 0px;
+}
+.box-numbers-2 {
+    .list-numbers {
+        border-bottom: 1px solid var(--bs-border-color);
+        padding-bottom: 49px;
+        padding-top: 49px;
+        .item-number {
+            text-align: center;
+        }
+    }
+}
+.box-list-flights {
+    position: relative;
+    .item-flight {
+        display: flex;
+        align-items: center;
+        border: 1px solid var(--bs-border-color);
+        border-radius: 8px;
+        background-color: var(--bs-neutral-0);
+        padding: 17px 21px;
+        margin-bottom: 15px;
+        justify-content: space-between;
+        .flight-route, .flight-price, .flight-name {
+            display: flex;
+            align-items: center;
+        }
+        .flight-route {
+            &.flight-route-type-2 {
+                flex-wrap: wrap;
+                max-width: 474px;
+                .flight-route-1 {
+                    display: flex;
+                    align-items: center;
+                    width: 100%;
+                    margin-top: 34px;
+                    margin-bottom: 15px;
+                }
+                .flight-route-2 {
+                    display: flex;
+                    width: 100%;
+                    align-items: center;
+                    margin-top: 14px;
+                    margin-bottom: 35px;
+                }
+            }
+            
+            .flight-route-icon {
+                min-width: 24px;
+                height: 24px;
+                margin: 0px 29px;
+                background-image: url(../imgs/page/homepage10/route.png);
+                background-repeat: no-repeat;
+                background-position: center;
+            }
+            .flight-name {
+                img {
+                    width: 48px;
+                    margin-right: 12px;
+                    display: block;
+                    height: 48px;
+                }
+                .flight-info {
+                    .time-flight {
+                        padding: 0px 0px 0px 20px;
+                        background-image: url(../imgs/page/homepage10/time.png);
+                        background-repeat: no-repeat;
+                        background-position: left center;
+                        color: var(--bs-neutral-500);
+                        span {
+                            color: var(--bs-neutral-1000);
+                        }
+                    }
+                }
+            }
+        }
+        .flight-price {
+            .flight-price-1 {
+                border-left: 1px solid var(--bs-border-color);
+                padding: 0px 29px;
+            }
+            .flight-price-2 {
+                border-left: 1px solid var(--bs-border-color);
+                padding: 0px 29px;
+            }
+        } 
+        &:hover {
+            box-shadow: $box-shadow-2;
+        }
+    }
+}
+.box-install-app-3 {
+    position: relative;
+    padding-bottom: 0px;
+    .block-install-apps {
+        padding: 119px 90px 89px 90px;
+        margin-left: -90px;
+        margin-right: -90px;
+        background-image: url(../imgs/page/homepage10/img-install.png);
+        background-repeat: no-repeat;
+        background-size: contain;
+        background-position: right center;
+        &::before {
+            content: "";
+            position: absolute;
+            top: 30px;
+            right: 170px;
+            left: 0px;
+            margin: auto;
+            width: 453px;
+            height: 107px;
+            background-image: url(../imgs/page/homepage10/bg-plane.png);
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center;
+        }
+    }
+}
+.box-title-bestsell {
+    display: inline-block;
+    padding-right: 230px;
+    background-image: url(../imgs/page/homepage10/flight.png);
+    background-repeat: no-repeat;
+    background-position: right center;
+}
+.box-best-sell {
+    padding: 50px 0px;
+}
+.box-logos-5 {
+    padding-bottom: 0px;
+    margin-top: -150px;
+}
+.list-ticks-green {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    li {
+        margin-bottom: 20px;
+        padding: 3px 25px 3px 36px;
+        background-image: url(../imgs/page/homepage10/tick.png);
+        background-repeat: no-repeat;
+        background-position: left center;
+        font-size: 14px;
+        line-height: 22px;
+        color: var(--bs-neutral-0);
+        font-weight: bold;
+    }
+}
+.block-banner-home10 {
+    min-height: 970px;
+    padding-top: 234px;
+    background-image: url(../imgs/page/homepage10/banner.png);
+    background-repeat: no-repeat;
+    background-position: top center;
+    background-size: cover;
+}
+.text-with-img {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    line-height: 26px;
+    font-weight: bold;
+    color: var(--bs-neutral-0);
+    img {
+        margin-right: 10px;
+    }
+}
+.box-search-advance-home10 {
+    .box-search-advance {
+        top: -190px;
+    }
+}
+.box-top-flights {
+    padding: 90px 0px 0px 0px;
+}
+.card-testimonial-2 {
+    max-width: 100%;
+    border: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    background-color: transparent;
+    .card-top {
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-top: 0px;
+        .card-author {
+            flex-wrap: wrap;
+            text-align: center;
+            justify-content: center;
+            width: 100%;
+            .card-image {
+                margin-bottom: 10px;
+            }
+            > .card-info {
+                margin-bottom: 5px;
+                width: 100%;
+            }
+        }
+        .card-rate {
+            margin-bottom: 10px;
+        }
+    }
+    > .card-info {
+        text-align: center;
+    }
+    .card-bottom {
+        text-align: center;
+        margin-top: 15px;
+    }
+}
+.swiper-pagination-style-3 {
+    text-align: center;
+    width: 100%;
+    position: relative;
+    display: inline-block;
+    margin: 35px 0px 0px 0px;
+    .swiper-pagination-bullet {
+        width: 12px;
+        height: 12px;
+        background-color: var(--bs-neutral-200);
+        opacity: 1;
+        margin: 0px 3px;
+    }
+    .swiper-pagination-bullet-active {
+        background-color: var(--bs-neutral-1000);
+    }
+}
+.box-testimonials-6 {
+    background-image: none;
+    &::before {
+        display: none;
+    }
+}
+.box-img-test-1 {
+    position: absolute;
+    left: 80px;
+    top: 20px;
+}
+.box-img-test-2 {
+    position: absolute;
+    right: 80px;
+    top: 90px;
+}
+.box-img-test-3 {
+    position: absolute;
+    right: 0px;
+    bottom: 30px;
+}
+.box-img-test-4 {
+    position: absolute;
+    left: 110px;
+    bottom: 20px;
+}

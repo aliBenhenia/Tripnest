@@ -1,0 +1,68 @@
+.box-location-shop {
+    padding: 180px 0px 0px 0px;
+    background-image: url(../imgs/page/pages/bg-contact.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: top center;
+}
+.box-text-location {
+    max-width: 245px;
+    text-align: left;
+    svg {
+        fill: var(--bs-neutral-1000);
+    }
+}
+.form-contact {
+    input[type="text"], input[type="email"] {
+        background-color: var(--bs-background-card);
+    }
+    .btn-book {
+        color: var(--bs-neutral-0);
+        svg {
+            stroke: var(--bs-neutral-0);
+        }
+    }
+}
+.box-traveled-in {
+    background: url(../imgs/page/pages/bg-travel-in.png) no-repeat bottom 5px right 5px;
+    background-color: var(--bs-background-5);
+    border: 1px solid var(--bs-border-color);
+    border-radius: 16px;
+    padding: 28px 33px 28px 33px;
+    .box-authors-partner {
+        border: 0px;
+        padding: 0px;
+    }
+}
+.banner-contact {
+    .row {
+        margin: 0px -6px;
+        .col-lg-12 {
+            padding: 0px 6px;
+        }
+        .col-lg-6 {
+            padding: 0px 6px;
+        }
+    }
+    img {
+        display: block;
+        width: 100%;
+    }
+    .banner-img-contact {
+        margin-bottom: 12px;
+    }
+}
+.box-contact-support {
+    padding: 50px 0px 99px 0px;
+}
+.box-contact-form {
+    padding: 90px 0px;
+}
+[data-bs-theme=dark] {
+    .box-location-shop {
+        background-image: url(../imgs/page/pages/bg-contact-dark.png);
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: top center;
+    }
+}

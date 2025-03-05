@@ -1,0 +1,93 @@
+.box-our-services-car {
+    border-top: 1px solid var(--bs-border-color);
+    padding: 90px 0px;
+}
+.box-feature-car {
+    padding: 45px 45px 31px 45px;
+    border: 1px solid var(--bs-border-color);
+    background-color: var(--bs-background-card);
+    box-shadow: $box-shadow-1;
+    margin-bottom: 20px;
+    border-radius: 8px;
+}
+.list-feature-car {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    margin: 0px -7px;
+    .item-feature-car {
+        padding: 0px 7px;
+        width: 25%;
+        margin-bottom: 14px;
+        .item-feature-car-inner {
+            display: flex;
+            align-items: center;
+            padding: 14px 16px;
+            border: 1px solid var(--bs-border-color);
+            background-color: var(--bs-background-9);
+            border-radius: 4px;
+            .feature-image {
+                margin-right: 5px;
+                img {
+                    display: block;
+                }
+            }
+        }
+    }
+}
+.list-checked-green {
+    list-style: none;
+    padding: 0px;
+    margin: 0px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 0px !important;
+    margin-bottom: 10px;
+    li {
+        list-style: none !important;
+        width: 50%;
+        background-image: url(../imgs/page/hotel/tick-green.svg);
+        background-repeat: no-repeat;
+        background-position: left center;
+        padding: 0px 30px 0px 20px;
+        font-size: 14px;
+        line-height: 22px;
+        font-weight: 500;
+        color: var(--bs-neutral-1000);
+        margin-bottom: 5px;
+    }
+}
+.box-logos-car {
+    padding: 50px 0px;
+    border-bottom: 1px solid var(--bs-border-color);
+    .item-logo-payment {
+        text-align: center;
+        img {
+            vertical-align: middle;
+        }
+    }
+}
+.box-logos-car-2 {
+    background-color: var(--bs-neutral-100);
+    padding: 50px 0px;
+    .item-logo-payment {
+        text-align: center;
+        img {
+            vertical-align: middle;
+        }
+    }
+}
+[data-bs-theme=dark] {
+    .box-button-book {
+        .btn.btn-book {
+            color: var(--bs-neutral-0);
+            svg {
+                stroke: var(--bs-neutral-0);
+            }           
+        }
+    }
+}
+.block-banner-car {
+    background-image: url(../imgs/page/car/banner-car.png);
+}

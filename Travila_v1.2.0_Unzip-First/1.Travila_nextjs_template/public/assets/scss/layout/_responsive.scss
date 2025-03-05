@@ -1,0 +1,1389 @@
+@include media-breakpoint-down(xxxl) {
+    .image-banner-top-left {
+        top: 30px;
+        left: 20px;
+    }
+}
+@include media-breakpoint-down(xxl) {
+    //max-width: 1399.98px
+    .custom-class {
+        display: block;
+    }
+    .header .main-menu li {
+        padding: 0px 10px;
+    }
+    .box-banner-home4 .box-image-banner-home4 .shape-phone {
+        right: -30px;
+    }
+    .card-journey-small .card-info {
+        padding: 20px 16px;
+    }
+    .box-grid-hotels .card-flight .card-image {
+        max-width: 280px;
+    }
+    .box-content-info-detail {
+        margin-top: -90px;
+    }
+}
+@include media-breakpoint-down(xl) {
+    //max-width: 1199.98px
+    .burger-icon {
+        display: block;
+    }
+    .custom-class {
+        display: block;
+    }
+    .header .main-header .header-right {
+        min-width: 290px;
+    }
+    .header-right {
+        padding-right: 50px;
+    }
+    .header .nav-main-menu {
+        display: none;
+    }
+    .header .main-header {
+        padding: 10px 0px;
+    }
+    .sticky-bar.stick .main-header {
+        padding: 10px 0px;
+    }
+    .popup-firstload .popup-container {
+        max-width: 95%;
+    }
+    .box-search-advance .box-bottom-search {
+        flex-wrap: wrap;
+    }
+    .box-search-advance .box-bottom-search .item-search {
+        width: 25%;
+        &:last-child {
+            width: 100%;
+            justify-content: center !important;
+            padding-top: 20px;
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    }
+    .banner-main h1 {
+        font-size: 50px;
+        line-height: 60px;
+    }
+    .box-list-numbers {
+        padding: 80px 30px;
+        flex-wrap: wrap;
+    }
+    .box-search-advance-2 {
+        position: relative;
+        top: auto;
+        right: auto;
+        max-width: 100%;
+        margin-top: 20px;
+        margin-bottom: 0px;
+    }
+    .box-search-advance-2 .box-bottom-search .item-search {
+        width: 25%;
+        &:last-child {
+            width: 25%;
+        }
+    }
+    .box-search-advance-3-col .box-bottom-search .item-search {
+        width: 50%;
+    }
+    .box-banner-home4 .box-image-banner-home4 .shape-phone {
+        right: -50px;
+    }
+    .banner-plus, .banner-marker {
+        display: none;
+    }
+    .box-banner-home4 .box-image-banner-home4 .shape-rate {
+        left: 130px;
+    }
+    .box-image-banner-home5 {
+        max-width: 50%;
+    }
+    .block-banner-home5 {
+        background-size: 70% auto;
+    }
+    .block-banner-home5 {
+        h1 {
+            font-size: 54px;
+            line-height: 66px;
+        }
+    }
+    .box-footer-col-3 .footer-col-1, .box-footer-col-3 .footer-col-2, .box-footer-col-3 .footer-col-3 {
+        padding: 15px;
+    }
+    .top-bar-2 .text-header-info .phone-head, .top-bar-2 .text-header-info a {
+        margin-right: 14px;
+        width: 17px;
+        display: inline-block;
+        overflow: hidden;
+        height: 20px;
+        line-height: 17px;
+        vertical-align: middle;
+    }
+    .top-bar-2 .text-header-info a {
+        margin-right: 0px;
+    }
+    .image-banner-bottom {
+        max-width: 400px;
+    }
+    .box-why-home9-inner-inner {
+        padding-left: 460px;
+    }
+    .box-img-test-1 {
+        left: 10px;
+    }
+    .box-img-test-2 {
+        right: 10px;
+        top: 70px;
+    }
+    .box-img-test-3 {
+        right: -10px;
+        bottom: 0px;
+    }
+    .box-list-tours.list-tours .card-journey-small .card-image {
+        min-width: 281px;
+    }
+    .destination-banner-1 {
+        height: 110px;
+    }
+    .destination-banner-2 {
+        height: 290px;
+    }
+    .destination-banner-3 {
+        height: 242px;
+    }
+    .destination-banner-4, .destination-banner-5 {
+        height: 155px;
+    }
+    .destination-banner-6 {
+        height: 194px;
+    }
+    .destination-banner-7 {
+        height: 203px;
+    }
+    .box-header-on-top {
+        left: 110px;
+        bottom: -20px;
+        right: 110px;
+    }
+    .block-room-features {
+        position: relative;
+        bottom: auto;
+        left: auto;
+        right: auto;
+        margin-top: 35px;
+    }
+    .item-room-feature {
+        max-width: 16.28%;
+    }
+    .box-grid-hotels .card-flight {
+        flex-wrap: wrap;
+    }
+    .box-grid-hotels .card-flight .card-image {
+        height: auto;
+        max-width: 100%;
+    }
+    .box-grid-hotels .card-flight .card-info {
+        margin-left: 0px;
+        margin-top: -40px;
+    }
+    .box-image-vision .image-vision-2 {
+        max-width: 160px;
+        top: -10px;
+        right: 10px;
+    }
+    .box-image-vision .image-vision-1 {
+        max-width: 160px;
+        bottom: -30px;
+        left: 10px;
+    }
+    .box-list-hotels-detail .card-flight:nth-of-type(even) .card-info {
+        order: 1 !important;
+    }
+    .box-content-info-detail {
+        margin-top: -60px;
+    }
+    .header.header-commingsoon .main-header .header-right {
+        width: 60%;
+        padding-right: 0px;
+    }
+    .header.header-commingsoon .main-header .header-left {
+        width: 40%;
+    }
+    .box-video-comming .box-banner-abs {
+        bottom: -90px;
+        right: -20px;
+    }
+    .box-list-flights-2 {
+        .item-flight {
+            flex-wrap: wrap;
+            .flight-price {
+                width: 100%;
+                padding-left: 0px;
+                .flight-price-1 {
+                    width: 50%;
+                    padding-left: 0px;
+                    border-left: 0px;
+                }
+                .flight-price-2 {
+                    width: 50%;
+                }
+            }
+        }
+    }
+    .box-list-flights-2 .item-flight .flight-route.flight-route-type-2 {
+        max-width: 100%;
+        .flight-route-1, .flight-route-2 {
+            justify-content: space-between;
+        }
+    }
+}
+@include media-breakpoint-down(lg) {
+    //max-width: 991.98px
+    .footer-1, .footer-2, .footer-3, .footer-4, .footer-5 {
+        width: 50%;
+        margin-bottom: 40px;
+    }
+    .box-banner-home4 .box-image-banner-home4 .shape-rate {
+        left: 0px;
+    }
+    .block-filter-search .filter-right {
+        width: 60%;
+        text-align: center;
+    }
+    .block-filter-search .filter-left {
+        width: 40%;
+    }
+    .block-dropdown-filter, .left-dropdown-filter {
+        flex-wrap: wrap;
+    }
+    .left-dropdown-filter {
+        margin-bottom: 15px;
+    }
+    .block-filter-search .filter-right .category-link {
+        padding: 5px 14px;
+        margin: 0px 2px 0px 0px;
+    }
+    .box-left-payment {
+        padding-left: 0px;
+    }
+    .block-testimonials {
+        flex-wrap: wrap;
+        .testimonials-left {
+            max-width: 100%;
+            width: 100%;
+        }
+    }
+    .block-testimonials .testimonials-left::before {
+        right: 10px;
+    }
+    .block-testimonials .testimonials-right {
+        width: 100%;
+    }
+    .container-slider {
+        padding-left: 0px;
+    }
+    .block-subscriber .subscriber-left {
+        width: 60%;
+        padding: 0px 16px;
+    }
+    .block-subscriber .subscriber-right {
+        width: 40%;
+    }
+    .block-filter-search {
+        .form-control {
+            &::placeholder {
+                font-size: 14px;
+            }
+        }
+    }
+    .box-search-advance .box-bottom-search {
+        flex-wrap: wrap;
+    }
+    .box-search-advance .box-bottom-search .item-search {
+        width: 50%;
+        position: relative;
+        padding: 0px 27px;
+        margin-bottom: 15px;
+        &:last-child {
+            width: 100%;
+            justify-content: center !important;
+            &::before {
+                display: none;
+            }
+        }
+        &.item-search-2 {
+            &::before {
+                display: none;
+            }
+        }
+    }
+    .box-list-numbers {
+        padding: 30px 10px;
+        flex-wrap: wrap;
+    }
+    .bg-contact-form-2 {
+        position: relative;
+        height: 500px;
+        max-width: 100%;
+        margin-bottom: 35px;
+    }
+    .box-list-numbers .item-numbers {
+        width: 50%;
+        padding: 0px 20px;
+        &::before {
+            right: 10px;
+        }
+        &.item-numbers-2 {
+            &::before {
+                display: none;
+            }
+        }
+    }
+        .box-search-advance-2 .box-bottom-search .item-search {
+            width: 50%;
+            &:last-child {
+                width: 50%;
+            }
+        }
+    .box-search-advance-3-col {
+        margin-bottom: 30px;
+    }
+    .box-banner-home4 .box-image-banner-home4 {
+        position: relative;
+        bottom: auto;
+        right: auto;
+        text-align: center;
+    }
+    .box-image-how {
+        margin-bottom: 40px;
+    }
+    .box-images-apps {
+        margin-top: 0px;
+    }
+    .img-phone {
+        top: 0px;
+    }
+    .img-laptop {
+        top: 0px;
+    }
+    .box-banner-home4 .box-image-banner-home4 .shape-phone {
+        right: -20px;
+    }
+    .card-journey-small.card-journey-small-type-2 .card-links ul {
+        flex-wrap: wrap;
+        li {
+            width: 100%;
+            margin-bottom: 7px;
+        }
+    }
+    .card-journey-small.card-journey-small-type-2 .card-links {
+        margin-top: 15px;
+    }
+    .block-banner-home5 {
+        padding-bottom: 400px;
+    }
+    .box-item-download {
+        padding: 30px 20px 30px 20px;
+    }
+    .box-footer-col-3 {
+        flex-wrap: wrap;
+        .footer-col-1, .footer-col-2 {
+            width: 100%;
+            padding: 25px 35px;
+            border-bottom: 1px solid $border-dark;
+            &::before {
+                display: none;
+            }
+        }
+        .footer-col-3 {
+            width: 100%;
+            padding: 25px 35px;
+        }
+    }
+    .box-videos-small .bg-video {
+        width: 85%;
+    }
+    .container-search-advance {
+        position: relative;
+        bottom: auto;
+        left: auto;
+        right: auto;
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
+    .item-banner-slide {
+        min-height: 543px;
+        padding: 120px 0px 145px 0px;
+        h1 {
+            font-size: 50px;
+            line-height: 60px;
+        }
+        h5 {
+            font-size: 20px;
+            line-height: 30px;
+        }
+    }
+    .box-numbers-home7 {
+        padding-left: 0px;
+    }
+    .box-testimonials-4 {
+        background-position: top 50% left 0%;
+    }
+    .dark {
+        .box-testimonials-4 {
+            background-position: top 50% left 0%;
+        }
+    }
+    .swiper-pagination-style-2 {
+        right: 15px;
+    }
+    .box-image-banner-home8 {
+        display: none;
+    }
+    .image-banner-bottom {
+        display: none;
+    }
+    .image-banner-top-left {
+        display: none;
+    }
+    .block-right-banner {
+        position: relative;
+        top: auto;
+        right: auto;
+        bottom: auto;
+        height: 500px;
+        max-width: 100%;
+        margin-top: 40px;
+    }
+    .block-banner-9-inner {
+        padding-top: 66px;
+        padding-bottom: 167px;
+    }
+    .item-people-used {
+        bottom: 78px;
+        left: auto;
+        right: 60px;
+    }
+    .box-why-home9-inner-inner {
+        padding: 30px 30px 30px 26px;
+    }
+    .box-why-home9-inner {
+        background-image: none;
+    }
+    .box-list-flights .item-flight {
+        flex-wrap: wrap;
+    }
+    .box-list-flights .item-flight .flight-route {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+    .box-list-flights .item-flight .flight-price {
+        .flight-price-1 {
+            padding-left: 0px;
+            border-left: 0px;
+            padding-right: 10px;
+            text-align: center;
+        }
+        .flight-price-2 {
+            padding: 0px 0px 0px 20px;
+            text-align: center;
+        }
+    }
+    .box-install-app-3 .block-install-apps {
+        background-image: none;
+        margin: 0px;
+        padding: 50px 40px 10px 40px;
+    }
+    .box-install-app-3 .block-install-apps::before {
+        display: none;
+    }
+    .box-right-skyward {
+        padding-left: 0px;
+    }
+    .box-how-it-work-inner {
+        background-image: none;
+    }
+    .block-banner-home10 {
+        min-height: 720px;
+        padding-top: 114px;
+        padding-bottom: 220px;
+    }
+    .block-banner-home10 {
+        h1 {
+            font-size: 44px;
+            line-height: 56px;
+        }
+        .box-buttons-banner {
+            margin-top: 15px !important;
+        }
+    }
+    .box-content-main {
+        flex-wrap: wrap;
+        .content-left {
+            min-width: 100%;
+        }
+        .content-right {
+            padding-bottom: 50px;
+        }
+    }
+    .box-search-advance-4 {
+        top: 30px;
+    }
+    .block-banner-destination {
+        padding: 0px 15px;
+    }
+    .box-banner-tour-detail-4 {
+        padding: 0px 10px;
+    }
+    .box-header-on-top {
+        position: relative;
+        left: auto;
+        right: auto;
+        bottom: auto;
+        margin-top: 30px;
+    }
+    .tour-title-main {
+        .color-white {
+            color: var(--bs-color-black) !important;
+        }
+    }
+    .tour-metas .tour-meta-left {
+        .color-white {
+            color: var(--bs-color-black) !important;
+        }
+    }
+    .item-room-feature {
+        max-width: 21.28%;
+        padding: 10px 10px;
+        margin: 0px 6px 20px 6px;
+    }
+    .box-buttons-room-detail-2 .box-button-faq {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    .box-content-info-detail {
+        margin-top: 0px;
+    }
+    .header-commingsoon {
+        .main-menu li {
+            padding: 0px 5px;
+            float: none;
+            display: inline-block;
+            a {
+                padding: 15px 5px 15px 5px;
+            }
+        }
+        .main-header {
+            flex-wrap: wrap;
+        }
+    }
+    .header.header-commingsoon .main-header .header-left {
+        width: 100%;
+        justify-content: center;
+    }
+    .header.header-commingsoon .main-header .header-right {
+        width: 100%;
+        padding-right: 0px;
+        justify-content: center;
+        text-align: center;
+    }
+    .box-video-comming {
+        margin-bottom: 150px;
+    }
+    .header.header-commingsoon .main-header .header-left .header-logo .text-slogan::before {
+        left: -12px;
+    }
+    .header.header-commingsoon .main-header .header-left .header-logo .text-slogan {
+        padding-left: 5px;
+    }
+}
+@include media-breakpoint-down(md) {
+    //max-width: 767.98px
+    .mobile-header-wrapper-style {
+        .mobile-header-wrapper-inner {
+            .mobile-header-top {
+                padding: 15px 30px 13px 30px;
+                border-bottom: 1px solid var(--bs-border-color);
+                .mobile-header-logo a img {
+                    width: 140px;
+                }
+            }
+            .mobile-header-content-area {
+                padding: 30px;
+            }
+        }
+    }
+    .btn-play-video {
+        width: 71px;
+        height: 71px;
+    }
+    .block-filter-search .filter-right {
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
+    .block-filter-search {
+        flex-wrap: wrap;
+    }
+    .block-filter-search .filter-left {
+        width: 100%;
+    }
+    .block-filter-search .filter-right {
+        width: 100%;
+    }
+    .box-price {
+        left: 20%;
+    }
+    .box-banner-left-how {
+        display: none;
+    }
+    .block-subscriber {
+        flex-wrap: wrap;
+    }
+    .block-subscriber .subscriber-left {
+        width: 100%;
+        padding: 35px;
+    }
+    .block-subscriber .subscriber-right {
+        display: none;
+    }
+    .card-popular-2 .card-meta .meta-links {
+        width: 85%;
+    }
+    .card-popular-2 .card-meta {
+        padding: 12px 10px;
+    }
+    .card-flight {
+        max-width: 100%;
+        width: 100%;
+        min-width: 100%;
+        flex-wrap: wrap;
+    }
+    .card-flight .card-image {
+        max-width: 100%;
+    }
+    .card-flight .card-info {
+        padding: 38px 31px;
+        width: calc(100% + 0px);
+        margin-left: 0px;
+        margin-top: -30px;
+    }
+    .text-unlock {
+        display: none;
+    }
+    .block-testimonials .testimonials-left::before {
+        display: none;
+    }
+    .popup-firstload .popup-container .popup-content {
+        flex-wrap: wrap;
+    }
+    .popup-firstload .popup-container .popup-left {
+        padding-left: 22px;
+        width: 100%;
+    }
+    .popup-firstload .popup-container .popup-right {
+        width: 100%;
+        text-align: center;
+        img {
+            max-height: 250px;
+        }
+    }
+    .slider-thumnail {
+        display: none;
+    }
+    .banner-main .banner-image .container {
+        padding-right: 0px;
+        padding-top: 30px;
+    }
+    .banner-image {
+        height: auto;
+        min-height: 669px;
+    }
+    .box-search-advance .box-top-search {
+        flex-wrap: wrap;
+    }
+    .left-top-search {
+        margin-bottom: 20px;
+    }
+    .box-search-advance .box-bottom-search .btn-black-lg {
+        width: 100%;
+        justify-content: center;
+    }
+    .card-journey-small {
+        max-width: 100%;
+    }
+    .box-flights-type-2 .card-flight .card-image {
+        max-width: 100%;
+    }
+    .image-bottom-how {
+        display: flex;
+    }
+    .image-bottom-how img {
+        width: 47%;
+    }
+    .box-testimonials-3::before {
+        right: 0px;
+        top: 10px;
+    }
+    .img-phone {
+        max-width: 180px;
+        left: -30px;
+    }
+    .block-install-apps {
+        padding: 30px 10px 0px 10px;
+    }
+    .box-banner-home4 .box-image-banner-home4 .shape-phone {
+        right: 10px;
+    }
+    .box-image-3-col .img-col img {
+        border-radius: 32px;
+    }
+    .card-popular.card-top-destination .card-image {
+        width: 60px;
+        min-width: 60px;
+        height: 60px;
+        margin-right: 10px;
+        img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+        }
+    }
+    .box-img-test-1, .box-img-test-2, .box-img-test-3, .box-img-test-4 {
+        display: none;
+    }
+    .box-title-bestsell {
+        background-image: none;
+        padding-right: 0px;
+    }
+    .box-how-it-work-inner {
+        padding: 30px 30px 0px 30px;
+    }
+    .list-steps-2-col li {
+        width: 100%;
+    }
+    .box-view-type, .box-item-sort {
+        justify-content: center;
+    }
+    .box-banner-2-col {
+        flex-wrap: wrap;
+        .banner-destination-left {
+            width: 100%;
+        }
+        .banner-destination-right {
+            position: relative;
+            top: auto;
+            right: auto;
+            bottom: 0px;
+            width: 100%;
+        }
+    }
+    .map-main {
+        height: 500px;
+    }
+    .block-banner-destination .box-swiper .swiper-button-prev-style-1 {
+        left: 14px;
+    }
+    .block-banner-destination .box-swiper .swiper-button-next-style-1 {
+        right: 14px;
+    }
+    .destination-banner-1, .destination-banner-2, .destination-banner-3, .destination-banner-4, .destination-banner-5, .destination-banner-6, .destination-banner-7 {
+        height: auto;
+    }
+    .banner-detail-1, .banner-detail-2, .banner-detail-4, .banner-detail-5, .banner-detail-6, .banner-detail-3 {
+        height: auto;
+    }
+    .box-info-tour {
+        flex-wrap: wrap;
+        padding-bottom: 1px;
+        .tour-info-group {
+            width: 50%;
+            margin-bottom: 15px;
+        }
+    }
+    .tour-metas {
+        flex-wrap: wrap;
+    }
+    .head-reviews {
+        flex-wrap: wrap;
+        justify-content: center;
+        .review-left {
+            margin-right: 0px;
+            margin-bottom: 24px;
+        }
+        .review-right {
+            margin-bottom: 24px;
+        }
+    }
+    .list-reviews .item-review {
+        .head-review {
+            flex-wrap: wrap;
+        }
+        .rate-review, .author-review {
+            margin-bottom: 15px;
+        }
+    }
+    .group-collapse-expand {
+        padding: 20px 20px 12px 20px;
+    }
+    .box-banner-tour-detail-2 .box-banner-tour-detail-2-inner .banner-image {
+        min-height: 300px;
+    }
+    .top-bar .text-header {
+        display: none;
+    }
+    .top-bar {
+        display: none;
+    }
+    .item-room-feature {
+        max-width: 29.28%;
+    }
+    .box-banner-room {
+        padding: 0px 10px 30px 10px;
+    }
+    .box-grid-hotels .card-flight .card-image {
+        max-width: 100%;
+    }
+    .box-grid-hotels .card-flight .card-info {
+        height: auto;
+    }
+    .card-flight.card-hotel .card-info .card-hotel-2-col {
+        flex-wrap: wrap;
+        .card-program {
+            width: 100%;
+            margin-bottom: 35px;
+        }
+        .card-hotel-price {
+            max-width: 100%;
+            min-width: auto;
+            width: 100%;
+        }
+    }
+    .text-86-bold {
+        font-size: 66px;
+        line-height: 76px;
+    }
+    .text-64-medium {
+        font-size: 44px;
+        line-height: 56px;
+    }
+    .box-video-comming .box-banner-abs {
+        bottom: -50px;
+        right: -10px;
+        max-width: 250px;
+    }
+    .box-video-comming {
+        margin-bottom: 90px;
+    }
+    .box-content-tickets-detail {
+        padding: 15px 10px 15px 10px;
+    }
+    .btn-logo {
+        padding: 15px 15px;
+        bottom: 4px;
+        left: 4px;
+    }
+    .container-banner-activities .box-button-abs-right {
+        justify-content: center;
+    }
+    .box-button-abs {
+        display: none !important;
+    }
+}
+@include media-breakpoint-down(sm) {
+    //max-width: 575.98px
+    .footer-1, .footer-2, .footer-3, .footer-4, .footer-5 {
+        width: 100%;
+    }
+    .header .main-header .header-right {
+        min-width: 150px;
+        .btn-green-linear {
+            display: none;
+        }
+    }
+    .burger-icon {
+        top: 0px;
+    }
+    .box-grid-hotels .card-flight .card-facilities .list-tick-green li {
+        width: 50%;
+    }
+    .sticky-bar.stick .burger-icon {
+        top: 0px;
+    }
+    .card-journey-small {
+        max-width: 100%;
+    }
+    .header .container-fluid {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    h1, .heading-1 {
+        font-size: 54px;
+        line-height: 66px;
+    }
+    h2, .heading-2 {
+        font-size: 42px;
+        line-height: 60px;
+    }
+    .title-popup {
+        font-size: 30px;
+        line-height: 44px;
+    }
+    .logo-area {
+        padding: 21px 21px 21px 22px;
+        margin-left: -22px;
+    }
+    .button-area {
+        padding: 20px 27px;
+    }
+    .payment-method {
+        .btn {
+            min-width: 100%;
+        }
+    }
+    .box-search-advance .box-bottom-search .item-search {
+        width: 100%;
+        border-bottom: 1px solid var(--bs-border-color);
+        padding-bottom: 10px;
+        &:last-child {
+            border-bottom: 0px;
+            padding-bottom: 0px;
+        }
+    }
+    .dark .box-search-advance .box-bottom-search .item-search {
+        border-color: $border-dark;
+    }
+    .dark .box-search-advance .box-bottom-search .item-search::before {
+        display: none;
+    }
+    .box-list-numbers .item-numbers {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        h2 {
+            font-size: 32px;
+            line-height: 48px;
+        }
+    }
+    .box-search-advance-2 .box-bottom-search .item-search {
+        width: 100%;
+        &:last-child {
+            width: 100%;
+            .btn {
+                width: auto;
+            }
+        }
+    }
+    .item-banner-box .item-banner-box-inner {
+        padding: 30px;
+    }
+    .dot-payment {
+        top: -15px;
+        right: -10px;
+    }
+    .box-search-advance .box-bottom-search .item-search::before {
+        display: none;
+    }
+    .container-footer {
+        padding: 2px 20px 0px 20px;
+    }
+    .box-slide-banner .swiper-button-prev-style-1, .box-slide-banner .swiper-button-next-style-1 {
+        display: none;
+    }
+    .box-images-apps {
+        padding-bottom: 20px;
+    }
+    .review-payment {
+        bottom: -70px;
+        left: -30px;
+        max-width: 290px;
+    }
+    .img-sm-payment {
+        left: 260px;
+    }
+    .box-swiper-padding.container-slider {
+        padding-right: 15px;
+    }
+    .box-swiper-padding .card-news {
+        max-width: 100%;
+    }
+    .btn.btn-border-1 svg {
+        height: 18px;
+        margin-right: 8px;
+    }
+    .box-left-payment-destination .box-button-faq .btn, .box-buttons-destination .box-button-faq .btn {
+        padding: 8px;
+        font-size: 14px;
+        margin-right: 12px;
+        margin-bottom: 12px;
+    }
+    .item-room-feature {
+        max-width: 45%;
+    }
+    .box-commingsoon-1 {
+        padding: 30px 30px 30px 20px;
+    }
+    .box-countdown-comming .box-count .deals-countdown .countdown-section .countdown-amount {
+        width: 70px;
+        height: 82px;
+        font-size: 32px;
+        line-height: 82px;
+    }
+    .banne-activities-3 {
+        flex-wrap: wrap;
+    }
+    .banne-activities-3 .banner-col-1, .banne-activities-3 .banner-col-2, .banne-activities-3 .banner-col-3 {
+        width: 100%;
+    }
+}
+@include media-breakpoint-down(xs) {
+    .download-apps {
+        img {
+            max-height: 44px;
+        }
+    }
+    .box-list-quicklinks .item-quicklinks {
+        width: 100%;
+    }
+    .sidebar-canvas-wrapper .sidebar-canvas-container .sidebar-canvas-content {
+        padding: 18px;
+    }
+    .mobile-header-wrapper-style .mobile-header-wrapper-inner .mobile-header-top {
+        padding: 15px 15px 13px 15px;
+    }
+    .mobile-header-wrapper-style .mobile-header-wrapper-inner .mobile-header-content-area {
+        padding: 15px;
+    }
+    h1, .heading-1 {
+        font-size: 44px;
+        line-height: 56px;
+    }
+    .banner-main h1 {
+        font-size: 40px;
+        line-height: 50px;
+    }
+    .box-banner-home4 .box-image-banner-home4 .shape-phone {
+        bottom: 5%;
+    }
+    .block-banner-home5 {
+        padding-bottom: 300px;
+    }
+    .list-numbers {
+        flex-wrap: wrap;
+    }
+    .list-numbers .item-number {
+        width: 50%;
+    }
+    .list-check-2-col {
+        flex-wrap: wrap;
+        li {
+            width: 100%;
+        }
+    }
+    .card-grid-video .card-info {
+        bottom: 20px;
+    }
+    .card-grid-video .card-image .btn-play {
+        margin-top: 20%;
+    }
+    .card-grid-video .card-info h4 {
+        font-size: 25px;
+        line-height: 35px;
+    }
+    .list-videos-small .item-video-small .item-info .heading-6 {
+        font-size: 16px;
+        line-height: 23px;
+    }
+    .list-videos-small .item-video-small .item-image {
+        width: 108px;
+        min-width: 108px;
+        margin-right: 15px;
+    }
+    .accordion-collapse .accordion-body {
+        padding-left: 76px;
+        padding-right: 20px;
+        margin-bottom: 28px;
+    }
+    .accordion-button h3 {
+        font-size: 30px;
+        line-height: 40px;
+        padding: 0px 15px;
+        min-width: 76px;
+    }
+    .accordion-button::after {
+        right: 18px;
+    }
+    .accordion-button {
+        padding-right: 60px;
+    }
+    .box-swiper-home7 {
+        padding: 0px;
+        .swiper-button-prev-style-1, .swiper-button-next-style-1 {
+            display: none;
+        }
+    }
+    .box-swiper-home7 .swiper-group-journey {
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+    .box-list-flights .item-flight .flight-route {
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-bottom: 0px;
+    }
+    .box-list-flights .item-flight .flight-price, .box-list-flights .item-flight .flight-name {
+        justify-content: center;
+        margin-bottom: 20px;
+        width: 100%;
+    }
+    .box-list-flights .item-flight .flight-route .flight-route-icon {
+        margin-bottom: 15px;
+    }
+    .flight-button {
+        width: 100%;
+        text-align: center;
+    }
+    .card-journey-grid-3 .card-info .card-program .endtime .card-prices {
+        justify-content: space-between;
+        width: 100%;
+    }
+    .card-journey-grid-3 .card-info .card-program .endtime .card-rating {
+        margin-bottom: 15px;
+    }
+    .card-journey-small .card-info .card-program .endtime {
+        flex-wrap: wrap;
+    }
+    .map-main {
+        height: 400px;
+    }
+    .box-hotel-facilities-list {
+        .list-numbers .item-number {
+            width: 33.33%;
+            margin-bottom: 25px;
+        }
+    }
+    .list-flight-facilities li {
+        width: 100%;
+    }
+    .box-timeline .item-timeline {
+        padding-left: 65px;
+    }
+    .item-info-flight {
+        padding: 20px;
+    }
+    .box-telephone-booking {
+        flex-wrap: wrap;
+        .box-tel-left {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+    }
+    .box-list-flights-2 .item-flight .flight-route.flight-route-type-2 {
+        .flight-route-1, .flight-route-2 {
+            flex-wrap: wrap;
+        }
+    }
+    .box-list-flights-2 .item-flight .flight-route .flight-route-icon {
+        margin: auto auto 15px auto;
+    }
+    .datepicker table tr td, .datepicker table tr th {
+        padding: 8px 12px;
+    }
+}
+@include media-breakpoint-down(xxs) {
+    .card-flight .card-info {
+        padding: 16px 12px;
+     }
+    .card-news .card-info {
+        padding: 25px;
+    }
+    .block-subscriber .subscriber-left {
+        padding: 20px 15px;
+    }
+    .card-news .card-info .card-meta {
+        .post-date, .post-time {
+            padding-right: 10px;
+        }
+    }
+    .box-list-numbers .item-numbers {
+        width: 100%;
+        &::before {
+            display: none;
+        }
+    }
+    .card-testimonial {
+        max-width: 380px;
+    }
+    .img-phone {
+        max-width: 120px;
+    }
+    .download-apps {
+        display: flex;
+        align-items: center;
+    }
+    .card-banner-slide .card-info {
+        right: 10px;
+    }
+    .card-banner-slide.card-banner-slide-2 .card-info, .card-banner-slide.card-banner-slide-3 .card-info {
+        left: 10px;
+    }
+    .card-journey-small .card-info {
+        padding: 33px 10px;
+    }
+    .img-sm-payment {
+        bottom: -50px;
+        left: 180px;
+        max-width: 120px;
+    }
+    .review-payment {
+        bottom: -60px;
+        left: -20px;
+        max-width: 200px;
+    }
+    .box-buttons-banner {
+        flex-wrap: wrap;
+    }
+    h3, .heading-3 {
+        font-size: 34px;
+        line-height: 48px;
+    }
+    .popup-signin .popup-container .popup-content {
+        padding: 29px 15px;
+    }
+    .btn.btn-google img {
+        margin-right: 5px;
+        margin-left: 0px;
+    }
+    .btn.btn-login {
+        padding-left: 9px;
+        padding-right: 9px;
+    }
+    .item-review-progress, .group-collapse-expand .item-review-progress {
+        flex-wrap: wrap;
+        .text-rv-progress {
+            width: 100%;
+        }   
+        .bar-rv-progress {
+            width: calc(100% - 42px);
+        }
+        .text-avarage {
+            min-width: 42px;
+        }
+    }
+    .item-room-feature {
+        max-width: 100%;
+    }
+    .box-countdown-comming .box-count .deals-countdown .countdown-section .countdown-amount {
+        width: 60px;
+        height: 72px;
+        font-size: 28px;
+        line-height: 72px;
+    }
+    .box-countdown-comming .box-count .deals-countdown .countdown-section .countdown-period {
+        font-size: 18px;
+        line-height: 28px;
+    }
+    .box-button-top-right {
+        top: 10px;
+        right: 10px;
+        .btn {
+            margin-left: 5px;
+        }
+    }
+    h4, .heading-4 {
+        font-size: 24px;
+        line-height: 34px;
+    }
+    .box-banner-activities-detail-4 .container-banner-activities .box-button-abs-right .btn-brand-secondary {
+        bottom: 0px;
+        right: 5px;
+    }
+    .block-banner-property-detail .banner-property-detail-1 .box-button-abs {
+        flex-wrap: wrap;
+    }
+}
+@include media-breakpoint-down(xxxs) {
+    .card-news .card-info {
+        padding: 15px 15px;
+    }
+    .box-footer-col-3 .footer-col-1, .box-footer-col-3 .footer-col-2, .box-footer-col-3 .footer-col-3 {
+        padding: 15px;
+    }
+    .card-grid-video .card-image .btn-play {
+        margin-top: 10%;
+    }
+    .item-sort > span {
+        display: none;
+    }
+    .box-info-tour {
+        .tour-info-group {
+            width: 100%;
+        }
+    }
+    .box-grid-hotels .card-flight .card-facilities .list-tick-green li {
+        width: 100%;
+    }
+    .card-flight.card-hotel .card-info .card-program .endtime {
+        flex-wrap: wrap;
+        .card-price {
+            width: 100%;
+            margin-bottom: 15px;
+        }
+    }
+}
+@include media-breakpoint-down(xxxxs) {
+    .box-numbers .item-number {
+        width: 100%;
+    }
+    .box-buttons-feature-4 .btn-black {
+        margin-bottom: 15px;
+    }
+    .box-buttons-feature-4 .btn.btn-learmore-2 {
+        margin-bottom: 15px;
+    }
+}
+@include media-breakpoint-up(xxl) {
+    //min-width: 1400px
+    .container.wide {
+        max-width: 1544px;
+    }
+    .w-lg-75{
+        max-width: 75%;
+    }
+}
+/*OTHER SCREEN*/
+@media screen and (min-width: 1200px) and (max-width: 1440px) {
+    .header-right {
+        display: none;
+    }
+}
+@media screen and (min-width: 1400px) and (max-width: 1610px) {
+    .header .container-fluid {
+        max-width: 100%;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    .header .main-menu li a {
+        padding: 20px 14px 20px 8px;
+    }
+    .btn.btn-mode {
+        padding: 11px 11px;
+    }
+}
+@media screen and (min-width: 1200px) and (max-width: 1399.98px) {
+    .burger-icon {
+        display: block;
+    }
+    .header .nav-main-menu {
+        display: none;
+    }
+    .header .main-header {
+        padding: 10px 0;
+    }
+    .sticky-bar.stick .main-header {
+        padding: 10px 0;
+    }
+}

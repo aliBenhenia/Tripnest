@@ -1,0 +1,187 @@
+.box-become-video {
+    padding: 130px 0px 90px 0px;
+}
+.box-what-offer {
+    padding-bottom: 60px;
+}
+h2 {
+    span {
+        font-weight: 500;
+    }
+}
+.box-banner-faq {
+    .row {
+        margin: 0px -6px;
+        .col-lg-7 {
+            padding: 0px 6px;
+            width: 56%;
+        }
+        .col-lg-5 {
+            padding: 0px 6px;
+            width: 44%;
+        }
+    }
+}
+.banner-faq {
+    margin-bottom: 12px;
+    img {
+        display: block;
+        width: 100%;
+        border-radius: 16px;
+    }
+}
+.box-mw-824 {
+    max-width: 824px;
+    margin: auto;
+}
+.box-detail-info {
+    p {
+        font-size: 16px;
+        line-height: 26px;
+        color: var(--bs-neutral-700);
+        margin-bottom: 24px;
+    }
+    h6 {
+        margin-bottom: 24px;
+        color: var(--bs-neutral-1000);
+    }
+}
+.box-countdown-comming {
+    .box-count .deals-countdown .countdown-section {
+        margin-right: 12px;
+        .countdown-amount {
+            width: 90px;
+            height: 102px;
+            font-size: 42px;
+            line-height: 102px;
+        }
+        .countdown-period {
+            font-size: 24px;
+            line-height: 39px;
+        }
+    }
+}
+.box-commingsoon-1 {
+    padding: 70px 10px 40px 70px;
+    border: 1px solid var(--bs-border-color);
+    border-radius: 8px;
+    background-color: var(--bs-background-card);
+}
+.box-video-comming {
+    max-width: 445px;
+    display: inline-block;
+    position: relative;
+    .box-banner-abs {
+        position: absolute;
+        bottom: -120px;
+        right: -60px;
+        z-index: 12;
+    }
+}
+.box-locations {
+    padding-top: 90px;
+    border-top: 1px solid var(--bs-border-color);
+}
+.box-welcome {
+    padding: 90px 0px;
+}
+.box-banner-commingsoon {
+    padding-top: 90px;
+}
+.box-button-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-top: 100px;
+}
+.box-faqs-help {
+    padding: 100px 0px;
+    border-top: 1px solid var(--bs-border-color);
+    .box-faqs-inner {
+        background-image: url(../imgs/page/pages/bg-faq.png);
+        background-repeat: no-repeat;
+        background-position: top right;
+    }
+    .accordion-button {
+        padding: 19px 42px 19px 22px;
+        box-shadow: none;
+        border-radius: 10px;
+        font-size: 18px;
+        line-height: 28px;
+        &:after {
+            background-image: url(../imgs/page/pages/arrow-down.png);
+            width: 22px;
+            height: 22px;
+            top: 50%;
+            right: 18px;
+            position: absolute;
+            z-index: 12;
+            margin-top: -12px;
+            background-color: transparent;
+        }
+        p {
+            font-size: 18px;
+            line-height: 28px;
+        }
+    }
+    .accordion {
+        border: 0px;
+        border-radius: 0px;
+    }
+    .accordion-collapse {
+        background-color: var(--bs-background-card);
+        border-bottom-left-radius: 10px;
+        border-bottom-right-radius: 10px;
+        .accordion-body {
+            padding: 0px;
+            padding-left: 20px;
+            padding-right: 40px;
+            margin-bottom: 28px;
+        }
+    }
+    .accordion-button:not(.collapsed) {
+        background-color: var(--bs-background-card);
+    }
+    .accordion-item {
+        margin-bottom: 8px;
+        border-radius: 8px;
+    }
+    .accordion-item:first-of-type {
+        border-radius: 8px;
+    }
+    .accordion-item:first-of-type .accordion-button {
+        border-top-left-radius: 10px;
+        border-top-right-radius: 10px;
+    }
+    .accordion-item {
+        border: 1px solid var(--bs-border-color) !important;
+    }
+    .accordion-button.collapsed {
+        border-bottom: 0px;
+    }
+}
+.box-location-shop-2 {
+    padding-bottom: 90px;
+}
+.box-contact-form-2 {
+    border-top: 1px solid var(--bs-border-color);
+    position: relative;
+}
+.bg-contact-form-2 {
+    background-image: url(../imgs/page/pages/banner-contact-form.png);
+    background-repeat: no-repeat;
+    background-position: top right;
+    background-size: cover;
+    position:absolute;
+    top: 0px;
+    right: 0px;
+    z-index: 1;
+    height: 100%;
+    width: 100%;
+    max-width: 47%;
+}
+.form-contact {
+    .form-group .cb-remember {
+        margin-top: 3px;
+    }
+}
