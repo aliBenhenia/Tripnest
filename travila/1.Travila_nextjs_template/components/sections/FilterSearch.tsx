@@ -8,19 +8,21 @@ export default function FilterSearch() {
 
 			<section className="section-box box-filter-search background-body">
 				<div className="container">
-					<div className="block-filter-search">
-						<div className="filter-left">
-							<form className="form-search-filter" action="#">
+					<div className="block-filter-search ">
+						<div className="filter-left border border-light"style={{ width: '100%' }}>
+							<form className="form-search-filter"
+							onSubmit={((e)=> e.preventDefault())}
+							>
 								<input className="form-control" type="text" name="key" placeholder="What are you looking for?" />
 							</form>
 						</div>
-						<div className="filter-right">
+						{/* <div className="filter-right">
 							<Link className="category-link btn-click active" href="#">Tours</Link>
 							<Link className="category-link btn-click" href="#">Hotels</Link>
 							<Link className="category-link btn-click" href="#">Tickets</Link>
 							<Link className="category-link btn-click" href="#">Rental</Link>
 							<Link className="category-link btn-click" href="#">Activities</Link>
-						</div>
+						</div> */}
 					</div>
 					<div className="block-dropdown-filter">
 						<div className="left-dropdown-filter">

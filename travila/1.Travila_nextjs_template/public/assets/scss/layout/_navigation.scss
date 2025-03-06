@@ -645,3 +645,45 @@
         }
     }
 }
+
+/* Mobile Bottom Navigation */
+.fixed-bottom {
+    background-color: var(--bs-white);
+    border-top: 1px solid var(--bs-border-color);
+    z-index: 1030;
+
+    .small {
+        font-size: 0.75rem;
+    }
+
+    svg {
+        width: 24px;
+        height: 24px;
+        transition: transform 0.2s ease;
+    }
+
+    a {
+        flex: 1;
+        padding: 0.5rem;
+        transition: color 0.2s ease;
+
+        &:hover {
+            svg {
+                transform: scale(1.1);
+            }
+        }
+
+        &.text-primary {
+            svg {
+                transform: scale(1.1);
+            }
+        }
+    }
+}
+
+/* Add padding to main content on mobile */
+@media (max-width: 767.98px) {
+    .main {
+        padding-bottom: calc(4rem + env(safe-area-inset-bottom)) !important;
+    }
+}
