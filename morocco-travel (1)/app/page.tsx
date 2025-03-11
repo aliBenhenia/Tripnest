@@ -13,7 +13,7 @@ export default function Home() {
       {/* Header */}
       <div className="p-4 pt-6 md:px-8 lg:px-16 flex justify-between items-center">
         <div>
-          <p className="text-gray-500 text-sm md:text-base">Hello, Ellison</p>
+          <p className="text-gray-500 text-sm md:text-base">Hello, aLi</p>
           <h1 className="text-3xl font-bold md:text-4xl">Find deals</h1>
         </div>
         <Avatar className="h-10 w-10 md:h-12 md:w-12">
