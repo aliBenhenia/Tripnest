@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { ArrowLeft, ChevronLeft, ChevronRight, Maximize2 ,MapPin} from "lucide-react"
+import { ArrowLeft, ChevronLeft, ChevronRight, Maximize2 ,MapPin,Star} from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { categories } from "@/lib/data"
@@ -189,7 +189,74 @@ export default function ClientCityPage({ city, activities }: ClientCityPageProps
           ))}
         </div>
       </div>
-
+      {/* Hotel Card 1 */}
+      <div className="m-5 gap-3">
+        <h1 className="text-2xl font-bold mb-3">recomnended</h1>
+      <div className="bg-white rounded-xl overflow-hidden mb-4 shadow">
+          <div className="relative">
+            <Image
+              src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/01/81/aa/d8/essaouira-harbour.jpg?w=1400&h=500&s=1"
+              alt="Hotel room"
+              width={400}
+              height={200}
+              className="w-full h-[200px] object-cover"
+            />
+          </div>
+          <div className="p-4">
+            <div className="flex justify-between">
+              <div>
+                <h3 className="text-xl font-bold">Hôtel Mercure Paris Centre Tour Eiffel</h3>
+                <div className="flex items-center mt-1">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <Star key={star} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+                  ))}
+                  <span className="text-gray-500 ml-1">(5.0)</span>
+                </div>
+                <div className="flex items-center text-gray-500 mt-1">
+                  <MapPin className="w-4 h-4 mr-1" />
+                  <span>Paris</span>
+                </div>
+              </div>
+              <div className="text-right">
+                <span className="text-3xl font-bold text-teal-500">$70</span>
+                <p className="text-gray-500">per night</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      <div className="bg-white rounded-xl overflow-hidden mb-4 shadow">
+          <div className="relative">
+            <Image
+              src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/01/81/aa/d8/essaouira-harbour.jpg?w=1400&h=500&s=1"
+              alt="Hotel room"
+              width={400}
+              height={200}
+              className="w-full h-[200px] object-cover"
+            />
+          </div>
+          <div className="p-4">
+            <div className="flex justify-between">
+              <div>
+                <h3 className="text-xl font-bold">Hôtel Mercure Paris Centre Tour Eiffel</h3>
+                <div className="flex items-center mt-1">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <Star key={star} className="w-5 h-5 fill-yellow-400 text-yellow-400" />
+                  ))}
+                  <span className="text-gray-500 ml-1">(5.0)</span>
+                </div>
+                <div className="flex items-center text-gray-500 mt-1">
+                  <MapPin className="w-4 h-4 mr-1" />
+                  <span>Paris</span>
+                </div>
+              </div>
+              <div className="text-right">
+                <span className="text-3xl font-bold text-teal-500">$70</span>
+                <p className="text-gray-500">per night</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
       {/* Bottom Navigation */}
       <BottomNavigation />
     </div>
