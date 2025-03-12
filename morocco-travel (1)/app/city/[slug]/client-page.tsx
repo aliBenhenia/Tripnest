@@ -205,7 +205,7 @@ export default function ClientCityPage({ city }: ClientCityPageProps) {
 
       {/* Top Destinations */}
       <div className="px-4 mt-6 md:px-8 lg:px-16 md:mt-12 md:max-w-5xl md:mx-auto">
-        <h2 className="text-2xl font-bold md:text-3xl">Top Destination</h2>
+        <h2 className="text-2xl font-bold md:text-3xl">Top Destination </h2>
 
         {/* Mobile scrolling view */}
         <div className="relative mt-4 md:hidden">
