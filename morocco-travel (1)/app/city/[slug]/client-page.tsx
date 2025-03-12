@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { ArrowLeft, ChevronLeft, ChevronRight, Maximize2 } from "lucide-react"
+import { ArrowLeft, ChevronLeft, ChevronRight, Maximize2 ,MapPin} from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { categories } from "@/lib/data"
@@ -135,8 +135,8 @@ export default function ClientCityPage({ city, activities }: ClientCityPageProps
 
         {/* Mobile scrolling view */}
         <div className="relative mt-4 md:hidden">
-          <div className="absolute left-0 top-1/2 -translate-y-1/2 z-10 h-8 w-8 bg-gradient-to-r from-white to-transparent pointer-events-none"></div>
-          <div className="absolute right-0 top-1/2 -translate-y-1/2 z-10 h-8 w-8 bg-gradient-to-l from-white to-transparent pointer-events-none"></div>
+          {/* <div className="absolute left-0 top-1/2 -translate-y-1/2 z-10 h-8 w-8 bg-gradient-to-r from-white to-transparent pointer-events-none"></div>
+          <div className="absolute right-0 top-1/2 -translate-y-1/2 z-10 h-8 w-8 bg-gradient-to-l from-white to-transparent pointer-events-none"></div> */}
 
           <div className="overflow-x-auto flex gap-3 pb-2 scrollbar-hide scroll-smooth">
             {activities.slice(0, 8).map((activity) => (
@@ -154,7 +154,14 @@ export default function ClientCityPage({ city, activities }: ClientCityPageProps
                 </div>
                 <div className="p-3">
                   <h3 className="font-medium text-sm">{activity.name}</h3>
-                  <p className="text-xs text-gray-500 mt-1">{activity.type}</p>
+                  <p className="text-xs text-gray-500 mt-1">
+                    <MapPin className="inline w-4 h-4 mr-1" /> 
+                    {activity.type}
+                    </p>
+                  <div className="flex items-center mt-1">
+                    <span className="text-yellow-500">★</span>
+                    <span className="text-sm ml-1">4.8</span>
+                  </div>
                 </div>
               </div>
             ))}

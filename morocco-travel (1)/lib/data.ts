@@ -124,19 +124,19 @@ export const cityActivities: Record<number, Array<{ id: number; name: string; ty
       id: 101,
       name: "Jardin Majorelle",
       type: "Sightseeing",
-      imageUrl: "/placeholder.svg?height=200&width=300&text=Jardin+Majorelle",
+      imageUrl: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/01/81/aa/d8/essaouira-harbour.jpg?w=1400&h=500&s=1",
     },
     {
       id: 102,
       name: "Bahia Palace",
       type: "Historical",
-      imageUrl: "/placeholder.svg?height=200&width=300&text=Bahia+Palace",
+      imageUrl: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/01/81/aa/d8/essaouira-harbour.jpg?w=1400&h=500&s=1",
     },
     {
       id: 103,
       name: "Medina Souks",
       type: "Shopping",
-      imageUrl: "/placeholder.svg?height=200&width=300&text=Medina+Souks",
+      imageUrl: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/01/81/aa/d8/essaouira-harbour.jpg?w=1400&h=500&s=1",
     },
     {
       id: 104,
