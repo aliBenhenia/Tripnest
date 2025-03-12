@@ -167,39 +167,79 @@ export default function ClientCityPage({ city }: ClientCityPageProps) {
             <p className="text-gray-500 text-lg">No activities found for this category in {city.name}</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
-            {filteredActivities.map((activity) => (
-              <div 
-                key={activity.id}
-                className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-200"
-              >
-                <div className="relative h-48">
-                  <Image
-                    src={activity.imageUrl}
-                    alt={activity.name}
-                    fill
-                    className="object-cover"
-                  />
-                  <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full">
-                    <span className="text-sm font-medium text-gray-800">{activity.type}</span>
-                  </div>
-                </div>
-                <div className="p-4">
-                  <h3 className="font-semibold text-lg mb-2">{activity.name}</h3>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center text-gray-600">
-                      <MapPin className="w-4 h-4 mr-1" />
-                      <span className="text-sm">{city.name}</span>
+          <>
+            {/* Mobile scrolling view */}
+            <div className="relative mt-4 md:hidden">
+              <div className="overflow-x-auto flex gap-3 pb-2 scrollbar-hide scroll-smooth">
+                {filteredActivities.map((activity) => (
+                  <div 
+                    key={activity.id}
+                    className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-200 flex-shrink-0 w-[280px] scroll-ml-4"
+                  >
+                    <div className="relative h-48">
+                      <Image
+                        src={activity.imageUrl}
+                        alt={activity.name}
+                        fill
+                        className="object-cover"
+                      />
+                      <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full">
+                        <span className="text-sm font-medium text-gray-800">{activity.type}</span>
+                      </div>
                     </div>
-                    <div className="flex items-center">
-                      <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                      <span className="ml-1 text-sm">4.8</span>
+                    <div className="p-4">
+                      <h3 className="font-semibold text-lg mb-2">{activity.name}</h3>
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center text-gray-600">
+                          <MapPin className="w-4 h-4 mr-1" />
+                          <span className="text-sm">{city.name}</span>
+                        </div>
+                        <div className="flex items-center">
+                          <Star className="w-4 h-4 text-yellow-400 fill-current" />
+                          <span className="ml-1 text-sm">4.8</span>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
+                ))}
               </div>
-            ))}
-          </div>
+            </div>
+
+            {/* Desktop grid view */}
+            <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+              {filteredActivities.map((activity) => (
+                <div 
+                  key={activity.id}
+                  className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-200"
+                >
+                  <div className="relative h-48">
+                    <Image
+                      src={activity.imageUrl}
+                      alt={activity.name}
+                      fill
+                      className="object-cover"
+                    />
+                    <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full">
+                      <span className="text-sm font-medium text-gray-800">{activity.type}</span>
+                    </div>
+                  </div>
+                  <div className="p-4">
+                    <h3 className="font-semibold text-lg mb-2">{activity.name}</h3>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center text-gray-600">
+                        <MapPin className="w-4 h-4 mr-1" />
+                        <span className="text-sm">{city.name}</span>
+                      </div>
+                      <div className="flex items-center">
+                        <Star className="w-4 h-4 text-yellow-400 fill-current" />
+                        <span className="ml-1 text-sm">4.8</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </>
         )}
       </div>
 
