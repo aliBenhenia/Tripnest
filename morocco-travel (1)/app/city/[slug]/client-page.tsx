@@ -4,7 +4,7 @@ import { useState } from "react"
 import { ArrowLeft, ChevronLeft, ChevronRight, Maximize2 ,MapPin,Star} from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
-import { categories } from "@/lib/data"
+import { categories, cityActivities } from "@/lib/data"
 import BottomNavigation from "@/components/bottom-navigation"
 
 interface ClientCityPageProps {
@@ -16,16 +16,23 @@ interface ClientCityPageProps {
     imageUrl2: string
     description: string
   }
-  activities: Array<{
-    id: number
-    name: string
-    type: string
-    imageUrl: string
-  }>
 }
 
-export default function ClientCityPage({ city, activities }: ClientCityPageProps) {
+export default function ClientCityPage({ city }: ClientCityPageProps) {
   const [currentSlide, setCurrentSlide] = useState(0)
+  const [selectedCategory, setSelectedCategory] = useState("all")
+
+  const handleCategoryClick = (categoryType: string) => {
+    setSelectedCategory(categoryType)
+  }
+
+  // Get activities for the current city
+  const cityActivitiesList = cityActivities[city.id] || []
+  
+  // Filter activities based on selected category
+  const filteredActivities = cityActivitiesList.filter(activity => 
+    selectedCategory === "all" ? true : activity.type.toLowerCase() === selectedCategory.toLowerCase()
+  )
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev === 1 ? 0 : prev + 1))
@@ -104,29 +111,96 @@ export default function ClientCityPage({ city, activities }: ClientCityPageProps
 
       {/* Categories */}
       <div className="px-4 mt-4 md:px-8 lg:px-16 md:mt-8 md:max-w-5xl md:mx-auto">
-        <h2 className="text-2xl font-bold md:text-3xl">Category</h2>
+        <h2 className="text-2xl font-bold md:text-3xl">Explore {city.name}</h2>
         <div className="relative mt-4">
-          {/* Scroll indicators for mobile */}
-          <div className="absolute left-0 top-1/2 -translate-y-1/2 z-10 h-8 w-8 bg-gradient-to-r from-white to-transparent pointer-events-none md:hidden"></div>
-          <div className="absolute right-0 top-1/2 -translate-y-1/2 z-10 h-8 w-8 bg-gradient-to-l from-white to-transparent pointer-events-none md:hidden"></div>
-
           <div className="overflow-x-auto flex gap-6 md:justify-start md:gap-16 md:mt-6 pb-2 scrollbar-hide scroll-smooth">
             {categories.map((category) => (
-              <div key={category.id} className="flex flex-col items-center flex-shrink-0 scroll-ml-4">
-                <div className="w-16 h-16 md:w-20 md:h-20 flex items-center justify-center">
+              <div
+                key={category.id}
+                onClick={() => handleCategoryClick(category.name.toLowerCase())}
+                className={`flex flex-col items-center flex-shrink-0 scroll-ml-4 cursor-pointer transition-all duration-200 ${
+                  selectedCategory === category.name.toLowerCase()
+                    ? 'scale-110' 
+                    : 'hover:scale-105'
+                }`}
+              >
+                <div className={`w-16 h-16 md:w-20 md:h-20 flex items-center justify-center rounded-full ${
+                  selectedCategory === category.name.toLowerCase()
+                    ? 'bg-blue-100 shadow-md' 
+                    : 'bg-gray-50'
+                }`}>
                   <Image
                     src={category.icon || "/placeholder.svg"}
                     alt={category.name}
                     width={40}
                     height={40}
-                    className="md:w-12 md:h-12"
+                    className={`md:w-12 md:h-12 transition-all ${
+                      selectedCategory === category.name.toLowerCase()
+                        ? 'text-blue-600' 
+                        : ''
+                    }`}
                   />
                 </div>
-                <span className="text-sm mt-1 md:text-base md:font-medium">{category.name}</span>
+                <span className={`text-sm mt-1 md:text-base md:font-medium ${
+                  selectedCategory === category.name.toLowerCase()
+                    ? 'text-blue-600 font-semibold' 
+                    : ''
+                }`}>
+                  {category.name}
+                </span>
               </div>
             ))}
           </div>
         </div>
+      </div>
+
+      {/* Activities Section */}
+      <div className="px-4 mt-6 md:px-8 lg:px-16 md:mt-12 md:max-w-5xl md:mx-auto">
+        <h2 className="text-2xl font-bold md:text-3xl">
+          {selectedCategory === 'all' 
+            ? `Popular Activities in ${city.name}` 
+            : `${categories.find(c => c.name.toLowerCase() === selectedCategory)?.name} Activities`}
+        </h2>
+
+        {filteredActivities.length === 0 ? (
+          <div className="text-center py-12">
+            <p className="text-gray-500 text-lg">No activities found for this category in {city.name}</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+            {filteredActivities.map((activity) => (
+              <div 
+                key={activity.id}
+                className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-200"
+              >
+                <div className="relative h-48">
+                  <Image
+                    src={activity.imageUrl}
+                    alt={activity.name}
+                    fill
+                    className="object-cover"
+                  />
+                  <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm px-3 py-1 rounded-full">
+                    <span className="text-sm font-medium text-gray-800">{activity.type}</span>
+                  </div>
+                </div>
+                <div className="p-4">
+                  <h3 className="font-semibold text-lg mb-2">{activity.name}</h3>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center text-gray-600">
+                      <MapPin className="w-4 h-4 mr-1" />
+                      <span className="text-sm">{city.name}</span>
+                    </div>
+                    <div className="flex items-center">
+                      <Star className="w-4 h-4 text-yellow-400 fill-current" />
+                      <span className="ml-1 text-sm">4.8</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Top Destinations */}
@@ -139,7 +213,7 @@ export default function ClientCityPage({ city, activities }: ClientCityPageProps
           <div className="absolute right-0 top-1/2 -translate-y-1/2 z-10 h-8 w-8 bg-gradient-to-l from-white to-transparent pointer-events-none"></div> */}
 
           <div className="overflow-x-auto flex gap-3 pb-2 scrollbar-hide scroll-smooth">
-            {activities.slice(0, 8).map((activity) => (
+            {cityActivitiesList.slice(0, 8).map((activity) => (
               <div
                 key={activity.id}
                 className="rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow flex-shrink-0 w-[260px] scroll-ml-4"
@@ -170,7 +244,7 @@ export default function ClientCityPage({ city, activities }: ClientCityPageProps
 
         {/* Desktop grid view */}
         <div className="hidden md:grid md:grid-cols-3 lg:grid-cols-4 md:gap-6 md:mt-6">
-          {activities.slice(0, 8).map((activity) => (
+          {cityActivitiesList.slice(0, 8).map((activity) => (
             <div key={activity.id} className="rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
               <div className="relative h-[160px]">
                 <Image

@@ -120,125 +120,225 @@ export const categories = [
 export const cityActivities: Record<number, Array<{ id: number; name: string; type: string; imageUrl: string }>> = {
   // Marrakech Activities
   1: [
+    // Beach Activities
     {
       id: 101,
-      name: "Jardin Majorelle",
-      type: "Sightseeing",
-      imageUrl: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/01/81/aa/d8/essaouira-harbour.jpg?w=1400&h=500&s=1",
+      name: "Ouzoud Waterfalls",
+      type: "beach",
+      imageUrl: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e",
     },
     {
       id: 102,
-      name: "Bahia Palace",
-      type: "Historical",
-      imageUrl: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/01/81/aa/d8/essaouira-harbour.jpg?w=1400&h=500&s=1",
+      name: "Ourika Valley River",
+      type: "beach",
+      imageUrl: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e",
     },
+    // Photography Activities
     {
       id: 103,
-      name: "Medina Souks",
-      type: "Shopping",
-      imageUrl: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/01/81/aa/d8/essaouira-harbour.jpg?w=1400&h=500&s=1",
+      name: "Majorelle Garden",
+      type: "photography",
+      imageUrl: "https://images.unsplash.com/photo-1529139574466-a303027c1d8b",
     },
     {
       id: 104,
-      name: "Hammam Experience",
-      type: "Wellness",
-      imageUrl: "/placeholder.svg?height=200&width=300&text=Hammam",
+      name: "Medina Street Photography",
+      type: "photography",
+      imageUrl: "https://images.unsplash.com/photo-1529139574466-a303027c1d8b",
     },
+    // Tour Activities
     {
       id: 105,
-      name: "Tagine Cooking Class",
-      type: "Food & Drink",
-      imageUrl: "/placeholder.svg?height=200&width=300&text=Cooking+Class",
+      name: "Atlas Mountains Tour",
+      type: "tour",
+      imageUrl: "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0",
     },
     {
       id: 106,
-      name: "Camel Riding",
-      type: "Adventure",
-      imageUrl: "/placeholder.svg?height=200&width=300&text=Camel+Riding",
+      name: "Desert Safari Tour",
+      type: "tour",
+      imageUrl: "https://images.unsplash.com/photo-1548234979-f5f8e1f5c221",
+    },
+    // Travel Activities
+    {
+      id: 107,
+      name: "Camel Trekking",
+      type: "travel",
+      imageUrl: "https://images.unsplash.com/photo-1548013146-72479768bada",
+    },
+    {
+      id: 108,
+      name: "Hot Air Balloon",
+      type: "travel",
+      imageUrl: "https://images.unsplash.com/photo-1548013146-72479768bada",
     },
   ],
 
   // Casablanca Activities
   2: [
+    // Beach Activities
     {
       id: 201,
-      name: "Hassan II Mosque",
-      type: "Religious Site",
-      imageUrl: "/placeholder.svg?height=200&width=300&text=Hassan+II+Mosque",
+      name: "Ain Diab Beach",
+      type: "beach",
+      imageUrl: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e",
     },
     {
       id: 202,
-      name: "Corniche Beach",
-      type: "Beach",
-      imageUrl: "/placeholder.svg?height=200&width=300&text=Corniche+Beach",
+      name: "Bouznika Beach",
+      type: "beach",
+      imageUrl: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e",
     },
+    // Photography Activities
     {
       id: 203,
-      name: "Morocco Mall",
-      type: "Shopping",
-      imageUrl: "/placeholder.svg?height=200&width=300&text=Morocco+Mall",
+      name: "Hassan II Mosque",
+      type: "photography",
+      imageUrl: "https://images.unsplash.com/photo-1529139574466-a303027c1d8b",
     },
     {
       id: 204,
-      name: "Old Medina",
-      type: "Historical",
-      imageUrl: "/placeholder.svg?height=200&width=300&text=Old+Medina",
+      name: "Art Deco District",
+      type: "photography",
+      imageUrl: "https://images.unsplash.com/photo-1529139574466-a303027c1d8b",
+    },
+    // Tour Activities
+    {
+      id: 205,
+      name: "City Center Tour",
+      type: "tour",
+      imageUrl: "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0",
+    },
+    {
+      id: 206,
+      name: "Historical Tour",
+      type: "tour",
+      imageUrl: "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0",
+    },
+    // Travel Activities
+    {
+      id: 207,
+      name: "Day Trip to Rabat",
+      type: "travel",
+      imageUrl: "https://images.unsplash.com/photo-1548013146-72479768bada",
+    },
+    {
+      id: 208,
+      name: "El Jadida Visit",
+      type: "travel",
+      imageUrl: "https://images.unsplash.com/photo-1548013146-72479768bada",
     },
   ],
 
   // Fes Activities
   3: [
+    // Beach Activities
     {
       id: 301,
-      name: "Bou Inania Madrasa",
-      type: "Historical",
-      imageUrl: "/placeholder.svg?height=200&width=300&text=Bou+Inania",
+      name: "Sidi Harazem Hot Springs",
+      type: "beach",
+      imageUrl: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e",
     },
     {
       id: 302,
-      name: "Chouara Tannery",
-      type: "Cultural",
-      imageUrl: "/placeholder.svg?height=200&width=300&text=Tannery",
+      name: "Meknes Water Park",
+      type: "beach",
+      imageUrl: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e",
     },
+    // Photography Activities
     {
       id: 303,
-      name: "Pottery Workshop",
-      type: "Crafts",
-      imageUrl: "/placeholder.svg?height=200&width=300&text=Pottery",
+      name: "Blue Gate Photography",
+      type: "photography",
+      imageUrl: "https://images.unsplash.com/photo-1529139574466-a303027c1d8b",
     },
     {
       id: 304,
-      name: "Fes Food Tour",
-      type: "Food & Drink",
-      imageUrl: "/placeholder.svg?height=200&width=300&text=Food+Tour",
+      name: "Medina Architecture",
+      type: "photography",
+      imageUrl: "https://images.unsplash.com/photo-1529139574466-a303027c1d8b",
+    },
+    // Tour Activities
+    {
+      id: 305,
+      name: "Medina Guided Tour",
+      type: "tour",
+      imageUrl: "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0",
+    },
+    {
+      id: 306,
+      name: "Tanneries Tour",
+      type: "tour",
+      imageUrl: "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0",
+    },
+    // Travel Activities
+    {
+      id: 307,
+      name: "Day Trip to Volubilis",
+      type: "travel",
+      imageUrl: "https://images.unsplash.com/photo-1548013146-72479768bada",
+    },
+    {
+      id: 308,
+      name: "Meknes Excursion",
+      type: "travel",
+      imageUrl: "https://images.unsplash.com/photo-1548013146-72479768bada",
     },
   ],
 
-  // Add activities for other cities...
+  // Chefchaouen Activities
   4: [
+    // Beach Activities
     {
       id: 401,
-      name: "Blue City Walking Tour",
-      type: "Sightseeing",
-      imageUrl: "/placeholder.svg?height=200&width=300&text=Blue+City",
+      name: "Ras El Maa Waterfall",
+      type: "beach",
+      imageUrl: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e",
     },
     {
       id: 402,
-      name: "Kasbah Museum",
-      type: "Cultural",
-      imageUrl: "/placeholder.svg?height=200&width=300&text=Kasbah",
+      name: "Akchour Waterfalls",
+      type: "beach",
+      imageUrl: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e",
     },
+    // Photography Activities
     {
       id: 403,
-      name: "Hiking in Rif Mountains",
-      type: "Adventure",
-      imageUrl: "/placeholder.svg?height=200&width=300&text=Hiking",
+      name: "Blue City Photography",
+      type: "photography",
+      imageUrl: "https://images.unsplash.com/photo-1529139574466-a303027c1d8b",
     },
     {
       id: 404,
-      name: "Local Cheese Tasting",
-      type: "Food & Drink",
-      imageUrl: "/placeholder.svg?height=200&width=300&text=Cheese",
+      name: "Sunset Photography",
+      type: "photography",
+      imageUrl: "https://images.unsplash.com/photo-1529139574466-a303027c1d8b",
+    },
+    // Tour Activities
+    {
+      id: 405,
+      name: "Blue City Walking Tour",
+      type: "tour",
+      imageUrl: "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0",
+    },
+    {
+      id: 406,
+      name: "Kasbah Tour",
+      type: "tour",
+      imageUrl: "https://images.unsplash.com/photo-1589182373726-e4f658ab50f0",
+    },
+    // Travel Activities
+    {
+      id: 407,
+      name: "Rif Mountains Trek",
+      type: "travel",
+      imageUrl: "https://images.unsplash.com/photo-1548013146-72479768bada",
+    },
+    {
+      id: 408,
+      name: "Talassemtane National Park",
+      type: "travel",
+      imageUrl: "https://images.unsplash.com/photo-1548013146-72479768bada",
     },
   ],
 }
