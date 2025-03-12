@@ -64,7 +64,7 @@ export const popularExperiences = [
     category: "Food & Cooking",
     price: 45,
     rating: 4.9,
-    imageUrl: "/placeholder.svg?height=300&width=400&text=Cooking+Class",
+    imageUrl: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/4d/45/65/tangier.jpg?w=1400&h=500&s=1",
   },
   {
     id: 2,
@@ -72,7 +72,7 @@ export const popularExperiences = [
     category: "Adventure",
     price: 89,
     rating: 5.0,
-    imageUrl: "/placeholder.svg?height=300&width=400&text=Desert+Trek",
+    imageUrl: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/01/81/aa/d8/essaouira-harbour.jpg?w=1400&h=500&s=1",
   },
   {
     id: 3,
@@ -80,7 +80,7 @@ export const popularExperiences = [
     category: "Cultural Tour",
     price: 31,
     rating: 4.8,
-    imageUrl: "/placeholder.svg?height=300&width=400&text=Medina+Tour",
+    imageUrl: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/01/81/aa/d8/essaouira-harbour.jpg?w=1400&h=500&s=1",
   },
   {
     id: 4,
@@ -88,7 +88,7 @@ export const popularExperiences = [
     category: "Nature & Outdoors",
     price: 65,
     rating: 4.7,
-    imageUrl: "/placeholder.svg?height=300&width=400&text=Atlas+Mountains",
+    imageUrl: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/4d/45/65/tangier.jpg?w=1400&h=500&s=1",
   },
 ]
 
@@ -97,22 +97,22 @@ export const categories = [
   {
     id: 1,
     name: "Beach",
-    icon: "/placeholder.svg?height=40&width=40&text=🏖️",
+    icon: "/beach.png",
   },
   {
     id: 2,
     name: "Photography",
-    icon: "/placeholder.svg?height=40&width=40&text=📷",
+    icon: "/camera.png",
   },
   {
     id: 3,
     name: "Tour",
-    icon: "/placeholder.svg?height=40&width=40&text=🌍",
+    icon: "/earth.png",
   },
   {
     id: 4,
     name: "Travel",
-    icon: "/placeholder.svg?height=40&width=40&text=🧳",
+    icon: "/travel-bag.png",
   },
 ]
 

@@ -17,7 +17,7 @@ export default function Home() {
           <h1 className="text-3xl font-bold md:text-4xl">Find deals</h1>
         </div>
         <Avatar className="h-10 w-10 md:h-12 md:w-12">
-          <AvatarImage src="/placeholder.svg?height=40&width=40" alt="User" />
+          <AvatarImage src="https://avatars.githubusercontent.com/u/95689141?s=400&u=275826ef98503225cfa203907197ad854e0111a1&v=4" alt="User" />
           <AvatarFallback>EL</AvatarFallback>
         </Avatar>
       </div>
@@ -40,8 +40,8 @@ export default function Home() {
         </div>
         <div className="relative mt-3">
           {/* Scroll indicators */}
-          <div className="absolute left-0 top-1/2 -translate-y-1/2 z-10 h-8 w-8 bg-gradient-to-r from-white to-transparent pointer-events-none md:hidden"></div>
-          <div className="absolute right-0 top-1/2 -translate-y-1/2 z-10 h-8 w-8 bg-gradient-to-l from-white to-transparent pointer-events-none md:hidden"></div>
+          {/* <div className="absolute h-[300px] left-0 top-1/2 -translate-y-1/2 z-10 h-8 w-8 bg-gradient-to-r from-white to-transparent pointer-events-none md:hidden"></div> */}
+          {/* <div className="absolute h-[300px] right-0 top-1/2 -translate-y-1/2 z-10 h-8 w-8 bg-gradient-to-l from-white to-transparent pointer-events-none md:hidden"></div> */}
 
           <div className="mt-3 pl-4 md:px-8 lg:px-16 pb-2 overflow-x-auto flex gap-3 md:gap-6 snap-x scrollbar-hide md:flex-wrap md:justify-center scroll-smooth">
             {moroccanCities.map((city) => (
@@ -78,18 +78,18 @@ export default function Home() {
             View all
           </Link>
         </div>
-        <div className="relative mt-3">
+        <div className="relative mt-3 mb-6">
           {/* Scroll indicators */}
-          <div className="absolute left-0 top-1/2 -translate-y-1/2 z-10 h-8 w-8 bg-gradient-to-r from-white to-transparent pointer-events-none md:hidden"></div>
-          <div className="absolute right-0 top-1/2 -translate-y-1/2 z-10 h-8 w-8 bg-gradient-to-l from-white to-transparent pointer-events-none md:hidden"></div>
+          {/* <div className="absolute left-0 top-1/2 -translate-y-1/2 z-10 h-8 w-8 bg-gradient-to-r from-white to-transparent pointer-events-none md:hidden"></div>
+          <div className="absolute right-0 top-1/2 -translate-y-1/2 z-10 h-8 w-8 bg-gradient-to-l from-white to-transparent pointer-events-none md:hidden"></div> */}
 
           <div className="mt-3 pl-4 md:px-8 lg:px-16 pb-2 overflow-x-auto flex gap-3 md:gap-6 snap-x scrollbar-hide md:flex-wrap md:justify-center scroll-smooth">
             {popularExperiences.map((experience) => (
               <div
                 key={experience.id}
-                className="snap-start shrink-0 w-[220px] md:w-[280px] lg:w-[300px] md:mb-6 scroll-ml-4"
+                className="snap-start shrink-0 w-[180px] md:w-[280px]  lg:w-[300px] md:mb-6 scroll-ml-4"
               >
-                <div className="relative h-[150px] w-[220px] md:h-[180px] md:w-[280px] lg:h-[200px] lg:w-[300px] rounded-xl overflow-hidden">
+                <div className="relative h-[150px] w-[180px] md:h-[180px] md:w-[280px] lg:h-[200px] lg:w-[300px] rounded-xl overflow-hidden">
                   <Image
                     src={experience.imageUrl || "/placeholder.svg"}
                     alt={experience.title}
