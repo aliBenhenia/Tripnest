@@ -2,7 +2,8 @@
 
 import { Search } from "lucide-react"
 import { Input } from "@/components/ui/input"
-import { useState } from "react"
+import { useState, useCallback, useMemo } from "react"
+import debounce from "lodash/debounce"
 
 interface SearchBarProps {
   placeholder?: string;
@@ -17,11 +18,20 @@ export function SearchBar({
 }: SearchBarProps) {
   const [searchValue, setSearchValue] = useState("")
 
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+  // Debounce search to prevent excessive re-renders
+  const debouncedSearch = useMemo(
+    () => debounce((value: string) => {
+      onSearch?.(value)
+    }, 300),
+    [onSearch]
+  )
+
+  // Memoize handler to prevent recreation
+  const handleSearch = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value
     setSearchValue(value)
-    onSearch?.(value)
-  }
+    debouncedSearch(value)
+  }, [debouncedSearch])
 
   return (
     <div className={`relative max-w-xl ${className}`}>
