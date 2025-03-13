@@ -5,11 +5,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Input } from "@/components/ui/input"
 import { moroccanCities } from "@/lib/data"
 import { popularExperiences } from "@/lib/data"
-import BottomNavigation from "@/components/bottom-navigation"
 
 export default function Home() {
   return (
-    <div className="w-full mx-auto bg-white min-h-screen pb-16 md:pb-0 md:max-w-none">
+    <div className="w-full mx-auto bg-white min-h-screen md:max-w-none">
       {/* Header */}
       <div className="p-4 pt-6 md:px-8 lg:px-16 flex justify-between items-center">
         <div>
@@ -114,9 +113,6 @@ export default function Home() {
           </div>
         </div>
       </div>
-
-      {/* Bottom Navigation */}
-      <BottomNavigation />
     </div>
   )
 }
