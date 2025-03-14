@@ -162,7 +162,7 @@ export function PopularPlaces({ places, isLoading }: PopularPlacesProps) {
             ))}
           </div>
 
-          {/* Gradient Edges1 */}
+          {/* Gradient Edges 2 */}
           <div className="hidden md:block absolute left-0 top-0 bottom-4 w-16 bg-gradient-to-r from-white to-transparent pointer-events-none" />
           <div className="hidden md:block absolute right-0 top-0 bottom-4 w-16 bg-gradient-to-l from-white to-transparent pointer-events-none" />
         </div>
