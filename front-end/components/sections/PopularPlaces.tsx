@@ -57,9 +57,9 @@ export function PopularPlaces({ places, isLoading }: PopularPlacesProps) {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 sm:mb-6 gap-3">
           <div>
-            {/* <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">
-              Popular Places              
-            </h2> */}
+            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">
+              Popular Places
+            </h2>
             <p className="mt-1 text-sm sm:text-base text-gray-500">
               Discover the most visited destinations in Morocco
             </p>
@@ -93,14 +93,14 @@ export function PopularPlaces({ places, isLoading }: PopularPlacesProps) {
                 <ChevronRight className="h-5 w-5" />
               </Button>
             </div>
-            {/* <Link href="/places">
+            <Link href="/places">
               <Button
                 variant="ghost"
                 className="text-sm sm:text-base text-gray-600 hover:text-black hover:bg-gray-50"
               >
                 View all places
               </Button>
-            </Link> */}
+            </Link>
           </div>
         </div>
 
@@ -141,18 +141,15 @@ export function PopularPlaces({ places, isLoading }: PopularPlacesProps) {
                         </div>
                       </div>
                       <div className="flex flex-col items-end gap-1 sm:gap-2">
-                        <div className="bg-primary/90 backdrop-blur-sm px-2.5 sm:px-3 py-1.5 rounded-full flex items-center">
-                          <span className="text-[11px] sm:text-xs md:text-sm font-semibold tracking-wide">
-                            {new Intl.NumberFormat('en-US').format(place.properties)}
-                            <span className="ml-1 opacity-90 font-medium">
-                              {place.properties === 1 ? 'property' : 'properties'}
-                            </span>
+                        <div className="bg-primary/90 backdrop-blur-sm px-2 sm:px-3 py-1 rounded-full">
+                          <span className="text-xs sm:text-sm font-medium">
+                            {place.properties} properties
                           </span>
                         </div>
                         {place.rating && (
-                          <div className="flex items-center bg-white/90 backdrop-blur-sm px-2.5 py-1.5 rounded-full">
-                            <span className="text-yellow-500 text-[11px] sm:text-xs md:text-sm">★</span>
-                            <span className="ml-1 text-[11px] sm:text-xs md:text-sm font-semibold">
+                          <div className="flex items-center bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full">
+                            <span className="text-yellow-500 text-xs sm:text-sm">★</span>
+                            <span className="ml-1 text-xs sm:text-sm font-medium">
                               {place.rating.toFixed(1)}
                             </span>
                           </div>
@@ -166,8 +163,8 @@ export function PopularPlaces({ places, isLoading }: PopularPlacesProps) {
           </div>
 
           {/* Gradient Edges */}
-          {/* <div className="hidden md:block absolute left-0 top-0 bottom-4 w-16 bg-gradient-to-r from-white to-transparent pointer-events-none" />
-          <div className="hidden md:block absolute right-0 top-0 bottom-4 w-16 bg-gradient-to-l from-white to-transparent pointer-events-none" /> */}
+          <div className="hidden md:block absolute left-0 top-0 bottom-4 w-16 bg-gradient-to-r from-white to-transparent pointer-events-none" />
+          <div className="hidden md:block absolute right-0 top-0 bottom-4 w-16 bg-gradient-to-l from-white to-transparent pointer-events-none" />
         </div>
       </div>
     </section>
