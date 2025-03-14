@@ -47,36 +47,36 @@ export default function Home() {
           avatarUrl="https://avatars.githubusercontent.com/u/95689141?s=400&u=275826ef98503225cfa203907197ad854e0111a1&v=4"
         />
 
-        <div className="px-4 py-2 md:px-8 lg:px-16 md:py-4">
+      <div className="px-4 py-2 md:px-8 lg:px-16 md:py-4">
           <SearchBar onSearch={handleSearch} />
-        </div>
+      </div>
 
-        {/* Popular Places */}
-        <div className="mt-4">
-          {/* <SectionHeader 
+      {/* Popular Places */}
+      <div className="mt-4">
+          <SectionHeader 
             title={`Popular Places ${isLoading ? '...' : cities.length ? `(${cities.length})` : ''}`} 
             viewAllLink="#" 
-          /> */}
+          />
           <PopularPlaces 
             places={processedCities}
             isLoading={isLoading}
           />
-        </div>
+      </div>
 
-        {/* Popular Experiences */}
-        <div className="mt-4 md:mt-8">
+      {/* Popular Experiences */}
+      <div className="mt-4 md:mt-8">
           <SectionHeader 
             title={`Popular Experiences ${isLoading ? '...' : experiences.length ? `(${experiences.length})` : ''}`}
             viewAllLink="#" 
           />
           <Suspense fallback={<div className="animate-pulse bg-gray-200 h-[300px]" />}>
-            <div className="relative mt-3 mb-6">
-              <div className="mt-3 pl-4 md:px-8 lg:px-16 pb-2 overflow-x-auto flex gap-3 md:gap-6 snap-x scrollbar-hide md:flex-wrap md:justify-center scroll-smooth">
+        <div className="relative mt-3 mb-6">
+          <div className="mt-3 pl-4 md:px-8 lg:px-16 pb-2 overflow-x-auto flex gap-3 md:gap-6 snap-x scrollbar-hide md:flex-wrap md:justify-center scroll-smooth">
                 {experiences.map((experience) => (
                   <ExperienceCard key={experience.id} {...experience} />
                 ))}
               </div>
-            </div>
+          </div>
           </Suspense>
         </div>
       </ErrorBoundary>

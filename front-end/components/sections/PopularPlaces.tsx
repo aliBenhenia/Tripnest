@@ -53,13 +53,13 @@ export function PopularPlaces({ places, isLoading }: PopularPlacesProps) {
 
   return (
     <section className="mt-4 px-4 md:px-8 lg:px-16">
-      <div className="max-w-7xl mx-auto ">
+      <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 sm:mb-6 gap-3">
           <div>
-            <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">
+            {/* <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">
               Popular Places              
-            </h2>
+            </h2> */}
             <p className="mt-1 text-sm sm:text-base text-gray-500">
               Discover the most visited destinations in Morocco
             </p>
@@ -93,14 +93,14 @@ export function PopularPlaces({ places, isLoading }: PopularPlacesProps) {
                 <ChevronRight className="h-5 w-5" />
               </Button>
             </div>
-            <Link href="/places">
+            {/* <Link href="/places">
               <Button
                 variant="ghost"
                 className="text-sm sm:text-base text-gray-600 hover:text-black hover:bg-gray-50"
               >
                 View all places
               </Button>
-            </Link>
+            </Link> */}
           </div>
         </div>
 
@@ -114,7 +114,7 @@ export function PopularPlaces({ places, isLoading }: PopularPlacesProps) {
             {places.map((place) => (
               <Link
                 key={place.id}
-                href={`/place/${place.slug}`}
+                href={`/city/${place.slug}`}
                 className="group relative flex-shrink-0 w-[260px] sm:w-[300px] md:w-[320px] lg:w-[380px] transition-transform duration-300 hover:scale-[1.02]"
               >
                 <div className="relative h-[200px] sm:h-[250px] md:h-[320px] w-full rounded-xl sm:rounded-2xl overflow-hidden">
