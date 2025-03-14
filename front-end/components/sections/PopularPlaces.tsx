@@ -142,7 +142,7 @@ export function PopularPlaces({ places, isLoading }: PopularPlacesProps) {
                       </div>
                       <div className="flex flex-col items-end gap-1 sm:gap-1.5 md:gap-2 flex-shrink-0">
                         <div className="bg-primary/90 backdrop-blur-sm px-2 sm:px-2.5 md:px-3.5 py-1 sm:py-1.5 rounded-full shadow-sm border border-white/10 hover:bg-primary/95 transition-colors">
-                          <span className="text-[10px] sm:text-[11px] md:text-sm font-medium tracking-wide whitespace-nowrap">
+                          <span className="text-[10px] sm:text-[11px] md:text-sm font-medium tracking-wide whitespace-nowrap text-white">
                             {place.properties.toLocaleString()} {place.properties === 1 ? 'property' : 'properties'}
                           </span>
                         </div>

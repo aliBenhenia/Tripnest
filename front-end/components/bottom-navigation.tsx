@@ -80,10 +80,10 @@ export default function BottomNavigation() {
                     href={item.href} 
                     className={`flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-200
                       ${pathname === item.href 
-                        ? "text-black font-medium bg-primary shadow-lg shadow-primary/25 scale-105" 
-                        : "text-gray-600 hover:text-black hover:bg-gray-50"}`}
+                        ? "text-gray-900 font-medium relative after:absolute after:bottom-0 after:left-2 after:right-2 after:h-0.5 after:bg-primary after:rounded-full" 
+                        : "text-gray-600 hover:text-gray-900"}`}
                   >
-                    <item.icon className="h-4 w-4" />
+                    <item.icon className={`h-4 w-4 transition-colors ${pathname === item.href ? 'text-primary' : ''}`} />
                     {item.name}
                   </Link>
                 ))}
@@ -93,16 +93,16 @@ export default function BottomNavigation() {
             {/* Right section with actions */}
             <div className="flex items-center gap-3">
               {/* Language Selector */}
-              <button className="flex items-center gap-1 px-3 py-2 text-sm text-gray-600 hover:text-black hover:bg-gray-50 rounded-full transition-colors">
+              <button className="flex items-center gap-1 px-3 py-2 text-sm text-gray-600 hover:text-gray-900 rounded-full transition-colors">
                 <Globe className="h-4 w-4" />
                 <span>EN</span>
                 <ChevronDown className="h-4 w-4 opacity-50" />
               </button>
 
               {/* Notifications */}
-              <button className="relative p-2 text-gray-600 hover:text-black hover:bg-gray-50 rounded-full transition-colors">
+              <button className="relative p-2 text-gray-600 hover:text-gray-900 rounded-full transition-colors">
                 <Bell className="h-5 w-5" />
-                <span className="absolute -top-1 -right-1 h-5 w-5 bg-primary rounded-full text-[11px] text-black font-medium flex items-center justify-center shadow-lg shadow-primary/25">3</span>
+                <span className="absolute -top-1 -right-1 h-5 w-5 bg-primary rounded-full text-[11px] font-medium flex items-center justify-center">3</span>
               </button>
 
               {/* Saved Items */}
@@ -110,34 +110,41 @@ export default function BottomNavigation() {
                 href="/saved" 
                 className={`relative p-2 rounded-full transition-all duration-200
                   ${pathname === "/saved" 
-                    ? "text-black bg-primary shadow-lg shadow-primary/25 scale-105" 
-                    : "text-gray-600 hover:text-black hover:bg-gray-50"}`}
+                    ? "text-primary" 
+                    : "text-gray-600 hover:text-gray-900"}`}
               >
                 <Heart className="h-5 w-5" />
-                <span className="absolute -top-1 -right-1 h-5 w-5 bg-primary rounded-full text-[11px] text-black font-medium flex items-center justify-center shadow-lg shadow-primary/25">2</span>
+                <span className="absolute -top-1 -right-1 h-5 w-5 bg-primary rounded-full text-[11px] font-medium flex items-center justify-center">2</span>
               </Link>
 
               <div className="h-6 w-px bg-gray-200 mx-1" />
 
               {/* CTA Button */}
-              <Button className="bg-black hover:bg-black/90 text-primary font-medium px-6 rounded-full shadow-lg hover:scale-105 transition-all duration-200">
-                List Your Property
+              <Button 
+                className="bg-white text-gray-800 font-medium px-6 py-2 rounded-full 
+                border border-gray-200 hover:border-primary/30
+                hover:shadow-[0_2px_12px_-3px_rgba(0,0,0,0.05)] hover:text-white
+                active:scale-[0.98] transition-all duration-200 group relative
+                after:absolute after:inset-0 after:rounded-full after:bg-primary/5 after:opacity-0 
+                hover:after:opacity-100 after:transition-opacity"
+              >
+                <span className="relative z-10">List Your Property</span>
               </Button>
 
               {/* Profile Menu */}
               <Link 
                 href="/profile" 
-                className={`flex items-center gap-2 p-1.5 rounded-full border-2 transition-all duration-200
+                className={`flex items-center gap-2 p-1.5 rounded-full border transition-all duration-200
                   ${pathname === "/profile" 
-                    ? "border-primary shadow-lg shadow-primary/25 scale-105" 
-                    : "border-gray-200 hover:border-primary"}`}
+                    ? "border-primary text-primary" 
+                    : "border-gray-200 text-gray-600 hover:text-gray-900 hover:border-gray-300"}`}
               >
                 <img
                   src="https://avatars.githubusercontent.com/u/95689141?s=400&u=275826ef98503225cfa203907197ad854e0111a1&v=4"
                   alt="Profile"
                   className="h-8 w-8 rounded-full"
                 />
-                <Menu className="h-4 w-4 text-gray-600" />
+                <Menu className="h-4 w-4" />
               </Link>
             </div>
           </div>
