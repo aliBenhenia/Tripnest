@@ -21,7 +21,7 @@ export default function TripsPage() {
           {[
             {
               title: "7 Days in Northern Morocco",
-              image: "/placeholder.svg?height=200&width=300&text=Northern+Morocco",
+              image: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/4d/45/65/tangier.jpg?w=1400&h=500&s=1",
             },
             { title: "Weekend in Marrakech", image: "/placeholder.svg?height=200&width=300&text=Marrakech+Weekend" },
             { title: "Coastal Morocco Adventure", image: "/placeholder.svg?height=200&width=300&text=Coastal+Morocco" },

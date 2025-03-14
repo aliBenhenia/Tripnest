@@ -24,10 +24,10 @@ export default function ExplorePage() {
         <h3 className="text-lg font-semibold mb-3">Popular Destinations</h3>
         <div className="grid grid-cols-2 gap-3">
           {[
-            { name: "Marrakech", image: "/placeholder.svg?height=200&width=300&text=Marrakech" },
-            { name: "Fes", image: "/placeholder.svg?height=200&width=300&text=Fes" },
-            { name: "Casablanca", image: "/placeholder.svg?height=200&width=300&text=Casablanca" },
-            { name: "Chefchaouen", image: "/placeholder.svg?height=200&width=300&text=Chefchaouen" },
+            { name: "Marrakech", image: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/4d/45/65/tangier.jpg?w=1400&h=500&s=1" },
+            { name: "Fes", image: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/4d/45/65/tangier.jpg?w=1400&h=500&s=1" },
+            { name: "Casablanca", image: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/4d/45/65/tangier.jpg?w=1400&h=500&s=1" },
+            { name: "Chefchaouen", image: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/4d/45/65/tangier.jpg?w=1400&h=500&s=1" },
           ].map((item, index) => (
             <div key={index} className="relative rounded-lg overflow-hidden h-32">
               <Image src={item.image || "/placeholder.svg"} alt={item.name} fill className="object-cover" />
@@ -48,13 +48,13 @@ export default function ExplorePage() {
               title: "Desert Safari Adventure",
               price: 89,
               rating: 4.8,
-              image: "/placeholder.svg?height=200&width=300&text=Desert+Safari",
+              image: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/4d/45/65/tangier.jpg?w=1400&h=500&s=1",
             },
             {
               title: "Traditional Cooking Class",
               price: 45,
               rating: 4.9,
-              image: "/placeholder.svg?height=200&width=300&text=Cooking+Class",
+              image: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/4d/45/65/tangier.jpg?w=1400&h=500&s=1",
             },
           ].map((item, index) => (
             <div key={index} className="flex gap-3">
