@@ -129,27 +129,27 @@ export function PopularPlaces({ places, isLoading }: PopularPlacesProps) {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
                   
                   {/* Content */}
-                  <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6">
-                    <div className="flex items-start justify-between">
-                      <div>
-                        <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-white mb-1 sm:mb-2">
+                  <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 md:p-6">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-white mb-1 sm:mb-2 truncate">
                           {place.name}
                         </h3>
-                        <div className="flex items-center text-white/90 text-xs sm:text-sm">
-                          <MapPin className="h-3 w-3 sm:h-4 sm:w-4 mr-1" />
-                          <span>{place.location || 'Morocco'}</span>
+                        <div className="flex items-center text-white/90 text-[10px] sm:text-xs md:text-sm">
+                          <MapPin className="h-3 w-3 sm:h-3.5 sm:w-3.5 md:h-4 md:w-4 mr-1 flex-shrink-0" />
+                          <span className="truncate">{place.location || 'Morocco'}</span>
                         </div>
                       </div>
-                      <div className="flex flex-col items-end gap-1 sm:gap-2">
-                        <div className="bg-primary/90 backdrop-blur-sm px-2 sm:px-3 py-1 rounded-full">
-                          <span className="text-xs sm:text-sm font-medium">
-                            {place.properties} properties
+                      <div className="flex flex-col items-end gap-1 sm:gap-1.5 md:gap-2 flex-shrink-0">
+                        <div className="bg-primary/90 backdrop-blur-sm px-2 sm:px-2.5 md:px-3.5 py-1 sm:py-1.5 rounded-full shadow-sm border border-white/10 hover:bg-primary/95 transition-colors">
+                          <span className="text-[10px] sm:text-[11px] md:text-sm font-medium tracking-wide whitespace-nowrap">
+                            {place.properties.toLocaleString()} {place.properties === 1 ? 'property' : 'properties'}
                           </span>
                         </div>
                         {place.rating && (
-                          <div className="flex items-center bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full">
-                            <span className="text-yellow-500 text-xs sm:text-sm">★</span>
-                            <span className="ml-1 text-xs sm:text-sm font-medium">
+                          <div className="flex items-center bg-white/90 backdrop-blur-sm px-2 sm:px-2.5 md:px-3.5 py-1 sm:py-1.5 rounded-full shadow-sm hover:bg-white/95 transition-colors">
+                            <span className="text-yellow-500 text-[10px] sm:text-[11px] md:text-sm">★</span>
+                            <span className="ml-0.5 sm:ml-1 text-[10px] sm:text-[11px] md:text-sm font-medium">
                               {place.rating.toFixed(1)}
                             </span>
                           </div>
