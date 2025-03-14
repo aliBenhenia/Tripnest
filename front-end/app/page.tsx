@@ -7,6 +7,7 @@ import { SearchBar } from "@/components/SearchBar"
 import { SectionHeader } from "@/components/SectionHeader"
 import { useSearch } from "@/hooks/useSearch"
 import { ErrorBoundary } from "@/components/ErrorBoundary"
+import { PopularPlaces } from "@/components/sections/PopularPlaces"
 
 // Dynamically import components that are not needed immediately
 const CityCard = dynamic(() => import('@/components/CityCard').then(mod => mod.CityCard), {
@@ -17,8 +18,26 @@ const ExperienceCard = dynamic(() => import('@/components/ExperienceCard').then(
   loading: () => <div className="animate-pulse bg-gray-200 rounded-xl h-[150px] w-[180px]" />
 })
 
+// Generate stable ratings based on city name
+const getStableRating = (name: string) => {
+  let hash = 0;
+  for (let i = 0; i < name.length; i++) {
+    hash = ((hash << 5) - hash) + name.charCodeAt(i);
+    hash = hash & hash;
+  }
+  // Generate a rating between 4.5 and 5.0 based on hash
+  return 4.5 + (Math.abs(hash) % 50) / 100;
+}
+
 export default function Home() {
   const { searchQuery, isLoading, handleSearch, cities, experiences } = useSearch()
+
+  // Process cities with stable ratings
+  const processedCities = cities.map(city => ({
+    ...city,
+    rating: getStableRating(city.name),
+    location: `${city.name} Region, Morocco`
+  }))
 
   return (
     <div className="w-full mx-auto bg-white min-h-screen md:max-w-none">
@@ -34,19 +53,14 @@ export default function Home() {
 
         {/* Popular Places */}
         <div className="mt-4">
-          <SectionHeader 
+          {/* <SectionHeader 
             title={`Popular Places ${isLoading ? '...' : cities.length ? `(${cities.length})` : ''}`} 
             viewAllLink="#" 
+          /> */}
+          <PopularPlaces 
+            places={processedCities}
+            isLoading={isLoading}
           />
-          <Suspense fallback={<div className="animate-pulse bg-gray-200 h-[300px]" />}>
-            <div className="relative mt-3">
-              <div className="mt-3 pl-4 md:px-8 lg:px-16 pb-2 overflow-x-auto flex gap-3 md:gap-6 snap-x scrollbar-hide md:flex-wrap md:justify-center scroll-smooth">
-                {cities.map((city) => (
-                  <CityCard key={city.id} {...city} />
-                ))}
-              </div>
-            </div>
-          </Suspense>
         </div>
 
         {/* Popular Experiences */}
