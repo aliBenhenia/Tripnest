@@ -343,3 +343,86 @@ export const cityActivities: Record<number, Array<{ id: number; name: string; ty
   ],
 }
 
+interface City {
+  name: string;
+  region: string;
+  image: string;
+}
+
+interface Activity {
+  title: string;
+  location: string;
+  image: string;
+  duration: string;
+  groupSize: string;
+  price: number;
+  rating: number;
+  reviews: number;
+}
+
+export const cities: City[] = [
+  {
+    name: "Marrakech",
+    region: "Marrakech-Safi",
+    image: "https://images.unsplash.com/photo-1597212618440-806262de4f6b?q=80&w=1000",
+  },
+  {
+    name: "Fes",
+    region: "Fès-Meknès",
+    image: "https://images.unsplash.com/photo-1553244323-0dd6bd55ca27?q=80&w=1000",
+  },
+  {
+    name: "Chefchaouen",
+    region: "Tanger-Tétouan-Al Hoceïma",
+    image: "https://images.unsplash.com/photo-1553913861-c0fddf2619ee?q=80&w=1000",
+  },
+  {
+    name: "Casablanca",
+    region: "Casablanca-Settat",
+    image: "https://images.unsplash.com/photo-1579017461826-8ea20d5cdb28?q=80&w=1000",
+  }
+]
+
+export const activities: Activity[] = [
+  {
+    title: "Desert Safari Adventure",
+    location: "Merzouga Desert",
+    image: "https://images.unsplash.com/photo-1565689478690-8ddf97b359b5?q=80&w=1000",
+    duration: "2 days",
+    groupSize: "2-8 people",
+    price: 149,
+    rating: 4.9,
+    reviews: 128
+  },
+  {
+    title: "Traditional Cooking Class",
+    location: "Marrakech Medina",
+    image: "https://images.unsplash.com/photo-1585537884607-c4d0b7158424?q=80&w=1000",
+    duration: "4 hours",
+    groupSize: "4-10 people",
+    price: 65,
+    rating: 4.8,
+    reviews: 96
+  },
+  {
+    title: "Atlas Mountains Trek",
+    location: "High Atlas",
+    image: "https://images.unsplash.com/photo-1489493887464-892be6d1daae?q=80&w=1000",
+    duration: "1 day",
+    groupSize: "2-6 people",
+    price: 89,
+    rating: 4.9,
+    reviews: 156
+  },
+  {
+    title: "Medina Photography Tour",
+    location: "Fes Medina",
+    image: "https://images.unsplash.com/photo-1531468117562-037c2178ef42?q=80&w=1000",
+    duration: "3 hours",
+    groupSize: "1-4 people",
+    price: 45,
+    rating: 4.7,
+    reviews: 82
+  }
+]
+
