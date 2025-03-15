@@ -1,167 +1,253 @@
 "use client"
 
-import { User, Settings, CreditCard, Bell, Lock, HelpCircle, LogOut, ChevronRight, Globe, ChevronDown, Heart } from "lucide-react"
+import { User, Settings, CreditCard, Bell, Lock, HelpCircle, LogOut, ChevronRight, Globe, ChevronDown, Heart, Camera, MapPin, Calendar, Star, Edit, Mail, Phone } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import Image from "next/image"
 import Link from "next/link"
+
+const stats = [
+  { label: "Reviews", value: "128" },
+  { label: "Photos", value: "84" },
+  { label: "Followers", value: "2.1k" },
+  { label: "Following", value: "346" },
+]
 
 const menuItems = [
   {
     title: "Account Settings",
     icon: Settings,
     notifications: 2,
+    description: "Personal information and preferences"
   },
   {
     title: "Payment Methods",
     icon: CreditCard,
     notifications: 1,
+    description: "Manage your payment options"
   },
   {
     title: "Notifications",
     icon: Bell,
     notifications: 5,
+    description: "Control your notification settings"
   },
   {
     title: "Privacy & Security",
     icon: Lock,
     notifications: 0,
+    description: "Protect your account and data"
   },
   {
     title: "Help Center",
     icon: HelpCircle,
     notifications: 0,
+    description: "Get help and support"
   },
+]
+
+const recentTrips = [
+  {
+    title: "Desert Safari Adventure",
+    location: "Merzouga Desert",
+    date: "Mar 15, 2024",
+    image: "https://images.unsplash.com/photo-1565689478690-8ddf97b359b5",
+    rating: 4.9
+  },
+  {
+    title: "Atlas Mountains Trek",
+    location: "High Atlas",
+    date: "Feb 28, 2024",
+    image: "https://images.unsplash.com/photo-1489493887464-892be6d1daae",
+    rating: 4.8
+  }
 ]
 
 export default function ProfilePage() {
   return (
-    <div className="max-w-2xl mx-auto min-h-screen bg-white">
-      <div className="space-y-8 p-6 md:p-8">
-        {/* Header with Actions */}
-        <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-semibold text-gray-900">Profile</h1>
-          <div className="flex items-center gap-3">
-            {/* Language Selector */}
-            <button 
-              className="flex items-center gap-1.5 px-3.5 py-2 text-sm text-gray-600 hover:text-gray-900 
-                rounded-full transition-all duration-200 border border-gray-200 
-                hover:border-primary/30 hover:shadow-[0_2px_12px_-3px_rgba(0,0,0,0.05)] 
-                active:scale-[0.98] group"
-            >
-              <Globe className="h-4 w-4 group-hover:text-primary transition-colors" />
-              <span className="font-medium">EN</span>
-              <ChevronDown className="h-4 w-4 opacity-50 group-hover:text-primary transition-colors" />
-            </button>
+    <div className="min-h-screen bg-gray-50/50">
+      {/* Cover Photo */}
+      <div className="relative h-[200px] md:h-[280px] bg-gradient-to-r from-gray-900 to-gray-600">
+        <Image
+          src="https://images.unsplash.com/photo-1489493887464-892be6d1daae"
+          alt="Cover"
+          fill
+          className="object-cover mix-blend-overlay"
+        />
+        <button className="absolute bottom-4 right-4 bg-black/50 backdrop-blur-sm text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-black/60 transition-colors">
+          <Camera className="w-4 h-4" />
+          <span className="text-sm font-medium">Change Cover</span>
+        </button>
+      </div>
 
-            {/* Notifications */}
-            <button 
-              className="relative p-2.5 text-gray-600 hover:text-gray-900 
-                rounded-full transition-all duration-200 border border-gray-200 
-                hover:border-primary/30 hover:shadow-[0_2px_12px_-3px_rgba(0,0,0,0.05)] 
-                active:scale-[0.98] group"
-            >
-              <Bell className="h-[18px] w-[18px] group-hover:text-primary transition-colors" />
-              <span className="absolute -top-0.5 -right-0.5 h-5 w-5 bg-primary rounded-full 
-                text-[11px] font-medium flex items-center justify-center text-white 
-                border-2 border-white shadow-sm scale-100 group-hover:scale-110 transition-transform">
-                3
-              </span>
-            </button>
+      {/* Profile Content */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="relative -mt-24 sm:-mt-32 pb-20">
+          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            {/* Header with Actions */}
+            <div className="p-6 flex items-center justify-between border-b">
+              <div className="flex items-center gap-6">
+                {/* Avatar */}
+                <div className="relative">
+                  <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-4 border-white shadow-md overflow-hidden bg-gray-100">
+                    <Image
+                      src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde"
+                      alt="Profile"
+                      fill
+                      className="object-cover"
+                    />
+                  </div>
+                  <button className="absolute bottom-0 right-0 bg-primary text-white p-2 rounded-full shadow-lg hover:bg-primary/90 transition-colors">
+                    <Camera className="w-4 h-4" />
+                  </button>
+                </div>
 
-            {/* Saved Items */}
-            <Link 
-              href="/saved" 
-              className="relative p-2.5 text-gray-600 hover:text-gray-900 
-                rounded-full transition-all duration-200 border border-gray-200 
-                hover:border-primary/30 hover:shadow-[0_2px_12px_-3px_rgba(0,0,0,0.05)] 
-                active:scale-[0.98] group"
-            >
-              <Heart className="h-[18px] w-[18px] group-hover:text-primary transition-colors" />
-              <span className="absolute -top-0.5 -right-0.5 h-5 w-5 bg-primary rounded-full 
-                text-[11px] font-medium flex items-center justify-center text-white 
-                border-2 border-white shadow-sm scale-100 group-hover:scale-110 transition-transform">
-                2
-              </span>
-            </Link>
+                {/* User Info */}
+                <div className="space-y-1">
+                  <div className="flex items-center gap-3">
+                    <h1 className="text-2xl font-bold text-gray-900">Ellison Parker</h1>
+                    <span className="px-2.5 py-0.5 text-xs font-medium bg-primary/10 text-primary rounded-full">Pro Member</span>
+                  </div>
+                  <p className="text-gray-500 flex items-center gap-2">
+                    <MapPin className="w-4 h-4" />
+                    Marrakech, Morocco
+                  </p>
+                  <p className="text-gray-500 text-sm">Joined March 2024</p>
+                </div>
+              </div>
 
-            <div className="h-6 w-px bg-gray-200 mx-1 hidden sm:block" />
-          </div>
-        </div>
+              <div className="flex items-center gap-3">
+                {/* Language Selector */}
+                <button className="flex items-center gap-1.5 px-3.5 py-2 text-sm text-gray-600 hover:text-gray-900 
+                  rounded-full transition-all duration-200 border border-gray-200 
+                  hover:border-primary/30 hover:shadow-[0_2px_12px_-3px_rgba(0,0,0,0.05)] 
+                  active:scale-[0.98] group">
+                  <Globe className="h-4 w-4 group-hover:text-primary transition-colors" />
+                  <span className="font-medium">EN</span>
+                  <ChevronDown className="h-4 w-4 opacity-50 group-hover:text-primary transition-colors" />
+                </button>
 
-        <div className="space-y-6 p-4">
-          <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center">
-              <User className="h-8 w-8 text-gray-500" />
+                {/* Edit Profile */}
+                <Button className="gap-2">
+                  <Edit className="w-4 h-4" />
+                  Edit Profile
+                </Button>
+              </div>
             </div>
-            <div>
-              <h2 className="text-xl font-bold">Ellison</h2>
-              <p className="text-gray-500">ellison@example.com</p>
+
+            {/* Stats */}
+            <div className="grid grid-cols-4 divide-x border-b">
+              {stats.map((stat) => (
+                <div key={stat.label} className="px-6 py-4 text-center">
+                  <div className="text-2xl font-semibold text-gray-900">{stat.value}</div>
+                  <div className="text-sm text-gray-500">{stat.label}</div>
+                </div>
+              ))}
             </div>
-          </div>
 
-          <div className="space-y-1">
-            <button className="w-full flex items-center justify-between py-3 px-4 rounded-lg hover:bg-gray-50">
-              <span className="font-medium">Account Settings</span>
-              <svg
-                className="w-5 h-5 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
-              </svg>
-            </button>
-            <button className="w-full flex items-center justify-between py-3 px-4 rounded-lg hover:bg-gray-50">
-              <span className="font-medium">Payment Methods</span>
-              <svg
-                className="w-5 h-5 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
-              </svg>
-            </button>
-            <button className="w-full flex items-center justify-between py-3 px-4 rounded-lg hover:bg-gray-50">
-              <span className="font-medium">Notifications</span>
-              <svg
-                className="w-5 h-5 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
-              </svg>
-            </button>
-            <button className="w-full flex items-center justify-between py-3 px-4 rounded-lg hover:bg-gray-50">
-              <span className="font-medium">Privacy & Security</span>
-              <svg
-                className="w-5 h-5 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
-              </svg>
-            </button>
-            <button className="w-full flex items-center justify-between py-3 px-4 rounded-lg hover:bg-gray-50">
-              <span className="font-medium">Help Center</span>
-              <svg
-                className="w-5 h-5 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path>
-              </svg>
-            </button>
-          </div>
+            {/* Main Content */}
+            <div className="grid grid-cols-12 divide-x">
+              {/* Left Column - Menu Items */}
+              <div className="col-span-4 p-6 space-y-1">
+                {menuItems.map((item) => (
+                  <button
+                    key={item.title}
+                    className="w-full flex items-center gap-4 p-3 rounded-xl hover:bg-gray-50 transition-colors group"
+                  >
+                    <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-gray-50 group-hover:bg-white 
+                      flex items-center justify-center text-gray-500 group-hover:text-primary 
+                      transition-colors border border-gray-100">
+                      <item.icon className="w-5 h-5" />
+                    </div>
+                    <div className="flex-1 text-left">
+                      <div className="flex items-center justify-between">
+                        <span className="font-medium text-gray-900">{item.title}</span>
+                        {item.notifications > 0 && (
+                          <span className="px-2 py-0.5 text-xs font-medium bg-primary text-white rounded-full">
+                            {item.notifications}
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-sm text-gray-500">{item.description}</p>
+                    </div>
+                    <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-gray-600" />
+                  </button>
+                ))}
 
-          <div className="pt-4 border-t">
-            <button className="w-full py-3 text-red-600 font-medium">Log Out</button>
+                <button className="w-full flex items-center gap-4 p-3 rounded-xl hover:bg-red-50 text-red-600 transition-colors group mt-4">
+                  <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-red-50 group-hover:bg-white 
+                    flex items-center justify-center group-hover:text-red-600 
+                    transition-colors border border-red-100">
+                    <LogOut className="w-5 h-5" />
+                  </div>
+                  <span className="flex-1 text-left font-medium">Log Out</span>
+                  <ChevronRight className="w-5 h-5 opacity-50" />
+                </button>
+              </div>
+
+              {/* Right Column - Recent Activity */}
+              <div className="col-span-8 p-6">
+                <div className="space-y-6">
+                  {/* Contact Information */}
+                  <div>
+                    <h3 className="text-lg font-semibold mb-4">Contact Information</h3>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="flex items-center gap-3 p-3 rounded-lg border bg-gray-50">
+                        <Mail className="w-5 h-5 text-gray-500" />
+                        <div>
+                          <div className="text-sm text-gray-500">Email</div>
+                          <div className="font-medium">ellison@example.com</div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3 p-3 rounded-lg border bg-gray-50">
+                        <Phone className="w-5 h-5 text-gray-500" />
+                        <div>
+                          <div className="text-sm text-gray-500">Phone</div>
+                          <div className="font-medium">+212 612 345 678</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Recent Trips */}
+                  <div>
+                    <h3 className="text-lg font-semibold mb-4">Recent Trips</h3>
+                    <div className="grid grid-cols-2 gap-4">
+                      {recentTrips.map((trip) => (
+                        <div key={trip.title} className="group rounded-xl overflow-hidden border hover:shadow-lg transition-all">
+                          <div className="aspect-[16/9] relative">
+                            <Image
+                              src={trip.image}
+                              alt={trip.title}
+                              fill
+                              className="object-cover group-hover:scale-105 transition-transform duration-300"
+                            />
+                          </div>
+                          <div className="p-4">
+                            <h4 className="font-semibold text-gray-900 group-hover:text-primary transition-colors">
+                              {trip.title}
+                            </h4>
+                            <div className="flex items-center justify-between mt-2 text-sm">
+                              <div className="flex items-center gap-1 text-gray-500">
+                                <MapPin className="w-4 h-4" />
+                                {trip.location}
+                              </div>
+                              <div className="flex items-center gap-1 text-yellow-500">
+                                <Star className="w-4 h-4 fill-current" />
+                                {trip.rating}
+                              </div>
+                            </div>
+                            <div className="text-sm text-gray-500 mt-2 flex items-center gap-1">
+                              <Calendar className="w-4 h-4" />
+                              {trip.date}
+                            </div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
