@@ -1,6 +1,6 @@
 "use client"
 
-import { User, Settings, CreditCard, Bell, Lock, HelpCircle, LogOut, ChevronRight, Globe, ChevronDown, Heart, Camera, MapPin, Calendar, Star, Edit, Mail, Phone } from "lucide-react"
+import { User, Settings, CreditCard, Bell, Lock, HelpCircle, LogOut, ChevronRight, Globe, ChevronDown, Heart, Camera, MapPin, Calendar, Star, Edit, Mail, Phone, Share2, Instagram, Twitter, Facebook } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import Link from "next/link"
@@ -66,13 +66,15 @@ export default function ProfilePage() {
   return (
     <div className="min-h-screen bg-gray-50/50">
       {/* Cover Photo */}
-      <div className="relative h-[200px] md:h-[280px] bg-gradient-to-r from-gray-900 to-gray-600">
+      <div className="relative h-[200px] md:h-[280px] lg:h-[320px] bg-gradient-to-r from-gray-900 to-gray-600">
         <Image
           src="https://images.unsplash.com/photo-1489493887464-892be6d1daae"
           alt="Cover"
           fill
           className="object-cover mix-blend-overlay"
+          priority
         />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
         <button className="absolute bottom-4 right-4 bg-black/50 backdrop-blur-sm text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-black/60 transition-colors">
           <Camera className="w-4 h-4" />
           <span className="text-sm font-medium">Change Cover</span>
@@ -84,11 +86,11 @@ export default function ProfilePage() {
         <div className="relative -mt-24 sm:-mt-32 pb-20">
           <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
             {/* Header with Actions */}
-            <div className="p-6 flex items-center justify-between border-b">
-              <div className="flex items-center gap-6">
+            <div className="p-6 flex flex-col md:flex-row md:items-center md:justify-between gap-6 border-b">
+              <div className="flex flex-col md:flex-row md:items-center gap-6">
                 {/* Avatar */}
-                <div className="relative">
-                  <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-4 border-white shadow-md overflow-hidden bg-gray-100">
+                <div className="relative mx-auto md:mx-0">
+                  <div className="w-32 h-32 md:w-36 md:h-36 rounded-full border-4 border-white shadow-md overflow-hidden bg-gray-100">
                     <Image
                       src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde"
                       alt="Profile"
@@ -102,12 +104,14 @@ export default function ProfilePage() {
                 </div>
 
                 {/* User Info */}
-                <div className="space-y-1">
-                  <div className="flex items-center gap-3">
-                    <h1 className="text-2xl font-bold text-gray-900">Ellison Parker</h1>
-                    <span className="px-2.5 py-0.5 text-xs font-medium bg-primary/10 text-primary rounded-full">Pro Member</span>
+                <div className="text-center md:text-left space-y-2">
+                  <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-3">
+                    <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Ellison Parker</h1>
+                    <span className="px-2.5 py-0.5 text-xs font-medium bg-primary/10 text-primary rounded-full inline-flex items-center justify-center">
+                      Pro Member
+                    </span>
                   </div>
-                  <p className="text-gray-500 flex items-center gap-2">
+                  <p className="text-gray-500 flex items-center justify-center md:justify-start gap-2">
                     <MapPin className="w-4 h-4" />
                     Marrakech, Morocco
                   </p>
@@ -115,18 +119,11 @@ export default function ProfilePage() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-3">
-                {/* Language Selector */}
-                <button className="flex items-center gap-1.5 px-3.5 py-2 text-sm text-gray-600 hover:text-gray-900 
-                  rounded-full transition-all duration-200 border border-gray-200 
-                  hover:border-primary/30 hover:shadow-[0_2px_12px_-3px_rgba(0,0,0,0.05)] 
-                  active:scale-[0.98] group">
-                  <Globe className="h-4 w-4 group-hover:text-primary transition-colors" />
-                  <span className="font-medium">EN</span>
-                  <ChevronDown className="h-4 w-4 opacity-50 group-hover:text-primary transition-colors" />
-                </button>
-
-                {/* Edit Profile */}
+              <div className="flex items-center justify-center md:justify-end gap-3">
+                <Button variant="outline" size="sm" className="gap-2">
+                  <Share2 className="w-4 h-4" />
+                  Share Profile
+                </Button>
                 <Button className="gap-2">
                   <Edit className="w-4 h-4" />
                   Edit Profile
@@ -135,9 +132,9 @@ export default function ProfilePage() {
             </div>
 
             {/* Stats */}
-            <div className="grid grid-cols-4 divide-x border-b">
+            <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 border-b">
               {stats.map((stat) => (
-                <div key={stat.label} className="px-6 py-4 text-center">
+                <div key={stat.label} className="px-6 py-4 text-center hover:bg-gray-50 transition-colors cursor-pointer">
                   <div className="text-2xl font-semibold text-gray-900">{stat.value}</div>
                   <div className="text-sm text-gray-500">{stat.label}</div>
                 </div>
@@ -145,9 +142,9 @@ export default function ProfilePage() {
             </div>
 
             {/* Main Content */}
-            <div className="grid grid-cols-12 divide-x">
+            <div className="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x">
               {/* Left Column - Menu Items */}
-              <div className="col-span-4 p-6 space-y-1">
+              <div className="lg:col-span-4 p-6 space-y-1">
                 {menuItems.map((item) => (
                   <button
                     key={item.title}
@@ -185,20 +182,20 @@ export default function ProfilePage() {
               </div>
 
               {/* Right Column - Recent Activity */}
-              <div className="col-span-8 p-6">
-                <div className="space-y-6">
+              <div className="lg:col-span-8 p-6">
+                <div className="space-y-8">
                   {/* Contact Information */}
                   <div>
                     <h3 className="text-lg font-semibold mb-4">Contact Information</h3>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="flex items-center gap-3 p-3 rounded-lg border bg-gray-50">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="flex items-center gap-3 p-3 rounded-lg border bg-gray-50 hover:bg-white transition-colors">
                         <Mail className="w-5 h-5 text-gray-500" />
                         <div>
                           <div className="text-sm text-gray-500">Email</div>
                           <div className="font-medium">ellison@example.com</div>
                         </div>
                       </div>
-                      <div className="flex items-center gap-3 p-3 rounded-lg border bg-gray-50">
+                      <div className="flex items-center gap-3 p-3 rounded-lg border bg-gray-50 hover:bg-white transition-colors">
                         <Phone className="w-5 h-5 text-gray-500" />
                         <div>
                           <div className="text-sm text-gray-500">Phone</div>
@@ -208,19 +205,39 @@ export default function ProfilePage() {
                     </div>
                   </div>
 
+                  {/* Social Links */}
+                  <div>
+                    <h3 className="text-lg font-semibold mb-4">Social Media</h3>
+                    <div className="flex gap-3">
+                      <Button variant="outline" size="icon" className="rounded-full w-10 h-10">
+                        <Instagram className="w-5 h-5" />
+                      </Button>
+                      <Button variant="outline" size="icon" className="rounded-full w-10 h-10">
+                        <Twitter className="w-5 h-5" />
+                      </Button>
+                      <Button variant="outline" size="icon" className="rounded-full w-10 h-10">
+                        <Facebook className="w-5 h-5" />
+                      </Button>
+                    </div>
+                  </div>
+
                   {/* Recent Trips */}
                   <div>
-                    <h3 className="text-lg font-semibold mb-4">Recent Trips</h3>
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="flex items-center justify-between mb-4">
+                      <h3 className="text-lg font-semibold">Recent Trips</h3>
+                      <Button variant="outline" size="sm">View All</Button>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {recentTrips.map((trip) => (
                         <div key={trip.title} className="group rounded-xl overflow-hidden border hover:shadow-lg transition-all">
-                          <div className="aspect-[16/9] relative">
+                          <div className="aspect-video relative">
                             <Image
                               src={trip.image}
                               alt={trip.title}
                               fill
                               className="object-cover group-hover:scale-105 transition-transform duration-300"
                             />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                           </div>
                           <div className="p-4">
                             <h4 className="font-semibold text-gray-900 group-hover:text-primary transition-colors">
