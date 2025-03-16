@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "clean": "if exist .next rd /s /q .next && if exist out rd /s /q out",
+    "build": "npm run clean && next build",
     "start": "next start",
     "lint": "next lint"
   },
@@ -41,6 +42,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "cmdk": "1.0.4",
+    "critters": "^0.0.20",
     "date-fns": "latest",
     "embla-carousel-react": "8.5.1",
     "input-otp": "1.4.1",
