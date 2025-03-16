@@ -1,7 +1,9 @@
 'use client'
 
 import { Search, Home, MapPin } from "lucide-react"
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
+import { cities } from "../lib/data"
+import Link from "next/link"
 
 interface SearchBarProps {
   onSearch: (query: string) => void
@@ -9,6 +11,42 @@ interface SearchBarProps {
 
 export function SearchBar({ onSearch }: SearchBarProps) {
   const [activeTab, setActiveTab] = useState('all')
+  const [searchQuery, setSearchQuery] = useState('')
+  const [searchResults, setSearchResults] = useState<Array<{name: string, region: string, image: string}>>([])
+  const [showDropdown, setShowDropdown] = useState(false)
+  const dropdownRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    // Filter cities based on search query
+    if (searchQuery.trim() === '') {
+      setSearchResults([])
+      setShowDropdown(false)
+      return
+    }
+
+    const filtered = cities.filter(city => 
+      city.name.toLowerCase().includes(searchQuery.toLowerCase())
+    )
+    setSearchResults(filtered)
+    setShowDropdown(filtered.length > 0)
+    
+    // Pass the search query to parent component
+    onSearch(searchQuery)
+  }, [searchQuery, onSearch])
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setShowDropdown(false)
+      }
+    }
+    
+    document.addEventListener("mousedown", handleClickOutside)
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside)
+    }
+  }, [])
 
   return (
     <div className="w-full max-w-5xl mx-auto">
@@ -56,8 +94,44 @@ export function SearchBar({ onSearch }: SearchBarProps) {
           type="text"
           placeholder="Search destinations, hotels, activities..."
           className="w-full pl-8 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3.5 text-sm sm:text-base text-gray-900 bg-white border border-gray-200 rounded-full shadow-sm placeholder:text-gray-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary hover:border-gray-300 transition-colors"
-          onChange={(e) => onSearch(e.target.value)}
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          onFocus={() => searchResults.length > 0 && setShowDropdown(true)}
         />
+        
+        {/* Search Results Dropdown */}
+        {showDropdown && (
+          <div 
+            ref={dropdownRef}
+            className="absolute z-10 w-full mt-1 bg-white rounded-md shadow-lg border border-gray-200 max-h-80 overflow-y-auto"
+          >
+            <div className="py-1">
+              {searchResults.map((city, index) => (
+                <Link 
+                  href={`/city/${city.name.toLowerCase()}`} 
+                  key={index}
+                  className="flex items-center px-4 py-3 hover:bg-gray-50 transition-colors cursor-pointer"
+                  onClick={() => {
+                    setShowDropdown(false)
+                    setSearchQuery('')
+                  }}
+                >
+                  <div className="h-10 w-10 rounded-md overflow-hidden mr-3">
+                    <img 
+                      src={city.image} 
+                      alt={city.name}
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                  <div>
+                    <p className="font-medium text-gray-900">{city.name}</p>
+                    <p className="text-sm text-gray-500">{city.region}</p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )
