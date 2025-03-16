@@ -28,7 +28,7 @@ export function SearchBar({ onSearch }: SearchBarProps) {
       city.name.toLowerCase().includes(searchQuery.toLowerCase())
     )
     setSearchResults(filtered)
-    setShowDropdown(filtered.length > 0)
+    setShowDropdown(true) // Always show dropdown when searching
     
     // Pass the search query to parent component
     onSearch(searchQuery)
@@ -96,7 +96,7 @@ export function SearchBar({ onSearch }: SearchBarProps) {
           className="w-full pl-8 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3.5 text-sm sm:text-base text-gray-900 bg-white border border-gray-200 rounded-full shadow-sm placeholder:text-gray-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary hover:border-gray-300 transition-colors"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          onFocus={() => searchResults.length > 0 && setShowDropdown(true)}
+          onFocus={() => searchQuery.trim() !== '' && setShowDropdown(true)}
         />
         
         {/* Search Results Dropdown */}
@@ -106,29 +106,41 @@ export function SearchBar({ onSearch }: SearchBarProps) {
             className="absolute z-10 w-full mt-1 bg-white rounded-md shadow-lg border border-gray-200 max-h-80 overflow-y-auto"
           >
             <div className="py-1">
-              {searchResults.map((city, index) => (
-                <Link 
-                  href={`/city/${city.name.toLowerCase()}`} 
-                  key={index}
-                  className="flex items-center px-4 py-3 hover:bg-gray-50 transition-colors cursor-pointer"
-                  onClick={() => {
-                    setShowDropdown(false)
-                    setSearchQuery('')
-                  }}
-                >
-                  <div className="h-10 w-10 rounded-md overflow-hidden mr-3">
-                    <img 
-                      src={city.image} 
-                      alt={city.name}
-                      className="h-full w-full object-cover"
-                    />
+              {searchResults.length > 0 ? (
+                searchResults.map((city, index) => (
+                  <Link 
+                    href={`/city/${city.name.toLowerCase()}`} 
+                    key={index}
+                    className="flex items-center px-4 py-3 hover:bg-gray-50 transition-colors cursor-pointer"
+                    onClick={() => {
+                      setShowDropdown(false)
+                      setSearchQuery('')
+                    }}
+                  >
+                    <div className="h-10 w-10 rounded-md overflow-hidden mr-3">
+                      <img 
+                        src={city.image} 
+                        alt={city.name}
+                        className="h-full w-full object-cover"
+                      />
+                    </div>
+                    <div>
+                      <p className="font-medium text-gray-900">{city.name}</p>
+                      <p className="text-sm text-gray-500">{city.region}</p>
+                    </div>
+                  </Link>
+                ))
+              ) : (
+                <div className="px-4 py-6 text-center">
+                  <div className="mb-2">
+                    <Search className="h-8 w-8 text-gray-400 mx-auto" />
                   </div>
-                  <div>
-                    <p className="font-medium text-gray-900">{city.name}</p>
-                    <p className="text-sm text-gray-500">{city.region}</p>
-                  </div>
-                </Link>
-              ))}
+                  <p className="text-gray-900 font-medium">No results found</p>
+                  <p className="text-gray-500 text-sm mt-1">
+                    We couldn't find "{searchQuery}" in our destinations
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         )}
