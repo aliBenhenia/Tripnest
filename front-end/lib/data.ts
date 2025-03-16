@@ -5,8 +5,8 @@ export const moroccanCities = [
     name: "Marrakech",
     slug: "marrakech",
     properties: 783,
-    imageUrl: "https://images.unsplash.com/photo-1597212618440-806262de4f6b?q=80&w=1473&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    imageUrl2: "https://plus.unsplash.com/premium_photo-1673415819362-c2ca640bfafe?q=80&w=1471&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    imageUrl: "/images/marrakech.jpg",
+    imageUrl2: "/images/marrakech.jpg",
     description: "Known for its vibrant souks, historic palaces, and the famous Jemaa el-Fnaa square.",
   },
   {
@@ -14,35 +14,35 @@ export const moroccanCities = [
     name: "Casablanca",
     slug: "casablanca",
     properties: 593,
-    imageUrl: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/05/4d/c3/07/ii.jpg?w=900&h=500&s=1",
-    imageUrl2: "/placeholder.svg?height=400&width=300&text=Casablanca+2",
+    imageUrl: "/images/casablanca.jpg",
+    imageUrl2: "/images/casablanca.jpg",
     description: "Morocco's largest city with modern architecture and the stunning Hassan II Mosque.",
   },
   {
     id: 3,
-    name: "Fes",
-    slug: "fes",
-    properties: 425,
-    imageUrl: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0f/8a/0f/b3/photo0jpg.jpg?w=1400&h=500&s=1",
-    imageUrl2: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/4d/46/b3/chefchaouen.jpg?w=1400&h=500&s=1",
-    description: "Home to the oldest university in the world and the largest car-free urban area.",
-  },
-  {
-    id: 4,
     name: "Chefchaouen",
     slug: "chefchaouen",
     properties: 312,
-    imageUrl: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/4d/46/b3/chefchaouen.jpg?w=1400&h=500&s=1",
-    imageUrl2: "/placeholder.svg?height=400&width=300&text=Chefchaouen+2",
+    imageUrl: "/images/chefchaouen.jpg",
+    imageUrl2: "/images/chefchaouen.jpg",
     description: "The famous blue city nestled in the Rif Mountains with its distinctive blue-washed buildings.",
+  },
+  {
+    id: 4,
+    name: "Fes",
+    slug: "fes",
+    properties: 425,
+    imageUrl: "/images/fes.jpg",
+    imageUrl2: "/images/fes.jpg",
+    description: "Home to the oldest university in the world and the largest car-free urban area.",
   },
   {
     id: 5,
     name: "Essaouira",
     slug: "essaouira",
     properties: 287,
-    imageUrl: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/01/81/aa/d8/essaouira-harbour.jpg?w=1400&h=500&s=1",
-    imageUrl2: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/01/81/aa/d8/essaouira-harbour.jpg?w=1400&h=500&s=1",
+    imageUrl: "/images/essaouira.jpg",
+    imageUrl2: "/images/essaouira.jpg",
     description: "A charming coastal town known for its windy beaches, historic medina, and vibrant art scene.",
   },
   {
@@ -50,11 +50,11 @@ export const moroccanCities = [
     name: "Tangier",
     slug: "tangier",
     properties: 356,
-    imageUrl: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/4d/45/65/tangier.jpg?w=1400&h=500&s=1",
-    imageUrl2: "/placeholder.svg?height=400&width=300&text=Tangier+2",
+    imageUrl: "/images/tangier.jpg",
+    imageUrl2: "/images/tangier.jpg",
     description: "A port city where the Mediterranean meets the Atlantic, with a rich international history.",
   },
-]
+];
 
 // Popular Experiences
 export const popularExperiences = [
@@ -64,7 +64,7 @@ export const popularExperiences = [
     category: "Food & Cooking",
     price: 45,
     rating: 4.9,
-    imageUrl: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/4d/45/65/tangier.jpg?w=1400&h=500&s=1",
+    imageUrl: "/images/marrakech.jpg",
   },
   {
     id: 2,
@@ -72,7 +72,7 @@ export const popularExperiences = [
     category: "Adventure",
     price: 89,
     rating: 5.0,
-    imageUrl: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/01/81/aa/d8/essaouira-harbour.jpg?w=1400&h=500&s=1",
+    imageUrl: "/images/casablanca.jpg",
   },
   {
     id: 3,
@@ -80,7 +80,7 @@ export const popularExperiences = [
     category: "Cultural Tour",
     price: 31,
     rating: 4.8,
-    imageUrl: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/01/81/aa/d8/essaouira-harbour.jpg?w=1400&h=500&s=1",
+    imageUrl: "/images/fes.jpg",
   },
   {
     id: 4,
@@ -88,7 +88,7 @@ export const popularExperiences = [
     category: "Nature & Outdoors",
     price: 65,
     rating: 4.7,
-    imageUrl: "https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/4d/45/65/tangier.jpg?w=1400&h=500&s=1",
+    imageUrl: "/images/chefchaouen.jpg",
   },
 ]
 
@@ -341,6 +341,118 @@ export const cityActivities: Record<number, Array<{ id: number; name: string; ty
       imageUrl: "https://images.unsplash.com/photo-1548013146-72479768bada",
     },
   ],
+
+  // Tangier Activities
+  6: [
+    // Beach Activities
+    {
+      id: 601,
+      name: "Achakkar Beach",
+      type: "beach",
+      imageUrl: "/images/tangier.jpg",
+    },
+    {
+      id: 602,
+      name: "Tangier Bay",
+      type: "beach",
+      imageUrl: "/images/tangier.jpg",
+    },
+    // Photography Activities
+    {
+      id: 603,
+      name: "Kasbah Photography",
+      type: "photography",
+      imageUrl: "/images/tangier.jpg",
+    },
+    {
+      id: 604,
+      name: "Cape Spartel Lighthouse",
+      type: "photography",
+      imageUrl: "/images/tangier.jpg",
+    },
+    // Tour Activities
+    {
+      id: 605,
+      name: "Hercules Cave Tour",
+      type: "tour",
+      imageUrl: "/images/tangier.jpg",
+    },
+    {
+      id: 606,
+      name: "Old Medina Tour",
+      type: "tour",
+      imageUrl: "/images/tangier.jpg",
+    },
+    // Travel Activities
+    {
+      id: 607,
+      name: "Day Trip to Asilah",
+      type: "travel",
+      imageUrl: "/images/tangier.jpg",
+    },
+    {
+      id: 608,
+      name: "Strait of Gibraltar Boat Tour",
+      type: "travel",
+      imageUrl: "/images/tangier.jpg",
+    },
+  ],
+
+  // Essaouira Activities
+  5: [
+    // Beach Activities
+    {
+      id: 501,
+      name: "Essaouira Beach",
+      type: "beach",
+      imageUrl: "/images/essaouira.jpg",
+    },
+    {
+      id: 502,
+      name: "Sidi Kaouki Beach",
+      type: "beach",
+      imageUrl: "/images/essaouira.jpg",
+    },
+    // Photography Activities
+    {
+      id: 503,
+      name: "Ramparts Photography",
+      type: "photography",
+      imageUrl: "/images/essaouira.jpg",
+    },
+    {
+      id: 504,
+      name: "Harbor Sunset Photography",
+      type: "photography",
+      imageUrl: "/images/essaouira.jpg",
+    },
+    // Tour Activities
+    {
+      id: 505,
+      name: "Medina Walking Tour",
+      type: "tour",
+      imageUrl: "/images/essaouira.jpg",
+    },
+    {
+      id: 506,
+      name: "Fishing Harbor Tour",
+      type: "tour",
+      imageUrl: "/images/essaouira.jpg",
+    },
+    // Travel Activities
+    {
+      id: 507,
+      name: "Windsurfing Adventure",
+      type: "travel",
+      imageUrl: "/images/essaouira.jpg",
+    },
+    {
+      id: 508,
+      name: "Quad Biking",
+      type: "travel",
+      imageUrl: "/images/essaouira.jpg",
+    },
+  ],
 }
 
 interface City {
@@ -364,22 +476,32 @@ export const cities: City[] = [
   {
     name: "Marrakech",
     region: "Marrakech-Safi",
-    image: "https://images.unsplash.com/photo-1597212618440-806262de4f6b?q=80&w=1000",
+    image: "/images/marrakech.jpg",
   },
   {
     name: "Fes",
     region: "Fès-Meknès",
-    image: "https://images.unsplash.com/photo-1553244323-0dd6bd55ca27?q=80&w=1000",
+    image: "/images/fes.jpg",
   },
   {
     name: "Chefchaouen",
     region: "Tanger-Tétouan-Al Hoceïma",
-    image: "https://images.unsplash.com/photo-1553913861-c0fddf2619ee?q=80&w=1000",
+    image: "/images/chefchaouen.jpg",
   },
   {
     name: "Casablanca",
     region: "Casablanca-Settat",
-    image: "https://images.unsplash.com/photo-1579017461826-8ea20d5cdb28?q=80&w=1000",
+    image: "/images/casablanca.jpg",
+  },
+  {
+    name: "Tangier",
+    region: "Tanger-Tétouan-Al Hoceïma",
+    image: "/images/tangier.jpg",
+  },
+  {
+    name: "Essaouira",
+    region: "Marrakech-Safi",
+    image: "/images/essaouira.jpg",
   }
 ]
 
@@ -387,7 +509,7 @@ export const activities: Activity[] = [
   {
     title: "Desert Safari Adventure",
     location: "Merzouga Desert",
-    image: "https://images.unsplash.com/photo-1565689478690-8ddf97b359b5?q=80&w=1000",
+    image: "/images/marrakech.jpg",
     duration: "2 days",
     groupSize: "2-8 people",
     price: 149,
@@ -397,7 +519,7 @@ export const activities: Activity[] = [
   {
     title: "Traditional Cooking Class",
     location: "Marrakech Medina",
-    image: "https://images.unsplash.com/photo-1585537884607-c4d0b7158424?q=80&w=1000",
+    image: "/images/casablanca.jpg",
     duration: "4 hours",
     groupSize: "4-10 people",
     price: 65,
@@ -407,7 +529,7 @@ export const activities: Activity[] = [
   {
     title: "Atlas Mountains Trek",
     location: "High Atlas",
-    image: "https://images.unsplash.com/photo-1489493887464-892be6d1daae?q=80&w=1000",
+    image: "/images/chefchaouen.jpg",
     duration: "1 day",
     groupSize: "2-6 people",
     price: 89,
@@ -417,12 +539,22 @@ export const activities: Activity[] = [
   {
     title: "Medina Photography Tour",
     location: "Fes Medina",
-    image: "https://images.unsplash.com/photo-1531468117562-037c2178ef42?q=80&w=1000",
+    image: "/images/fes.jpg",
     duration: "3 hours",
     groupSize: "1-4 people",
     price: 45,
     rating: 4.7,
     reviews: 82
+  },
+  {
+    title: "Coastal Exploration",
+    location: "Tangier",
+    image: "/images/tangier.jpg",
+    duration: "5 hours",
+    groupSize: "2-6 people",
+    price: 55,
+    rating: 4.6,
+    reviews: 74
   }
 ]
 
