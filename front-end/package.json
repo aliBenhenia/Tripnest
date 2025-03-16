@@ -4,8 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "clean": "if exist .next rd /s /q .next && if exist out rd /s /q out",
-    "build": "npm run clean && next build",
+    "clean": "rimraf .next && rimraf out",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
@@ -55,6 +55,7 @@
     "react-hook-form": "^7.54.1",
     "react-resizable-panels": "^2.1.7",
     "recharts": "2.15.0",
+    "rimraf": "^5.0.5",
     "sonner": "^1.7.1",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",
