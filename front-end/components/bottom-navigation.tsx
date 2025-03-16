@@ -71,12 +71,16 @@ export default function BottomNavigation() {
                   hover:after:bg-primary/[0.02] after:-m-3 after:p-3"
               >
                 <div className="relative transition-transform duration-300 group-hover:scale-[1.02]">
-                  <img 
-                    src="https://travila-nextjs-landing.vercel.app/assets/imgs/template/logo-w.svg" 
-                    alt="Travila" 
-                    className="w-28 h-10 filter brightness-0 transition-all duration-300
-                      group-hover:brightness-[0.2] group-hover:contrast-[1.1]" 
-                  />
+                  <div className="w-28 h-10 flex items-center justify-center font-bold text-xl">
+                    <span className="text-blue-600">Go</span>
+                    <span className="text-red-500">M</span>
+                    <span className="text-orange-500">o</span>
+                    <span className="text-green-500">r</span>
+                    <span className="text-blue-500">o</span>
+                    <span className="text-purple-500">c</span>
+                    <span className="text-red-600">c</span>
+                    <span className="text-orange-600">o</span>
+                  </div>
                   <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/[0.02] to-primary/0 
                     opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-lg" />
                 </div>
