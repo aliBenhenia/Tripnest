@@ -19,13 +19,6 @@ export const metadata: Metadata = {
   applicationName: 'Morocco Travel Explorer',
   keywords: ['morocco', 'travel', 'tourism', 'cities', 'experiences', 'destinations'],
   authors: [{ name: 'Your Name' }],
-  colorScheme: 'light',
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 1,
-    userScalable: false,
-  },
   openGraph: {
     type: 'website',
     locale: 'en_US',
@@ -35,7 +28,15 @@ export const metadata: Metadata = {
     siteName: 'Morocco Travel Explorer',
   },
 }
-
+export const viweport = {
+  colorScheme: 'light',
+  viewport: {
+    width: 'device-width',
+    initialScale: 1,
+    maximumScale: 1,
+    userScalable: false,
+  },
+}
 export default function RootLayout({
   children,
 }: {
