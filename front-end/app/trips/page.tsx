@@ -27,7 +27,8 @@ export default function TripsPage() {
             { title: "Coastal Morocco Adventure", image: "/placeholder.svg?height=200&width=300&text=Coastal+Morocco" },
           ].map((item, index) => (
             <div key={index} className="relative rounded-lg overflow-hidden h-40">
-              <Image src={item.image || "/placeholder.svg"} alt={item.title} fill className="object-cover" />
+              <Image src={item.image || "/placeholder.svg"} alt={item.title} fill className="object-cover" 
+               sizes="(max-width: 768px) 100vw, 50vw" />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
               <div className="absolute bottom-3 left-3 text-white">
                 <h4 className="font-medium text-lg">{item.title}</h4>

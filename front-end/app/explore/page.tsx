@@ -205,6 +205,7 @@ export default function ExplorePage() {
                     src={city.image}
                     alt={city.name}
                     fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
                     className="object-cover transition-transform group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-black/60" />
@@ -236,6 +237,7 @@ export default function ExplorePage() {
                     src={"https://dynamic-media-cdn.tripadvisor.com/media/photo-o/15/4d/45/65/tangier.jpg?w=1400&h=500&s=1"}
                     alt={activity.title}
                     fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
                     className="object-cover transition-transform group-hover:scale-110"
                   />
                   <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-lg text-sm font-medium">

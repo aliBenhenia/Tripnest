@@ -53,7 +53,8 @@ export default function SavedPage() {
         ].map((item, index) => (
           <div key={index} className="rounded-lg overflow-hidden shadow-sm">
             <div className="relative h-28">
-              <Image src={item.image || "/placeholder.svg"} alt={item.name} fill className="object-cover" />
+              <Image src={item.image || "/placeholder.svg"} alt={item.name} fill className="object-cover" 
+               sizes="(max-width: 768px) 100vw, 50vw"/>
               <button className="absolute top-2 right-2 bg-white/20 backdrop-blur-sm p-1.5 rounded-full">
                 <Heart className="h-4 w-4 text-white fill-white" />
               </button>
