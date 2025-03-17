@@ -13,7 +13,7 @@ import { useState, useEffect } from "react"
 import { SearchBar } from "@/components/SearchBar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Calendar as CalendarComponent } from "@/components/ui/calendar"
-import { format, addDays, isSameDay, isAfter, isBefore, isToday } from "date-fns"
+import { format, addDays, isSameDay, isAfter, isBefore, isToday } from "date-fns" 
 
 export default function ExplorePage() {
   const [date, setDate] = useState<Date>()
