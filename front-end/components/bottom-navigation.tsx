@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button"
 import { useAuth } from "@/hooks/useAuth"
 import { useState, useEffect } from "react"
 import { useAppSelector } from "@/lib/redux/hooks"
+import { useRouter } from "next/navigation"
 
 // API URL
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
@@ -15,6 +16,7 @@ export default function BottomNavigation() {
   const pathname = usePathname()
   const { user: authUser, isAuthenticated, logout } = useAuth()
   const [showProfileMenu, setShowProfileMenu] = useState(false)
+  const router = useRouter()
   
   // Get user from Redux store
   const reduxUser = useAppSelector(state => state.user.currentUser)
@@ -57,6 +59,15 @@ export default function BottomNavigation() {
   const handleLogout = () => {
     logout()
     setShowProfileMenu(false)
+    
+    // Clear localStorage items if needed beyond what's in useAuth
+    localStorage.removeItem('travila_user')
+    localStorage.removeItem('travila_token')
+    
+    // If the current page is one that requires authentication, redirect to home
+    if (pathname.startsWith('/profile') || pathname.startsWith('/saved')) {
+      router.push('/')
+    }
   }
 
   const toggleProfileMenu = () => {
@@ -65,12 +76,21 @@ export default function BottomNavigation() {
 
   // Get user avatar URL
   const getAvatarUrl = () => {
-    if (user?.avatar) {
+    // First check the Redux state
+    if (reduxUser?.avatar) {
+      return `${API_URL}${reduxUser.avatar}`
+    } 
+    // Then check auth context user data 
+    else if (user?.avatar) {
       return `${API_URL}${user.avatar}`
-    } else if (user?.name) {
-      return `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=random`
+    } 
+    // Generate avatar from name if available
+    else if (user?.name || reduxUser?.name) {
+      const name = user?.name || reduxUser?.name || ''
+      return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=random`
     }
-    return "https://avatars.githubusercontent.com/u/95689141?s=400&u=275826ef98503225cfa203907197ad854e0111a1&v=4"
+    // Default fallback
+    return "/images/default-avatar.png"
   }
 
   return (

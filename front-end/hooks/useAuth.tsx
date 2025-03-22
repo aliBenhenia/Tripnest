@@ -1,6 +1,8 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { store } from '@/lib/redux/store';
+import { RESET_STATE } from '@/lib/redux/store';
 
 // Define user type
 type User = {
@@ -115,6 +117,25 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setIsLoading(true);
     
     try {
+      // Validate inputs
+      if (!name || !email || !password) {
+        setError('All fields are required');
+        setIsLoading(false);
+        return false;
+      }
+      
+      if (password.length < 6) {
+        setError('Password must be at least 6 characters long');
+        setIsLoading(false);
+        return false;
+      }
+      
+      if (!email.includes('@')) {
+        setError('Please enter a valid email address');
+        setIsLoading(false);
+        return false;
+      }
+      
       const endpoints = await getApiEndpoints();
       const response = await fetch(`${API_URL}${endpoints.signup}`, {
         method: 'POST',
@@ -127,7 +148,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const data = await response.json();
       
       if (!response.ok) {
-        throw new Error(data.message || 'Signup failed');
+        // Handle different error scenarios
+        if (response.status === 409) {
+          setError('This email is already registered. Please log in instead.');
+          setIsLoading(false);
+          return false;
+        } else if (data.errors && Array.isArray(data.errors)) {
+          setError(data.errors.map((err: any) => err.msg).join('. '));
+          setIsLoading(false);
+          return false;
+        } else {
+          setError(data.message || 'Failed to create account. Please try again.');
+          setIsLoading(false);
+          return false;
+        }
       }
       
       // Save to state and localStorage
@@ -142,6 +176,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setIsLoading(false);
       return true;
     } catch (err) {
+      console.error('Signup error:', err);
       setError(err instanceof Error ? err.message : 'An unknown error occurred');
       setIsLoading(false);
       return false;
@@ -154,19 +189,65 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setIsLoading(true);
     
     try {
-      const endpoints = await getApiEndpoints();
-      const response = await fetch(`${API_URL}${endpoints.signin}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
+      // Validate inputs
+      if (!email || !password) {
+        setError('Email and password are required');
+        setIsLoading(false);
+        return false;
+      }
       
-      const data = await response.json();
+      if (!email.includes('@')) {
+        setError('Please enter a valid email address');
+        setIsLoading(false);
+        return false;
+      }
+      
+      const endpoints = await getApiEndpoints();
+      
+      // Handle network errors
+      let response;
+      try {
+        response = await fetch(`${API_URL}${endpoints.signin}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ email, password }),
+        });
+      } catch (fetchError) {
+        setError('Network error. Please check your internet connection and try again.');
+        setIsLoading(false);
+        return false;
+      }
+      
+      let data;
+      try {
+        data = await response.json();
+      } catch (jsonError) {
+        setError('Invalid response from server. Please try again later.');
+        setIsLoading(false);
+        return false;
+      }
       
       if (!response.ok) {
-        throw new Error(data.message || 'Login failed');
+        // Handle different error scenarios
+        if (response.status === 401) {
+          setError('Invalid email or password. Please try again.');
+          setIsLoading(false);
+          return false;
+        } else if (response.status === 404) {
+          setError('Account not found. Please check your email or sign up.');
+          setIsLoading(false);
+          return false;
+        } else if (data.errors && Array.isArray(data.errors)) {
+          setError(data.errors.map((err: any) => err.msg).join('. '));
+          setIsLoading(false);
+          return false;
+        } else {
+          setError(data.message || 'Login failed. Please try again later.');
+          setIsLoading(false);
+          return false;
+        }
       }
       
       // Save to state and localStorage
@@ -181,6 +262,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setIsLoading(false);
       return true;
     } catch (err) {
+      console.error('Login error:', err);
       setError(err instanceof Error ? err.message : 'An unknown error occurred');
       setIsLoading(false);
       return false;
@@ -191,6 +273,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = () => {
     setUser(null);
     setToken(null);
+    
+    // Reset Redux state
+    store.dispatch({ type: RESET_STATE });
     
     if (isBrowser) {
       localStorage.removeItem(TOKEN_KEY);

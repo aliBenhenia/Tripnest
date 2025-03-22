@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "network": "next dev -H 0.0.0.0",
     "clean": "rimraf .next && rimraf out",
     "build": "next build",
     "start": "next start",

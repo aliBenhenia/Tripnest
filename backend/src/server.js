@@ -395,8 +395,8 @@ const startServer = async () => {
   }
 
   // Start server whether MongoDB connects or not
-  app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+  app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server running on http://0.0.0.0:${PORT}`);
     if (!isMongoDBConnected) {
       console.log(`Since MongoDB is not connected, use these endpoints instead:`);
       console.log(`- POST /api/local-auth/signup`);
