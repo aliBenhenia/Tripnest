@@ -1,19 +1,82 @@
 "use client"
 
+import React, { useState } from 'react';
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { 
   Search, MapPin, Calendar, Users, Clock, 
   Users2, Star, Heart, Filter, ArrowUpDown,
-  ChevronDown, X, ChevronLeft, ChevronRight
+  ChevronDown, X, ChevronLeft, ChevronRight, SlidersHorizontal
 } from "lucide-react"
 import Image from "next/image"
 import { cities, activities } from "@/lib/data"
-import { useState, useEffect } from "react"
 import { SearchBar } from "@/components/SearchBar"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { Calendar as CalendarComponent } from "@/components/ui/calendar"
 import { format, addDays, isSameDay, isAfter, isBefore, isToday } from "date-fns" 
+import ExploreCard from '@/components/ExploreCard'
+
+// Sample explore items data
+const exploreItems = [
+  {
+    id: 'exp-1',
+    title: 'Sahara Desert Adventure',
+    description: 'Experience the beauty of the Sahara Desert with our guided tour. Ride camels, sleep under the stars, and enjoy traditional Moroccan cuisine.',
+    image: 'https://images.unsplash.com/photo-1489493887464-892be6d1daae',
+    type: 'experience' as const,
+    rating: 4.8,
+    location: 'Merzouga',
+    price: '$120'
+  },
+  {
+    id: 'place-1',
+    title: 'Luxury Riad in Marrakech',
+    description: 'Stay in a beautiful traditional riad with modern amenities in the heart of Marrakech\'s medina.',
+    image: 'https://images.unsplash.com/photo-1539020140153-e8c5073eacbe',
+    type: 'place' as const,
+    rating: 4.9,
+    location: 'Marrakech',
+    price: '$85'
+  },
+  {
+    id: 'city-1',
+    title: 'Chefchaouen (Blue City)',
+    description: 'Explore the famous blue streets of Chefchaouen, one of Morocco\'s most picturesque destinations.',
+    image: 'https://images.unsplash.com/photo-1531501410720-c8d437948191',
+    type: 'city' as const,
+    rating: 4.7,
+    location: 'Northern Morocco'
+  },
+  {
+    id: 'exp-2',
+    title: 'Atlas Mountains Trek',
+    description: 'A guided trek through the stunning Atlas Mountains, visiting Berber villages and experiencing local culture.',
+    image: 'https://images.unsplash.com/photo-1437956040300-32ccaeb92b4e',
+    type: 'experience' as const,
+    rating: 4.6,
+    location: 'High Atlas',
+    price: '$95'
+  },
+  {
+    id: 'place-2',
+    title: 'Seaside Resort in Essaouira',
+    description: 'Relax by the Atlantic Ocean in this charming coastal town known for its fresh seafood and windsurfing.',
+    image: 'https://images.unsplash.com/photo-1582719508461-905c673771fd',
+    type: 'place' as const,
+    rating: 4.5,
+    location: 'Essaouira',
+    price: '$110'
+  },
+  {
+    id: 'city-2',
+    title: 'Fes Cultural Tour',
+    description: 'Discover the oldest imperial city in Morocco with its famous tanneries and medieval Medina.',
+    image: 'https://images.unsplash.com/photo-1573480450683-8d66e1b14e16',
+    type: 'city' as const,
+    rating: 4.8,
+    location: 'Northern Morocco'
+  }
+];
 
 export default function ExplorePage() {
   const [date, setDate] = useState<Date>()
@@ -28,6 +91,7 @@ export default function ExplorePage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [openCalendar, setOpenCalendar] = useState(false)
   const [openGuests, setOpenGuests] = useState(false)
+  const [activeFilter, setActiveFilter] = useState('all')
 
   const handleSearch = (query: string) => {
     setSearchQuery(query)
@@ -39,6 +103,15 @@ export default function ExplorePage() {
     if (!dateRange.to) return format(dateRange.from, "MMM d, yyyy");
     return `${format(dateRange.from, "MMM d")} - ${format(dateRange.to, "MMM d, yyyy")}`;
   };
+
+  // Filter items based on search term and active filter
+  const filteredItems = exploreItems.filter(item => {
+    const matchesSearch = item.title.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                         item.description.toLowerCase().includes(searchQuery.toLowerCase());
+    
+    if (activeFilter === 'all') return matchesSearch;
+    return matchesSearch && item.type === activeFilter;
+  });
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -166,20 +239,20 @@ export default function ExplorePage() {
                         </Button>
                       </div>
                     </div>
-            </div>
+                  </div>
                   <div className="flex items-center justify-end p-3 border-t border-gray-100">
                     <Button onClick={() => setOpenGuests(false)}>
                       Apply
                     </Button>
-            </div>
+                  </div>
                 </PopoverContent>
               </Popover>
               
               {/* Search Button */}
               <Button size="lg" className="h-14 text-base transition-all hover:shadow-md">
-              <Search className="w-4 h-4 mr-2" />
-              Search
-            </Button>
+                <Search className="w-4 h-4 mr-2" />
+                Search
+              </Button>
             </div>
           </div>
         </div>
@@ -269,6 +342,116 @@ export default function ExplorePage() {
             ))}
           </div>
         </div>
+
+        {/* Search and Filter Bar */}
+        <div className="bg-white rounded-lg shadow-md p-4 mb-6">
+          <div className="flex flex-col md:flex-row gap-4">
+            <div className="relative flex-grow">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+              <Input 
+                className="pl-10" 
+                placeholder="Search destinations, experiences..." 
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+            <div className="flex gap-2">
+              <Button 
+                variant={activeFilter === 'all' ? 'default' : 'outline'} 
+                onClick={() => setActiveFilter('all')}
+                className="text-sm"
+              >
+                All
+              </Button>
+              <Button 
+                variant={activeFilter === 'experience' ? 'default' : 'outline'} 
+                onClick={() => setActiveFilter('experience')}
+                className="text-sm"
+              >
+                Experiences
+              </Button>
+              <Button 
+                variant={activeFilter === 'place' ? 'default' : 'outline'} 
+                onClick={() => setActiveFilter('place')}
+                className="text-sm"
+              >
+                Places
+              </Button>
+              <Button 
+                variant={activeFilter === 'city' ? 'default' : 'outline'} 
+                onClick={() => setActiveFilter('city')}
+                className="text-sm"
+              >
+                Cities
+              </Button>
+            </div>
+          </div>
+        </div>
+        
+        {/* Results Grid */}
+        <div className="container mx-auto px-4 mt-8">
+          <div className="mb-6">
+            <div className="flex flex-wrap gap-3">
+              <Button 
+                variant={activeFilter === 'all' ? 'default' : 'outline'} 
+                onClick={() => setActiveFilter('all')}
+                className="text-sm"
+              >
+                All
+              </Button>
+              <Button 
+                variant={activeFilter === 'experience' ? 'default' : 'outline'} 
+                onClick={() => setActiveFilter('experience')}
+                className="text-sm"
+              >
+                Experiences
+              </Button>
+              <Button 
+                variant={activeFilter === 'place' ? 'default' : 'outline'} 
+                onClick={() => setActiveFilter('place')}
+                className="text-sm"
+              >
+                Places
+              </Button>
+              <Button 
+                variant={activeFilter === 'city' ? 'default' : 'outline'} 
+                onClick={() => setActiveFilter('city')}
+                className="text-sm"
+              >
+                Cities
+              </Button>
+            </div>
+          </div>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filteredItems.map(item => (
+              <ExploreCard
+                key={item.id}
+                id={item.id}
+                title={item.title}
+                description={item.description}
+                image={item.image}
+                type={item.type}
+                rating={item.rating}
+                location={item.location}
+                price={item.price}
+              />
+            ))}
+          </div>
+          
+          {/* Empty state */}
+          {filteredItems.length === 0 && (
+            <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 text-center">
+              <p className="text-lg text-gray-600">No items found matching your search criteria.</p>
+              <p className="text-gray-500 mt-2">Try adjusting your search or filters.</p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Destination Suggestions */}
+      <div className="py-12 px-4 max-w-7xl mx-auto">
+        {/* ... existing code ... */}
       </div>
     </div>
   )

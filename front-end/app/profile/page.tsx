@@ -1,273 +1,604 @@
 "use client"
 
-import { User, Settings, CreditCard, Bell, Lock, HelpCircle, LogOut, ChevronRight, Globe, ChevronDown, Heart, Camera, MapPin, Calendar, Star, Edit, Mail, Phone, Share2, Instagram, Twitter, Facebook } from "lucide-react"
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '@/hooks/useAuth';
+import ProtectedRoute from '@/components/ProtectedRoute';
+import { User, Settings, CreditCard, Bell, Lock, HelpCircle, LogOut, ChevronRight, Globe, ChevronDown, Heart, Camera, MapPin, Calendar, Star, Edit, Mail, Phone, Share2, Instagram, Twitter, Facebook, BookOpen, Clock } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Image from "next/image"
 import Link from "next/link"
+import { toast } from "@/components/ui/use-toast";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useAppDispatch, useAppSelector } from '@/lib/redux/hooks';
+import { setUserSuccess, updateUserAvatar, updateUserProfile } from '@/lib/redux/slices/userSlice';
+import { addSavedItem, fetchSavedItemsSuccess, removeSavedItem, SavedItem } from '@/lib/redux/slices/savedItemsSlice';
+import { addActivity, fetchActivitiesSuccess, ActivityItem } from '@/lib/redux/slices/recentActivitySlice';
+import { Tabs, TabsList, TabsContent } from "@/components/ui/tabs";
 
-const stats = [
-  { label: "Reviews", value: "128" },
-  { label: "Photos", value: "84" },
-  { label: "Followers", value: "2.1k" },
-  { label: "Following", value: "346" },
-]
-
-const menuItems = [
+// Mock data for saved items and recent activity
+const mockSavedItems: SavedItem[] = [
   {
-    title: "Account Settings",
-    icon: Settings,
-    notifications: 2,
-    description: "Personal information and preferences"
+    id: '1',
+    title: 'Marrakech City Tour',
+    description: 'Explore the vibrant city of Marrakech',
+    image: 'https://images.unsplash.com/photo-1539020140153-e8c5073eacbe',
+    type: 'experience',
+    savedAt: new Date(Date.now() - 86400000 * 3).toISOString() // 3 days ago
   },
   {
-    title: "Payment Methods",
-    icon: CreditCard,
-    notifications: 1,
-    description: "Manage your payment options"
+    id: '2',
+    title: 'Casablanca Beach Resort',
+    description: 'Luxury resort with private beach access',
+    image: 'https://images.unsplash.com/photo-1582719508461-905c673771fd',
+    type: 'place',
+    savedAt: new Date(Date.now() - 86400000 * 5).toISOString() // 5 days ago
   },
   {
-    title: "Notifications",
-    icon: Bell,
-    notifications: 5,
-    description: "Control your notification settings"
-  },
-  {
-    title: "Privacy & Security",
-    icon: Lock,
-    notifications: 0,
-    description: "Protect your account and data"
-  },
-  {
-    title: "Help Center",
-    icon: HelpCircle,
-    notifications: 0,
-    description: "Get help and support"
-  },
-]
-
-const recentTrips = [
-  {
-    title: "Desert Safari Adventure",
-    location: "Merzouga Desert",
-    date: "Mar 15, 2024",
-    image: "https://images.unsplash.com/photo-1565689478690-8ddf97b359b5",
-    rating: 4.9
-  },
-  {
-    title: "Atlas Mountains Trek",
-    location: "High Atlas",
-    date: "Feb 28, 2024",
-    image: "https://images.unsplash.com/photo-1489493887464-892be6d1daae",
-    rating: 4.8
+    id: '3',
+    title: 'Fes Cultural Experience',
+    description: 'Immerse yourself in the rich culture of Fes',
+    image: 'https://images.unsplash.com/photo-1531501410720-c8d437948191',
+    type: 'experience',
+    savedAt: new Date(Date.now() - 86400000 * 7).toISOString() // 7 days ago
   }
-]
+];
+
+const mockActivities: ActivityItem[] = [
+  {
+    id: '1',
+    title: 'Viewed Chefchaouen Tour',
+    description: 'You viewed details about the Blue City tour',
+    type: 'view',
+    timestamp: new Date(Date.now() - 86400000 * 1).toISOString(), // 1 day ago
+    referenceId: '101',
+    referenceType: 'experience'
+  },
+  {
+    id: '2',
+    title: 'Searched for "Sahara desert"',
+    description: 'You searched for desert experiences',
+    type: 'search',
+    timestamp: new Date(Date.now() - 86400000 * 2).toISOString() // 2 days ago
+  },
+  {
+    id: '3',
+    title: 'Saved Atlas Mountains Trek',
+    description: 'You added Atlas Mountains Trek to your saved items',
+    image: 'https://images.unsplash.com/photo-1489493887464-892be6d1daae',
+    type: 'save',
+    timestamp: new Date(Date.now() - 86400000 * 4).toISOString(), // 4 days ago
+    referenceId: '202',
+    referenceType: 'experience'
+  }
+];
+
+type ProfileUser = {
+  id: string;
+  name: string;
+  email: string;
+  avatar: string | null;
+  createdAt: string;
+};
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
 export default function ProfilePage() {
+  const { user: authUser, token, validateToken, logout } = useAuth();
+  const [user, setUser] = useState<ProfileUser | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [editMode, setEditMode] = useState(false);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const [serverError, setServerError] = useState<boolean>(false);
+  const [activeTab, setActiveTab] = useState('saved');
+
+  // Redux
+  const dispatch = useAppDispatch();
+  const reduxUser = useAppSelector(state => state.user.currentUser);
+  const savedItems = useAppSelector(state => state.savedItems.items);
+  const recentActivities = useAppSelector(state => state.recentActivity.activities);
+
+  useEffect(() => {
+    if (authUser && token) {
+      // Check if token is valid before fetching
+      validateToken().then(isValid => {
+        if (isValid) {
+          fetchUserProfile();
+          setServerError(false);
+        } else {
+          console.error('Token validation failed');
+          toast({
+            title: "Authentication expired",
+            description: "Please log in again",
+            variant: "destructive",
+          });
+          logout();
+        }
+      }).catch(error => {
+        console.error('Server connection error:', error);
+        setServerError(true);
+        // Show server connection error toast
+        toast({
+          title: "Server connection error",
+          description: "Unable to connect to the server. Please check your internet connection or try again later.",
+          variant: "destructive",
+        });
+      });
+    }
+  }, [authUser, token]);
+
+  // Initialize mock data for demo
+  useEffect(() => {
+    if (savedItems.length === 0) {
+      dispatch(fetchSavedItemsSuccess(mockSavedItems));
+    }
+    
+    if (recentActivities.length === 0) {
+      dispatch(fetchActivitiesSuccess(mockActivities));
+    }
+  }, [dispatch, savedItems.length, recentActivities.length]);
+
+  const fetchUserProfile = async () => {
+    if (!token) return;
+
+    try {
+      // Determine if we should use regular or local API
+      const infoResponse = await fetch(`${API_URL}/`);
+      const infoData = await infoResponse.json();
+      const profileEndpoint = infoData.userEndpoints[0].includes('local') 
+        ? '/api/local-users/profile' 
+        : '/api/users/profile';
+
+      console.log('Using profile endpoint:', `${API_URL}${profileEndpoint}`);
+
+      const response = await fetch(`${API_URL}${profileEndpoint}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      console.log('Profile response status:', response.status);
+
+      // Check if response is not ok
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        console.error('Profile fetch error:', errorData);
+        throw new Error(errorData.message || 'Failed to fetch profile');
+      }
+
+      const data = await response.json();
+      console.log('Profile data:', data);
+      
+      const userData = data.data.user;
+      setUser(userData);
+      setName(userData.name);
+      setEmail(userData.email);
+      
+      // Update Redux store
+      dispatch(setUserSuccess(userData));
+    } catch (error) {
+      console.error('Error fetching profile:', error);
+      // Fallback to auth user if profile fetch fails
+      if (authUser) {
+        console.log('Falling back to auth user:', authUser);
+        const fallbackUser = {
+          id: authUser.id,
+          name: authUser.name,
+          email: authUser.email,
+          avatar: null,
+          createdAt: authUser.createdAt
+        };
+        setUser(fallbackUser);
+        setName(authUser.name);
+        setEmail(authUser.email);
+        
+        // Update Redux store with fallback user
+        dispatch(setUserSuccess(fallbackUser));
+      }
+    }
+  };
+
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      setAvatarFile(file);
+      
+      // Create a preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setAvatarPreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!token || !user) {
+      toast({
+        title: "Authentication required",
+        description: "You must be logged in to update your profile",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      // Validate token first
+      const isTokenValid = await validateToken();
+      if (!isTokenValid) {
+        throw new Error('Authentication expired. Please log in again.');
+      }
+
+      // Determine if we should use regular or local API
+      const infoResponse = await fetch(`${API_URL}/`);
+      const infoData = await infoResponse.json();
+      const profileEndpoint = infoData.userEndpoints[0].includes('local') 
+        ? '/api/local-users/profile' 
+        : '/api/users/profile';
+
+      console.log('Using update endpoint:', `${API_URL}${profileEndpoint}`);
+      
+      const formData = new FormData();
+      formData.append('name', name);
+      formData.append('email', email);
+      
+      if (avatarFile) {
+        console.log('Uploading avatar file:', avatarFile.name, avatarFile.type, avatarFile.size);
+        formData.append('avatar', avatarFile);
+      }
+
+      // Log formData entries for debugging
+      for (const [key, value] of formData.entries()) {
+        console.log(`FormData: ${key} - ${value instanceof File ? 'File: ' + value.name : value}`);
+      }
+
+      const response = await fetch(`${API_URL}${profileEndpoint}`, {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        body: formData
+      });
+
+      console.log('Update response status:', response.status);
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        console.error('Profile update error:', errorData);
+        throw new Error(errorData.message || 'Failed to update profile');
+      }
+
+      const data = await response.json();
+      console.log('Updated profile data:', data);
+      
+      const updatedUser = data.data.user;
+      setUser(updatedUser);
+      
+      // Update Redux store with updated user data
+      if (avatarFile) {
+        dispatch(updateUserAvatar(updatedUser.avatar));
+      }
+      dispatch(updateUserProfile({
+        name: updatedUser.name,
+        email: updatedUser.email
+      }));
+      
+      // Add activity for profile update
+      dispatch(addActivity({
+        id: Date.now().toString(),
+        title: 'Profile Updated',
+        description: avatarFile ? 'You updated your profile and avatar' : 'You updated your profile information',
+        type: 'view',
+        timestamp: new Date().toISOString(),
+      }));
+      
+      // Update local storage user
+      const userKey = 'travila_user';
+      const storedUser = localStorage.getItem(userKey);
+      if (storedUser) {
+        const parsedUser = JSON.parse(storedUser);
+        const updatedStoredUser = {
+          ...parsedUser,
+          name: updatedUser.name,
+          email: updatedUser.email
+        };
+        localStorage.setItem(userKey, JSON.stringify(updatedStoredUser));
+        console.log('Updated localStorage user data');
+      }
+
+      setEditMode(false);
+      toast({
+        title: "Profile updated successfully",
+        variant: "default",
+      });
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      
+      // Check if this is an authentication error
+      if (error instanceof Error && error.message.toLowerCase().includes('authentication')) {
+        logout();
+      }
+      
+      toast({
+        title: "Failed to update profile",
+        description: error instanceof Error ? error.message : 'An unknown error occurred',
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Format date for display
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'short', 
+      day: 'numeric' 
+    });
+  };
+
+  // Handle removing a saved item
+  const handleRemoveSavedItem = (itemId: string) => {
+    dispatch(removeSavedItem(itemId));
+    toast({
+      title: "Item removed from saved items",
+      variant: "default",
+    });
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50/50">
-      {/* Cover Photo */}
-      <div className="relative h-[200px] md:h-[280px] lg:h-[320px] bg-gradient-to-r from-gray-900 to-gray-600">
-        <Image
-          src="https://images.unsplash.com/photo-1489493887464-892be6d1daae"
-          alt="Cover"
-          fill
-          className="object-cover mix-blend-overlay"
-          priority
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-        <button className="absolute bottom-4 right-4 bg-black/50 backdrop-blur-sm text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-black/60 transition-colors">
-          <Camera className="w-4 h-4" />
-          <span className="text-sm font-medium">Change Cover</span>
-        </button>
-      </div>
-
-      {/* Profile Content */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="relative -mt-24 sm:-mt-32 pb-20">
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-            {/* Header with Actions */}
-            <div className="p-6 flex flex-col md:flex-row md:items-center md:justify-between gap-6 border-b">
-              <div className="flex flex-col md:flex-row md:items-center gap-6">
-                {/* Avatar */}
-                <div className="relative mx-auto md:mx-0">
-                  <div className="w-32 h-32 md:w-36 md:h-36 rounded-full border-4 border-white shadow-md overflow-hidden bg-gray-100">
-                    <Image
-                      src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde"
-                      alt="Profile"
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                  <button className="absolute bottom-0 right-0 bg-primary text-white p-2 rounded-full shadow-lg hover:bg-primary/90 transition-colors">
-                    <Camera className="w-4 h-4" />
-                  </button>
-                </div>
-
-                {/* User Info */}
-                <div className="text-center md:text-left space-y-2">
-                  <div className="flex flex-col md:flex-row md:items-center gap-2 md:gap-3">
-                    <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Ellison Parker</h1>
-                    <span className="px-2.5 py-0.5 text-xs font-medium bg-primary/10 text-primary rounded-full inline-flex items-center justify-center">
-                      Pro Member
-                    </span>
-                  </div>
-                  <p className="text-gray-500 flex items-center justify-center md:justify-start gap-2">
-                    <MapPin className="w-4 h-4" />
-                    Marrakech, Morocco
-                  </p>
-                  <p className="text-gray-500 text-sm">Joined March 2024</p>
-                </div>
-              </div>
-
-              <div className="flex items-center justify-center md:justify-end gap-3">
-                <Button variant="outline" size="sm" className="gap-2">
-                  <Share2 className="w-4 h-4" />
-                  Share Profile
-                </Button>
-                <Button className="gap-2">
-                  <Edit className="w-4 h-4" />
-                  Edit Profile
-                </Button>
-              </div>
+    <ProtectedRoute>
+      <div className="container mx-auto px-4 py-8">
+        <div className="max-w-3xl mx-auto">
+          <h1 className="text-3xl font-bold mb-6">Your Profile</h1>
+          
+          {serverError ? (
+            <div className="bg-red-50 border border-red-200 rounded-lg shadow p-6 mb-6">
+              <h2 className="text-xl font-semibold text-red-700 mb-2">Server Connection Error</h2>
+              <p className="text-red-600 mb-4">
+                We're having trouble connecting to the server. This might be due to:
+              </p>
+              <ul className="list-disc pl-5 text-red-600 mb-4">
+                <li>Your internet connection</li>
+                <li>The server is temporarily unavailable</li>
+                <li>A configuration issue</li>
+              </ul>
+              <Button 
+                onClick={() => {
+                  setServerError(false);
+                  if (authUser && token) fetchUserProfile();
+                }}
+              >
+                Retry Connection
+              </Button>
             </div>
-
-            {/* Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 divide-x divide-y md:divide-y-0 border-b">
-              {stats.map((stat) => (
-                <div key={stat.label} className="px-6 py-4 text-center hover:bg-gray-50 transition-colors cursor-pointer">
-                  <div className="text-2xl font-semibold text-gray-900">{stat.value}</div>
-                  <div className="text-sm text-gray-500">{stat.label}</div>
-                </div>
-              ))}
-            </div>
-
-            {/* Main Content */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 divide-y lg:divide-y-0 lg:divide-x">
-              {/* Left Column - Menu Items */}
-              <div className="lg:col-span-4 p-6 space-y-1">
-                {menuItems.map((item) => (
-                  <button
-                    key={item.title}
-                    className="w-full flex items-center gap-4 p-3 rounded-xl hover:bg-gray-50 transition-colors group"
-                  >
-                    <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-gray-50 group-hover:bg-white 
-                      flex items-center justify-center text-gray-500 group-hover:text-primary 
-                      transition-colors border border-gray-100">
-                      <item.icon className="w-5 h-5" />
-                    </div>
-                    <div className="flex-1 text-left">
-                      <div className="flex items-center justify-between">
-                        <span className="font-medium text-gray-900">{item.title}</span>
-                        {item.notifications > 0 && (
-                          <span className="px-2 py-0.5 text-xs font-medium bg-primary text-white rounded-full">
-                            {item.notifications}
-                          </span>
-                        )}
+          ) : (
+            <>
+              <div className="bg-white rounded-lg shadow p-6 mb-6">
+                {editMode ? (
+                  <form onSubmit={handleSubmit} className="space-y-4">
+                    <div className="flex flex-col items-center mb-6">
+                      <div className="relative w-24 h-24 mb-4">
+                        <div className="h-24 w-24 rounded-full overflow-hidden">
+                          <img
+                            src={avatarPreview || (user?.avatar ? `${API_URL}${user.avatar}` : 
+                              `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || '')}&background=random&size=128`)}
+                            alt={user?.name || "Profile"}
+                            className="h-full w-full object-cover"
+                          />
+                        </div>
+                        <label htmlFor="avatar-upload" className="absolute bottom-0 right-0 bg-blue-600 text-white p-1 rounded-full cursor-pointer hover:bg-blue-700">
+                          <Camera size={16} />
+                        </label>
+                        <input 
+                          id="avatar-upload" 
+                          type="file" 
+                          accept="image/*" 
+                          className="hidden" 
+                          onChange={handleAvatarChange}
+                        />
                       </div>
-                      <p className="text-sm text-gray-500">{item.description}</p>
                     </div>
-                    <ChevronRight className="w-5 h-5 text-gray-400 group-hover:text-gray-600" />
-                  </button>
-                ))}
-
-                <button className="w-full flex items-center gap-4 p-3 rounded-xl hover:bg-red-50 text-red-600 transition-colors group mt-4">
-                  <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-red-50 group-hover:bg-white 
-                    flex items-center justify-center group-hover:text-red-600 
-                    transition-colors border border-red-100">
-                    <LogOut className="w-5 h-5" />
-                  </div>
-                  <span className="flex-1 text-left font-medium">Log Out</span>
-                  <ChevronRight className="w-5 h-5 opacity-50" />
-                </button>
+                    
+                    <div className="space-y-3">
+                      <div className="space-y-1">
+                        <Label htmlFor="name">Name</Label>
+                        <Input 
+                          id="name" 
+                          value={name} 
+                          onChange={(e) => setName(e.target.value)} 
+                          required 
+                        />
+                      </div>
+                      
+                      <div className="space-y-1">
+                        <Label htmlFor="email">Email</Label>
+                        <Input 
+                          id="email" 
+                          type="email" 
+                          value={email} 
+                          onChange={(e) => setEmail(e.target.value)} 
+                          required 
+                        />
+                      </div>
+                    </div>
+                    
+                    <div className="flex space-x-3 pt-3">
+                      <Button type="submit" disabled={loading}>
+                        {loading ? 'Saving...' : 'Save Changes'}
+                      </Button>
+                      <Button 
+                        type="button" 
+                        variant="outline" 
+                        onClick={() => {
+                          setEditMode(false);
+                          setName(user?.name || '');
+                          setEmail(user?.email || '');
+                          setAvatarPreview(null);
+                          setAvatarFile(null);
+                        }}
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  </form>
+                ) : (
+                  <>
+                    <div className="flex items-center space-x-4 mb-4">
+                      <div className="h-24 w-24 rounded-full overflow-hidden">
+                        <img
+                          src={user?.avatar ? `${API_URL}${user.avatar}` : 
+                            `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.name || '')}&background=random&size=128`}
+                          alt={user?.name || "Profile"}
+                          className="h-full w-full object-cover"
+                        />
+                      </div>
+                      <div>
+                        <h2 className="text-2xl font-semibold">{user?.name}</h2>
+                        <p className="text-gray-600">{user?.email}</p>
+                        <p className="text-sm text-gray-500">Member since {user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}</p>
+                      </div>
+                    </div>
+                    
+                    <div className="border-t pt-4 mt-4">
+                      <Button onClick={() => setEditMode(true)}>
+                        Edit Profile
+                      </Button>
+                    </div>
+                  </>
+                )}
               </div>
-
-              {/* Right Column - Recent Activity */}
-              <div className="lg:col-span-8 p-6">
-                <div className="space-y-8">
-                  {/* Contact Information */}
-                  <div>
-                    <h3 className="text-lg font-semibold mb-4">Contact Information</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="flex items-center gap-3 p-3 rounded-lg border bg-gray-50 hover:bg-white transition-colors">
-                        <Mail className="w-5 h-5 text-gray-500" />
-                        <div>
-                          <div className="text-sm text-gray-500">Email</div>
-                          <div className="font-medium">ellison@example.com</div>
-                        </div>
+              
+              {/* Tabs for Saved Items and Recent Activity */}
+              <div className="bg-white rounded-lg shadow mb-6">
+                <div className="border-b border-gray-200">
+                  <nav className="flex gap-2 px-6">
+                    <button
+                      onClick={() => setActiveTab('saved')}
+                      className={`py-4 px-2 font-medium text-sm border-b-2 -mb-px transition-colors ${
+                        activeTab === 'saved' 
+                          ? 'border-primary text-primary' 
+                          : 'border-transparent text-gray-500 hover:text-gray-900'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <Heart className="h-4 w-4" />
+                        <span>Saved Items</span>
                       </div>
-                      <div className="flex items-center gap-3 p-3 rounded-lg border bg-gray-50 hover:bg-white transition-colors">
-                        <Phone className="w-5 h-5 text-gray-500" />
-                        <div>
-                          <div className="text-sm text-gray-500">Phone</div>
-                          <div className="font-medium">+212 612 345 678</div>
-                        </div>
+                    </button>
+                    <button
+                      onClick={() => setActiveTab('activity')}
+                      className={`py-4 px-2 font-medium text-sm border-b-2 -mb-px transition-colors ${
+                        activeTab === 'activity' 
+                          ? 'border-primary text-primary' 
+                          : 'border-transparent text-gray-500 hover:text-gray-900'
+                      }`}
+                    >
+                      <div className="flex items-center gap-2">
+                        <Clock className="h-4 w-4" />
+                        <span>Recent Activity</span>
                       </div>
-                    </div>
-                  </div>
-
-                  {/* Social Links */}
-                  <div>
-                    <h3 className="text-lg font-semibold mb-4">Social Media</h3>
-                    <div className="flex gap-3">
-                      <Button variant="outline" size="icon" className="rounded-full w-10 h-10">
-                        <Instagram className="w-5 h-5" />
-                      </Button>
-                      <Button variant="outline" size="icon" className="rounded-full w-10 h-10">
-                        <Twitter className="w-5 h-5" />
-                      </Button>
-                      <Button variant="outline" size="icon" className="rounded-full w-10 h-10">
-                        <Facebook className="w-5 h-5" />
-                      </Button>
-                    </div>
-                  </div>
-
-                  {/* Recent Trips */}
-                  <div>
-                    <div className="flex items-center justify-between mb-4">
-                      <h3 className="text-lg font-semibold">Recent Trips</h3>
-                      <Button variant="outline" size="sm">View All</Button>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      {recentTrips.map((trip) => (
-                        <div key={trip.title} className="group rounded-xl overflow-hidden border hover:shadow-lg transition-all">
-                          <div className="aspect-video relative">
-                            <Image
-                              src={trip.image}
-                              alt={trip.title}
-                              fill
-                              className="object-cover group-hover:scale-105 transition-transform duration-300"
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                          </div>
-                          <div className="p-4">
-                            <h4 className="font-semibold text-gray-900 group-hover:text-primary transition-colors">
-                              {trip.title}
-                            </h4>
-                            <div className="flex items-center justify-between mt-2 text-sm">
-                              <div className="flex items-center gap-1 text-gray-500">
-                                <MapPin className="w-4 h-4" />
-                                {trip.location}
+                    </button>
+                  </nav>
+                </div>
+                
+                <div className="p-6">
+                  {activeTab === 'saved' ? (
+                    <div>
+                      <h2 className="text-xl font-semibold mb-4">Your Saved Items</h2>
+                      {savedItems.length > 0 ? (
+                        <div className="space-y-4">
+                          {savedItems.map(item => (
+                            <div key={item.id} className="flex border border-gray-200 rounded-lg overflow-hidden">
+                              <div className="w-24 h-24 shrink-0">
+                                <img 
+                                  src={item.image} 
+                                  alt={item.title} 
+                                  className="w-full h-full object-cover"
+                                />
                               </div>
-                              <div className="flex items-center gap-1 text-yellow-500">
-                                <Star className="w-4 h-4 fill-current" />
-                                {trip.rating}
+                              <div className="flex-1 p-3">
+                                <div className="flex justify-between items-start">
+                                  <h3 className="font-medium text-gray-900">{item.title}</h3>
+                                  <button 
+                                    className="text-gray-400 hover:text-red-500 p-1"
+                                    onClick={() => handleRemoveSavedItem(item.id)}
+                                  >
+                                    <Heart className="h-4 w-4 fill-current" />
+                                  </button>
+                                </div>
+                                <p className="text-sm text-gray-500 line-clamp-2 mt-1">{item.description}</p>
+                                <div className="mt-2 flex items-center justify-between">
+                                  <span className="text-xs text-gray-500">Saved on {formatDate(item.savedAt)}</span>
+                                  <Link 
+                                    href={`/${item.type}/${item.id}`}
+                                    className="text-xs text-primary font-medium hover:underline"
+                                  >
+                                    View Details
+                                  </Link>
+                                </div>
                               </div>
                             </div>
-                            <div className="text-sm text-gray-500 mt-2 flex items-center gap-1">
-                              <Calendar className="w-4 h-4" />
-                              {trip.date}
-                            </div>
-                          </div>
+                          ))}
                         </div>
-                      ))}
+                      ) : (
+                        <div className="p-4 border border-gray-200 rounded-md">
+                          <p className="text-gray-800">No saved items found.</p>
+                        </div>
+                      )}
                     </div>
-                  </div>
+                  ) : (
+                    <div>
+                      <h2 className="text-xl font-semibold mb-4">Your Recent Activity</h2>
+                      {recentActivities.length > 0 ? (
+                        <div className="space-y-4">
+                          {recentActivities.map(activity => (
+                            <div key={activity.id} className="flex border border-gray-200 rounded-lg overflow-hidden">
+                              <div className="w-2 bg-primary"></div>
+                              <div className="flex-1 p-3">
+                                <div className="flex justify-between items-start">
+                                  <h3 className="font-medium text-gray-900">{activity.title}</h3>
+                                  <span className="text-xs text-gray-500 whitespace-nowrap ml-2">
+                                    {formatDate(activity.timestamp)}
+                                  </span>
+                                </div>
+                                <p className="text-sm text-gray-500 line-clamp-2 mt-1">{activity.description}</p>
+                                {activity.referenceId && (
+                                  <div className="mt-2">
+                                    <Link 
+                                      href={`/${activity.referenceType}/${activity.referenceId}`}
+                                      className="text-xs text-primary font-medium hover:underline"
+                                    >
+                                      View Details
+                                    </Link>
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="p-4 border border-gray-200 rounded-md">
+                          <p className="text-gray-800">No recent activity found.</p>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
-            </div>
-          </div>
+            </>
+          )}
         </div>
       </div>
-    </div>
-  )
+    </ProtectedRoute>
+  );
 } 

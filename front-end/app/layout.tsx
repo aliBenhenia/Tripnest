@@ -4,6 +4,9 @@ import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import BottomNavigation from "@/components/bottom-navigation"
 import { ErrorBoundary } from "@/components/ErrorBoundary"
+import { AuthProvider } from "@/hooks/useAuth"
+import { Toaster } from "@/components/ui/toaster"
+import { Providers } from "@/lib/redux/provider"
 
 // Optimize font loading
 const inter = Inter({ 
@@ -61,10 +64,15 @@ export default function RootLayout({
       </head>
       <body className="min-h-screen bg-gray-100">
         <ErrorBoundary>
-          <main className="md:pt-16 pb-16 md:pb-0">
-            {children}
-          </main>
-          <BottomNavigation />
+          <Providers>
+            <AuthProvider>
+              <main className="md:pt-16 pb-16 md:pb-0">
+                {children}
+              </main>
+              <BottomNavigation />
+              <Toaster />
+            </AuthProvider>
+          </Providers>
         </ErrorBoundary>
       </body>
     </html>

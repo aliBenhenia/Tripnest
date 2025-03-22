@@ -2,11 +2,25 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Home, Map, Compass, Heart, User, Bell, Menu, Globe, ChevronDown } from "lucide-react"
+import { Home, Map, Compass, Heart, User, Bell, Menu, Globe, ChevronDown, LogOut, LogIn, UserPlus } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { useAuth } from "@/hooks/useAuth"
+import { useState, useEffect } from "react"
+import { useAppSelector } from "@/lib/redux/hooks"
+
+// API URL
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
 export default function BottomNavigation() {
   const pathname = usePathname()
+  const { user: authUser, isAuthenticated, logout } = useAuth()
+  const [showProfileMenu, setShowProfileMenu] = useState(false)
+  
+  // Get user from Redux store
+  const reduxUser = useAppSelector(state => state.user.currentUser)
+  
+  // Use either Redux user or auth user
+  const user = reduxUser || authUser
   
   const navigation = [
     {
@@ -31,10 +45,33 @@ export default function BottomNavigation() {
     },
     {
       name: "Profile",
-      href: "/profile",
+      href: isAuthenticated ? "/profile" : "/auth/login",
       icon: User,
     },
   ]
+
+  // Get the number of saved items from Redux store
+  const savedItems = useAppSelector(state => state.savedItems.items)
+  const savedItemsCount = savedItems.length
+
+  const handleLogout = () => {
+    logout()
+    setShowProfileMenu(false)
+  }
+
+  const toggleProfileMenu = () => {
+    setShowProfileMenu(!showProfileMenu)
+  }
+
+  // Get user avatar URL
+  const getAvatarUrl = () => {
+    if (user?.avatar) {
+      return `${API_URL}${user.avatar}`
+    } else if (user?.name) {
+      return `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name)}&background=random`
+    }
+    return "https://avatars.githubusercontent.com/u/95689141?s=400&u=275826ef98503225cfa203907197ad854e0111a1&v=4"
+  }
 
   return (
     <>
@@ -143,12 +180,14 @@ export default function BottomNavigation() {
               >
                 <Heart className={`h-[18px] w-[18px] transition-colors
                   ${pathname === "/saved" ? "fill-primary/20" : "group-hover:text-primary"}`} />
-                <span className="absolute -top-0.5 -right-0.5 h-5 w-5 bg-primary 
-                  rounded-full text-[11px] font-medium flex items-center justify-center text-white 
-                  border-2 border-white shadow-sm scale-100 group-hover:scale-110 
-                  transition-transform group-hover:ring-2 ring-primary/20">
-                  2
-                </span>
+                {savedItemsCount > 0 && (
+                  <span className="absolute -top-0.5 -right-0.5 h-5 w-5 bg-primary 
+                    rounded-full text-[11px] font-medium flex items-center justify-center text-white 
+                    border-2 border-white shadow-sm scale-100 group-hover:scale-110 
+                    transition-transform group-hover:ring-2 ring-primary/20">
+                    {savedItemsCount}
+                  </span>
+                )}
               </Link>
 
               <div className="h-6 w-px bg-gray-200 mx-1" />
@@ -184,20 +223,61 @@ export default function BottomNavigation() {
               </Button>
 
               {/* Profile Menu */}
-              <Link 
-                href="/profile" 
-                className={`flex items-center gap-2 p-1.5 rounded-full border transition-all duration-200 group
-                  ${pathname === "/profile" 
-                    ? "border-primary text-primary bg-primary/[0.03]" 
-                    : "border-gray-200 text-gray-600 hover:text-gray-900 hover:border-primary/30 hover:bg-gradient-to-r hover:from-primary/[0.03] hover:to-primary/[0.05]"}`}
-              >
-                <img
-                  src="https://avatars.githubusercontent.com/u/95689141?s=400&u=275826ef98503225cfa203907197ad854e0111a1&v=4"
-                  alt="Profile"
-                  className="h-8 w-8 rounded-full ring-2 ring-transparent group-hover:ring-primary/20 transition-all"
-                />
-                <Menu className="h-4 w-4 group-hover:text-primary transition-colors" />
-              </Link>
+              <div className="relative">
+                {isAuthenticated ? (
+                  // Logged in user profile
+                  <button 
+                    onClick={toggleProfileMenu}
+                    className={`flex items-center gap-2 p-1.5 rounded-full border transition-all duration-200 group
+                      ${pathname === "/profile" 
+                        ? "border-primary text-primary bg-primary/[0.03]" 
+                        : "border-gray-200 text-gray-600 hover:text-gray-900 hover:border-primary/30 hover:bg-gradient-to-r hover:from-primary/[0.03] hover:to-primary/[0.05]"}`}
+                  >
+                    <img
+                      src={getAvatarUrl()}
+                      alt="Profile"
+                      className="h-8 w-8 rounded-full ring-2 ring-transparent group-hover:ring-primary/20 transition-all object-cover"
+                    />
+                    <Menu className="h-4 w-4 group-hover:text-primary transition-colors" />
+                  </button>
+                ) : (
+                  // Login/Register button for non-authenticated users
+                  <Link
+                    href="/auth/login"
+                    className="flex items-center gap-2 px-4 py-2 rounded-full transition-all duration-200
+                      border border-gray-200 text-gray-600 hover:text-gray-900 hover:border-primary/30 
+                      hover:bg-gradient-to-r hover:from-primary/[0.03] hover:to-primary/[0.05]"
+                  >
+                    <LogIn className="h-4 w-4" />
+                    <span className="font-medium">Login</span>
+                  </Link>
+                )}
+
+                {/* Profile dropdown menu */}
+                {showProfileMenu && isAuthenticated && (
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-100">
+                    <div className="px-4 py-2 border-b border-gray-100">
+                      <p className="text-sm font-medium text-gray-900">{user?.name}</p>
+                      <p className="text-xs text-gray-500 truncate">{user?.email}</p>
+                    </div>
+                    <Link
+                      href="/profile"
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 w-full text-left flex items-center gap-2"
+                      onClick={() => setShowProfileMenu(false)}
+                    >
+                      <User className="h-4 w-4" />
+                      <span>Your Profile</span>
+                    </Link>
+                    <button
+                      onClick={handleLogout}
+                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 w-full text-left flex items-center gap-2"
+                    >
+                      <LogOut className="h-4 w-4" />
+                      <span>Sign out</span>
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
