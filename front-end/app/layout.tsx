@@ -65,13 +65,11 @@ export default function RootLayout({
       <body className="min-h-screen bg-gray-100">
         <ErrorBoundary>
           <Providers>
-            <AuthProvider>
               <main className="md:pt-16 pb-16 md:pb-0">
                 {children}
               </main>
               <BottomNavigation />
               <Toaster />
-            </AuthProvider>
           </Providers>
         </ErrorBoundary>
       </body>
