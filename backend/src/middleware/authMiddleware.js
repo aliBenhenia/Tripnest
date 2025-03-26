@@ -1,69 +1,75 @@
 const jwt = require('jsonwebtoken');
+const AppError = require('../utils/AppError');
 const User = require('../models/User');
+const catchAsync = require('../utils/catchAsync');
 
-const protect = async (req, res, next) => {
-  try {
-    // Check if token exists
-    let token;
-    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-      token = req.headers.authorization.split(' ')[1];
-    }
+exports.protect = catchAsync(async (req, res, next) => {
+  // Get token from header
+  const authHeader = req.headers.authorization;
+  let token;
 
-    console.log('Auth middleware: Token present:', !!token);
-
-    if (!token) {
-      return res.status(401).json({
-        status: 'fail',
-        message: 'Not authenticated. Please log in to access this resource.'
-      });
-    }
-
-    try {
-      // Verify token
-      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key-for-development');
-      console.log('Auth middleware: Token verified for user ID:', decoded.id);
-
-      // Check if user still exists
-      const user = await User.findById(decoded.id);
-      if (!user) {
-        console.log('Auth middleware: User not found with ID:', decoded.id);
-        return res.status(401).json({
-          status: 'fail',
-          message: 'The user for this token no longer exists.'
-        });
-      }
-
-      // Set user on request
-      req.user = user;
-      console.log('Auth middleware: Authentication successful for user:', user.email);
-      next();
-    } catch (jwtError) {
-      console.error('Auth middleware: JWT verification error:', jwtError.message);
-      
-      if (jwtError.name === 'JsonWebTokenError') {
-        return res.status(401).json({
-          status: 'fail',
-          message: 'Invalid token. Please log in again.'
-        });
-      } else if (jwtError.name === 'TokenExpiredError') {
-        return res.status(401).json({
-          status: 'fail',
-          message: 'Your token has expired. Please log in again.'
-        });
-      }
-      
-      return res.status(401).json({
-        status: 'fail',
-        message: 'Authentication failed. Please log in again.'
-      });
-    }
-  } catch (error) {
-    console.error('Auth middleware: Server error:', error);
-    return res.status(500).json({
-      status: 'error',
-      message: 'Server error during authentication.'
-    });
+  if (authHeader && authHeader.startsWith('Bearer')) {
+    token = authHeader.split(' ')[1];
   }
+
+  if (!token) {
+    return next(new AppError('You are not logged in. Please log in to get access.', 401));
+  }
+
+  try {
+    // Verify token
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    // Check if user still exists
+    const user = await User.findById(decoded.id);
+    if (!user) {
+      return next(new AppError('The user belonging to this token no longer exists.', 401));
+    }
+
+    // Grant access to protected route
+    req.user = user;
+    next();
+  } catch (error) {
+    if (error.name === 'TokenExpiredError') {
+      return next(new AppError('Your token has expired. Please log in again.', 401));
+    }
+    return next(new AppError('Invalid token. Please log in again.', 401));
+  }
+});
+
+exports.restrictTo = (...roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      return next(new AppError('You do not have permission to perform this action', 403));
+    }
+    next();
+  };
 };
 
-module.exports = { protect }; 
+exports.rateLimiter = (maxRequests, windowMs) => {
+  const requests = new Map();
+
+  return (req, res, next) => {
+    const ip = req.ip;
+    const now = Date.now();
+    const windowStart = now - windowMs;
+
+    // Clean old requests
+    if (requests.has(ip)) {
+      requests.get(ip).requests = requests.get(ip).requests.filter(time => time > windowStart);
+    }
+
+    // Initialize or get current requests
+    const currentRequests = requests.get(ip)?.requests || [];
+
+    if (currentRequests.length >= maxRequests) {
+      return next(new AppError('Too many requests from this IP, please try again later.', 429));
+    }
+
+    // Add current request
+    currentRequests.push(now);
+    requests.set(ip, { requests: currentRequests });
+
+    next();
+  };
+};

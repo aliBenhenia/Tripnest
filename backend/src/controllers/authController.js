@@ -1,127 +1,139 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const AppError = require('../utils/AppError');
+const catchAsync = require('../utils/catchAsync');
 
-// Create JWT token
-const signToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET || 'your-secret-key-for-development', {
-    expiresIn: process.env.JWT_EXPIRES_IN || '30d',
+// Generate tokens
+const generateTokens = (userId) => {
+  const accessToken = jwt.sign({ id: userId }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_ACCESS_EXPIRES
   });
+  const refreshToken = jwt.sign({ id: userId }, process.env.JWT_REFRESH_SECRET, {
+    expiresIn: process.env.JWT_REFRESH_EXPIRES
+  });
+  return { accessToken, refreshToken };
 };
 
-// Send JWT token to client
-const createSendToken = (user, statusCode, res) => {
-  const token = signToken(user._id);
+// Register new user
+exports.register = catchAsync(async (req, res, next) => {
+  const { username, email, password } = req.body;
+
+  // Check if user already exists
+  const existingUser = await User.findOne({ $or: [{ email }, { username }] });
+  if (existingUser) {
+    return next(new AppError('Email or username already exists', 400));
+  }
+
+  // Create new user
+  const user = await User.create({
+    username,
+    email,
+    password
+  });
+
+  // Generate tokens
+  const { accessToken, refreshToken } = generateTokens(user._id);
+
+  // Update user's refresh token
+  user.refreshToken = refreshToken;
+  await user.save({ validateBeforeSave: false });
 
   // Remove password from output
   user.password = undefined;
 
-  res.status(statusCode).json({
+  res.status(201).json({
     status: 'success',
-    token,
     data: {
-      user
+      user,
+      accessToken,
+      refreshToken
     }
   });
-};
+});
 
-// Sign up a new user
-exports.signup = async (req, res) => {
-  try {
-    const { name, email, password } = req.body;
+// Login user
+exports.login = catchAsync(async (req, res, next) => {
+  const { email, password } = req.body;
 
-    // Check if user already exists
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({
-        status: 'fail',
-        message: 'User already exists with this email'
-      });
-    }
-
-    // Create new user
-    const newUser = await User.create({
-      name,
-      email,
-      password
-    });
-
-    // Send token to client
-    createSendToken(newUser, 201, res);
-  } catch (err) {
-    res.status(400).json({
-      status: 'fail',
-      message: err.message
-    });
+  // Check if email and password exist
+  if (!email || !password) {
+    return next(new AppError('Please provide email and password', 400));
   }
-};
 
-// Sign in existing user
-exports.signin = async (req, res) => {
-  try {
-    const { email, password } = req.body;
-
-    // Check if email and password exist
-    if (!email || !password) {
-      return res.status(400).json({
-        status: 'fail',
-        message: 'Please provide email and password'
-      });
-    }
-
-    // Check if user exists and password is correct
-    const user = await User.findOne({ email }).select('+password');
-    if (!user || !(await user.correctPassword(password, user.password))) {
-      return res.status(401).json({
-        status: 'fail',
-        message: 'Incorrect email or password'
-      });
-    }
-
-    // Send token to client
-    createSendToken(user, 200, res);
-  } catch (err) {
-    res.status(400).json({
-      status: 'fail',
-      message: err.message
-    });
+  // Check if user exists & password is correct
+  const user = await User.findOne({ email }).select('+password');
+  if (!user || !(await user.comparePassword(password))) {
+    return next(new AppError('Incorrect email or password', 401));
   }
-};
 
-// Protect routes middleware
-exports.protect = async (req, res, next) => {
-  try {
-    // Check if token exists
-    let token;
-    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-      token = req.headers.authorization.split(' ')[1];
+  // Generate tokens
+  const { accessToken, refreshToken } = generateTokens(user._id);
+
+  // Update user's refresh token
+  user.refreshToken = refreshToken;
+  await user.save({ validateBeforeSave: false });
+
+  // Remove password from output
+  user.password = undefined;
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      user,
+      accessToken,
+      refreshToken
     }
+  });
+});
 
-    if (!token) {
-      return res.status(401).json({
-        status: 'fail',
-        message: 'You are not logged in. Please log in to get access.'
-      });
-    }
+// Refresh token
+exports.refreshToken = catchAsync(async (req, res, next) => {
+  const { refreshToken } = req.body;
 
-    // Verify token
-    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key-for-development');
-
-    // Check if user still exists
-    const currentUser = await User.findById(decoded.id);
-    if (!currentUser) {
-      return res.status(401).json({
-        status: 'fail',
-        message: 'The user belonging to this token no longer exists.'
-      });
-    }
-
-    // Grant access to protected route
-    req.user = currentUser;
-    next();
-  } catch (err) {
-    res.status(401).json({
-      status: 'fail',
-      message: 'Invalid token or authorization error'
-    });
+  if (!refreshToken) {
+    return next(new AppError('Please provide refresh token', 400));
   }
-}; 
+
+  // Verify refresh token
+  const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+
+  // Check if user still exists
+  const user = await User.findById(decoded.id);
+  if (!user || user.refreshToken !== refreshToken) {
+    return next(new AppError('Invalid refresh token', 401));
+  }
+
+  // Generate new tokens
+  const tokens = generateTokens(user._id);
+
+  // Update user's refresh token
+  user.refreshToken = tokens.refreshToken;
+  await user.save({ validateBeforeSave: false });
+
+  res.status(200).json({
+    status: 'success',
+    data: tokens
+  });
+});
+
+// Logout user
+exports.logout = catchAsync(async (req, res) => {
+  const user = await User.findById(req.user.id);
+  user.refreshToken = undefined;
+  await user.save({ validateBeforeSave: false });
+
+  res.status(200).json({
+    status: 'success',
+    message: 'Logged out successfully'
+  });
+});
+
+// Get current user
+exports.getCurrentUser = catchAsync(async (req, res) => {
+  const user = await User.findById(req.user.id);
+
+  res.status(200).json({
+    status: 'success',
+    data: { user }
+  });
+});

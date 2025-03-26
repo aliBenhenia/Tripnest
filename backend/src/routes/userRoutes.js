@@ -1,16 +1,22 @@
 const express = require('express');
 const userController = require('../controllers/userController');
-const { protect } = require('../middleware/authMiddleware');
-const { uploadAvatar } = require('../middleware/uploadMiddleware');
-
+const { protect, restrictTo, rateLimiter } = require('../middleware/authMiddleware');
 const router = express.Router();
 
-// All routes below are protected
+// Apply rate limiting
+const userRateLimiter = rateLimiter(100, 15 * 60 * 1000); // 100 requests per 15 minutes
+
+// All routes are protected
 router.use(protect);
 
 // Profile routes
 router.get('/profile', userController.getProfile);
-router.patch('/profile', uploadAvatar, userController.updateProfile);
-router.patch('/password', userController.updatePassword);
+router.patch('/profile', userRateLimiter, userController.updateProfile);
+router.patch('/password', userRateLimiter, userController.updatePassword);
+router.delete('/account', userRateLimiter, userController.deleteAccount);
 
-module.exports = router; 
+// Admin only routes
+router.use(restrictTo('admin'));
+// Add admin specific routes here if needed
+
+module.exports = router;

@@ -1,51 +1,71 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-const validator = require('validator');
 
 const userSchema = new mongoose.Schema({
-  name: {
+  username: {
     type: String,
-    required: [true, 'Please provide a name'],
-    trim: true
+    required: [true, 'Username is required'],
+    unique: true,
+    trim: true,
+    minlength: [3, 'Username must be at least 3 characters long'],
+    maxlength: [30, 'Username cannot exceed 30 characters']
   },
   email: {
     type: String,
-    required: [true, 'Please provide an email'],
+    required: [true, 'Email is required'],
     unique: true,
+    trim: true,
     lowercase: true,
-    validate: [validator.isEmail, 'Please provide a valid email']
+    match: [/^\S+@\S+\.\S+$/, 'Please enter a valid email']
   },
   password: {
     type: String,
-    required: [true, 'Please provide a password'],
-    minlength: 8,
+    required: [true, 'Password is required'],
+    minlength: [8, 'Password must be at least 8 characters long'],
     select: false
   },
   avatar: {
     type: String,
-    default: null
+    default: 'default-avatar.png'
   },
-  createdAt: {
-    type: Date,
-    default: Date.now
+  role: {
+    type: String,
+    enum: ['user', 'admin'],
+    default: 'user'
+  },
+  bio: {
+    type: String,
+    maxlength: [200, 'Bio cannot exceed 200 characters'],
+    default: ''
+  },
+  savedPlaces: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Place'
+  }],
+  refreshToken: String,
+  passwordResetToken: String,
+  passwordResetExpires: Date,
+  active: {
+    type: Boolean,
+    default: true,
+    select: false
   }
+}, {
+  timestamps: true
 });
 
-// Hash password before saving to database
+// Hash password before saving
 userSchema.pre('save', async function(next) {
-  // Only run this function if password was modified
   if (!this.isModified('password')) return next();
-
-  // Hash the password with cost of 12
   this.password = await bcrypt.hash(this.password, 12);
   next();
 });
 
-// Method to check if password is correct
-userSchema.methods.correctPassword = async function(candidatePassword, userPassword) {
-  return await bcrypt.compare(candidatePassword, userPassword);
+// Compare password method
+userSchema.methods.comparePassword = async function(candidatePassword) {
+  return await bcrypt.compare(candidatePassword, this.password);
 };
 
 const User = mongoose.model('User', userSchema);
 
-module.exports = User; 
+module.exports = User;
