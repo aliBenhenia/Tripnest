@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { useAuth } from '@/hooks/useAuth';
+import useAuthRedux from '@/hooks/useAuthRedux';
 import { AlertCircle, Loader2, Eye, EyeOff } from 'lucide-react';
 
 export default function LoginPage() {
@@ -18,7 +18,7 @@ export default function LoginPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const returnUrl = searchParams.get('returnUrl') || '/';
-  const { login, error, isAuthenticated } = useAuth();
+  const { login, error, isAuthenticated } = useAuthRedux();
 
   // Redirect if already authenticated
   useEffect(() => {
@@ -196,4 +196,4 @@ export default function LoginPage() {
       </div>
     </div>
   );
-} 
+}

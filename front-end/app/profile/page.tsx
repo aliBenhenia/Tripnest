@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '@/hooks/useAuth';
+import useAuthRedux from '@/hooks/useAuthRedux';
 import ProtectedRoute from '@/components/ProtectedRoute';
 import { User, Settings, CreditCard, Bell, Lock, HelpCircle, LogOut, ChevronRight, Globe, ChevronDown, Heart, Camera, MapPin, Calendar, Star, Edit, Mail, Phone, Share2, Instagram, Twitter, Facebook, BookOpen, Clock } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -84,7 +84,7 @@ type ProfileUser = {
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
 export default function ProfilePage() {
-  const { user: authUser, token, validateToken, logout } = useAuth();
+  const { user: authUser, token, validateToken, logout } = useAuthRedux();
   const [user, setUser] = useState<ProfileUser | null>(null);
   const [loading, setLoading] = useState(false);
   const [editMode, setEditMode] = useState(false);
@@ -601,4 +601,4 @@ export default function ProfilePage() {
       </div>
     </ProtectedRoute>
   );
-} 
+}

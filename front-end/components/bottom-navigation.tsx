@@ -4,7 +4,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Home, Map, Compass, Heart, User, Bell, Menu, Globe, ChevronDown, LogOut, LogIn, UserPlus } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { useAuth } from "@/hooks/useAuth"
+import useAuthRedux from "@/hooks/useAuthRedux"
 import { useState, useEffect } from "react"
 import { useAppSelector } from "@/lib/redux/hooks"
 import { useRouter } from "next/navigation"
@@ -14,7 +14,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
 export default function BottomNavigation() {
   const pathname = usePathname()
-  const { user: authUser, isAuthenticated, logout } = useAuth()
+  const { user: authUser, isAuthenticated, logout } = useAuthRedux()
   const [showProfileMenu, setShowProfileMenu] = useState(false)
   const router = useRouter()
   

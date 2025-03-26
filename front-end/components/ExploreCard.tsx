@@ -7,7 +7,7 @@ import { useAppDispatch, useAppSelector } from '@/lib/redux/hooks';
 import { addSavedItem, removeSavedItem, SavedItem } from '@/lib/redux/slices/savedItemsSlice';
 import { toast } from '@/components/ui/use-toast';
 import { addActivity } from '@/lib/redux/slices/recentActivitySlice';
-import { useAuth } from '@/hooks/useAuth';
+import useAuthRedux from '@/hooks/useAuthRedux';
 
 type ExploreCardProps = {
   id: string;
@@ -31,7 +31,7 @@ export default function ExploreCard({
   price,
 }: ExploreCardProps) {
   const dispatch = useAppDispatch();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuthRedux();
   const savedItems = useAppSelector(state => state.savedItems.items);
   const isSaved = savedItems.some(item => item.id === id);
 
@@ -142,4 +142,4 @@ export default function ExploreCard({
       </div>
     </div>
   );
-} 
+}

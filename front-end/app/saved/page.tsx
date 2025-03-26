@@ -7,11 +7,11 @@ import { Heart, MapPin, Calendar, ChevronLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { toast } from '@/components/ui/use-toast';
-import { useAuth } from '@/hooks/useAuth';
+import useAuthRedux from '@/hooks/useAuthRedux';
 import ProtectedRoute from '@/components/ProtectedRoute';
 
 export default function SavedPage() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated } = useAuthRedux();
   const savedItems = useAppSelector(state => state.savedItems.items);
   const dispatch = useAppDispatch();
 
@@ -113,4 +113,4 @@ export default function SavedPage() {
       </div>
     </ProtectedRoute>
   );
-} 
+}

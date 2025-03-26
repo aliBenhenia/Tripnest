@@ -1,0 +1,289 @@
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { AppDispatch } from '../store';
+
+// Define user type
+export type User = {
+  id: string;
+  name: string;
+  email: string;
+  createdAt: string;
+};
+
+// Define auth state
+interface AuthState {
+  user: User | null;
+  token: string | null;
+  isLoading: boolean;
+  error: string | null;
+}
+
+// Local storage keys
+const TOKEN_KEY = 'travila_auth_token';
+const USER_KEY = 'travila_user';
+
+// API URL
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+
+// Define initial state
+const initialState: AuthState = {
+  user: null,
+  token: null,
+  isLoading: false,
+  error: null,
+};
+
+// Create auth slice
+const authSlice = createSlice({
+  name: 'auth',
+  initialState,
+  reducers: {
+    setAuthLoading: (state, action: PayloadAction<boolean>) => {
+      state.isLoading = action.payload;
+      if (action.payload) {
+        state.error = null;
+      }
+    },
+    setAuthError: (state, action: PayloadAction<string | null>) => {
+      state.error = action.payload;
+      state.isLoading = false;
+    },
+    setAuthUser: (state, action: PayloadAction<User | null>) => {
+      state.user = action.payload;
+      state.isLoading = false;
+      state.error = null;
+    },
+    setAuthToken: (state, action: PayloadAction<string | null>) => {
+      state.token = action.payload;
+    },
+    clearAuth: (state) => {
+      state.user = null;
+      state.token = null;
+      state.isLoading = false;
+      state.error = null;
+    },
+  },
+});
+
+// Export actions
+export const {
+  setAuthLoading,
+  setAuthError,
+  setAuthUser,
+  setAuthToken,
+  clearAuth,
+} = authSlice.actions;
+
+// Thunk actions
+export const initializeAuth = () => async (dispatch: AppDispatch) => {
+  try {
+    const isBrowser = typeof window !== 'undefined';
+    if (!isBrowser) return;
+
+    const storedToken = localStorage.getItem(TOKEN_KEY);
+    const storedUser = localStorage.getItem(USER_KEY);
+
+    if (storedToken && storedUser) {
+      dispatch(setAuthToken(storedToken));
+      dispatch(setAuthUser(JSON.parse(storedUser)));
+    }
+  } catch (error) {
+    console.error('Error initializing auth:', error);
+  }
+};
+
+export const loginUser = (email: string, password: string) => async (dispatch: AppDispatch) => {
+  dispatch(setAuthLoading(true));
+  dispatch(setAuthError(null));
+
+  try {
+    // Validate inputs
+    if (!email || !password) {
+      dispatch(setAuthError('Email and password are required'));
+      return false;
+    }
+
+    if (!email.includes('@')) {
+      dispatch(setAuthError('Please enter a valid email address'));
+      return false;
+    }
+
+    // Get API endpoints
+    const endpoints = await getApiEndpoints();
+
+    // Make login request
+    let response;
+    try {
+      response = await fetch(`${API_URL}${endpoints.signin}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+    } catch (fetchError) {
+      dispatch(setAuthError('Network error. Please check your internet connection and try again.'));
+      return false;
+    }
+
+    let data;
+    try {
+      data = await response.json();
+    } catch (jsonError) {
+      dispatch(setAuthError('Invalid response from server. Please try again later.'));
+      return false;
+    }
+
+    if (!response.ok) {
+      // Handle different error scenarios
+      if (response.status === 401) {
+        dispatch(setAuthError('Invalid email or password. Please try again.'));
+        return false;
+      } else if (response.status === 404) {
+        dispatch(setAuthError('Account not found. Please check your email or sign up.'));
+        return false;
+      } else if (data.errors && Array.isArray(data.errors)) {
+        dispatch(setAuthError(data.errors.map((err: any) => err.msg).join('. ')));
+        return false;
+      } else {
+        dispatch(setAuthError(data.message || 'Login failed. Please try again later.'));
+        return false;
+      }
+    }
+
+    // Save to state and localStorage
+    dispatch(setAuthUser(data.data.user));
+    dispatch(setAuthToken(data.token));
+
+    localStorage.setItem(TOKEN_KEY, data.token);
+    localStorage.setItem(USER_KEY, JSON.stringify(data.data.user));
+
+    return true;
+  } catch (err) {
+    console.error('Login error:', err);
+    dispatch(setAuthError(err instanceof Error ? err.message : 'An unknown error occurred'));
+    return false;
+  }
+};
+
+export const signupUser = (name: string, email: string, password: string) => async (dispatch: AppDispatch) => {
+  dispatch(setAuthLoading(true));
+  dispatch(setAuthError(null));
+
+  try {
+    // Validate inputs
+    if (!name || !email || !password) {
+      dispatch(setAuthError('All fields are required'));
+      return false;
+    }
+
+    if (password.length < 6) {
+      dispatch(setAuthError('Password must be at least 6 characters long'));
+      return false;
+    }
+
+    if (!email.includes('@')) {
+      dispatch(setAuthError('Please enter a valid email address'));
+      return false;
+    }
+
+    // Get API endpoints
+    const endpoints = await getApiEndpoints();
+
+    // Make signup request
+    const response = await fetch(`${API_URL}${endpoints.signup}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ name, email, password }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      // Handle different error scenarios
+      if (response.status === 409) {
+        dispatch(setAuthError('This email is already registered. Please log in instead.'));
+        return false;
+      } else if (data.errors && Array.isArray(data.errors)) {
+        dispatch(setAuthError(data.errors.map((err: any) => err.msg).join('. ')));
+        return false;
+      } else {
+        dispatch(setAuthError(data.message || 'Failed to create account. Please try again.'));
+        return false;
+      }
+    }
+
+    // Save to state and localStorage
+    dispatch(setAuthUser(data.data.user));
+    dispatch(setAuthToken(data.token));
+
+    localStorage.setItem(TOKEN_KEY, data.token);
+    localStorage.setItem(USER_KEY, JSON.stringify(data.data.user));
+
+    return true;
+  } catch (err) {
+    console.error('Signup error:', err);
+    dispatch(setAuthError(err instanceof Error ? err.message : 'An unknown error occurred'));
+    return false;
+  }
+};
+
+export const logoutUser = () => (dispatch: AppDispatch) => {
+  // Clear auth state
+  dispatch(clearAuth());
+
+  // Clear localStorage
+  localStorage.removeItem(TOKEN_KEY);
+  localStorage.removeItem(USER_KEY);
+};
+
+export const validateAuthToken = () => async (dispatch: AppDispatch, getState: any) => {
+  const { auth } = getState();
+  const { token } = auth;
+
+  if (!token) return false;
+
+  try {
+    // Get the appropriate profile endpoint
+    const infoResponse = await fetch(`${API_URL}/`);
+    const infoData = await infoResponse.json();
+    const profileEndpoint = infoData.userEndpoints[0].includes('local')
+      ? '/api/local-users/profile'
+      : '/api/users/profile';
+
+    // Try to get profile with current token
+    const response = await fetch(`${API_URL}${profileEndpoint}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    return response.ok;
+  } catch (error) {
+    console.error('Token validation error:', error);
+    return false;
+  }
+};
+
+// Helper function to get API endpoints
+const getApiEndpoints = async () => {
+  try {
+    const response = await fetch(`${API_URL}/`);
+    const data = await response.json();
+    return {
+      signup: data.authEndpoints[0].includes('local') ? '/api/local-auth/signup' : '/api/auth/signup',
+      signin: data.authEndpoints[1].includes('local') ? '/api/local-auth/signin' : '/api/auth/signin'
+    };
+  } catch (error) {
+    console.error('Error fetching API info:', error);
+    return {
+      signup: '/api/local-auth/signup',
+      signin: '/api/local-auth/signin'
+    };
+  }
+};
+
+// Export reducer
+export const authReducer = authSlice.reducer;

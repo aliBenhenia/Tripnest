@@ -2,15 +2,18 @@
 
 import { Provider } from 'react-redux';
 import { store } from './store';
-import { ReactNode } from 'react';
-import { AuthProvider } from '@/hooks/useAuth';
+import { ReactNode, useEffect } from 'react';
+import { initializeAuth } from './slices/authSlice';
 
 export function Providers({ children }: { children: ReactNode }) {
+  // Initialize auth state from localStorage when the app loads
+  useEffect(() => {
+    store.dispatch(initializeAuth());
+  }, []);
+
   return(
       <Provider store={store}>
-        <AuthProvider>
-          {children}
-        </AuthProvider>
+        {children}
       </Provider>
    );
-} 
+}

@@ -4,7 +4,6 @@ import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import BottomNavigation from "@/components/bottom-navigation"
 import { ErrorBoundary } from "@/components/ErrorBoundary"
-import { AuthProvider } from "@/hooks/useAuth"
 import { Toaster } from "@/components/ui/toaster"
 import { Providers } from "@/lib/redux/provider"
 

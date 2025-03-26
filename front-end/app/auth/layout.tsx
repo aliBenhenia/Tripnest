@@ -2,7 +2,7 @@
 
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/hooks/useAuth';
+import useAuthRedux from '@/hooks/useAuthRedux';
 import Link from 'next/link';
 
 export default function AuthLayout({
@@ -10,7 +10,7 @@ export default function AuthLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { isAuthenticated, isLoading } = useAuthRedux();
   const router = useRouter();
 
   // Redirect if already authenticated
@@ -67,4 +67,4 @@ export default function AuthLayout({
       </footer>
     </div>
   );
-} 
+}

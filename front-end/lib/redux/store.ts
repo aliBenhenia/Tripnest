@@ -2,12 +2,14 @@ import { configureStore, combineReducers } from '@reduxjs/toolkit';
 import { userReducer } from './slices/userSlice';
 import { savedItemsReducer } from './slices/savedItemsSlice';
 import { recentActivityReducer } from './slices/recentActivitySlice';
+import { authReducer } from './slices/authSlice';
 
 // Create a root reducer with reset capability
 const appReducer = combineReducers({
   user: userReducer,
   savedItems: savedItemsReducer,
   recentActivity: recentActivityReducer,
+  auth: authReducer,
 });
 
 // Add a root level reducer that can clear all state on logout
@@ -27,4 +29,4 @@ export const store = configureStore({
 
 // Infer the RootState and AppDispatch types from the store
 export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch; 
+export type AppDispatch = typeof store.dispatch;

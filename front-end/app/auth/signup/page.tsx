@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { useAuth } from '@/hooks/useAuth';
+import useAuthRedux from '@/hooks/useAuthRedux';
 import { AlertCircle, Loader2, CheckCircle2 } from 'lucide-react';
 
 export default function SignupPage() {
@@ -28,7 +28,7 @@ export default function SignupPage() {
   });
   
   const router = useRouter();
-  const { signup, error } = useAuth();
+  const { signup, error } = useAuthRedux();
 
   // Handle errors from auth provider
   useEffect(() => {
@@ -299,4 +299,4 @@ export default function SignupPage() {
       </div>
     </div>
   );
-} 
+}
