@@ -25,7 +25,12 @@ console.log(`Using port: ${PORT}`);
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  // Allow requests from any origin
+  origin: 'http://localhost:3000',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 
 // Set up multer storage configuration

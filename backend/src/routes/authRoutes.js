@@ -13,7 +13,7 @@ router.post('/login', authRateLimiter, authController.login);
 router.post('/refresh-token', authRateLimiter, authController.refreshToken);
 
 // Protected routes
-router.use(protect); // Apply authentication middleware to all routes below
+// router.use(protect); // Apply authentication middleware to all routes below
 router.get('/me', authController.getCurrentUser);
 router.post('/logout', authController.logout);
 

@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  # MongoDB service
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=adminpassword
+      - MONGO_INITDB_DATABASE=travila
+    volumes:
+      - mongodb_data:/data/db
+    ports:
+      - "27017:27017"
+    networks:
+      - app_network
+
+  # Backend (Node.js / Express) service
+  backend:
+    build: ./backend
+    container_name: backend
+    environment:
+      - MONGO_URI=mongodb://mongodb:27017/travila
+      - PORT=3001
+      - NODE_ENV=development
+      - JWT_SECRET=qwertyuiopasdfghjklzxcvbnm123456
+    ports:
+      - "3001:3001"  # Your backend API will be on port 3001
+    depends_on:
+      - mongodb
+    volumes:
+      - ./backend:/app
+    networks:
+      - app_network
+
+  # Frontend (React app) service
+  frontend:
+    build: ./front-end
+    container_name: frontend
+    environment:
+      - NEXT_PUBLIC_API_URL=http://backend:3001  # Change the port to 3001 to match the backend
+    ports:
+      - "3000:3000"  # Your frontend will be on port 3000
+    depends_on:
+      - backend
+    volumes:
+      - ./front-end:/app
+    networks:
+      - app_network
+
+networks:
+  app_network:
+    driver: bridge
+
+volumes:
+  mongodb_data:
