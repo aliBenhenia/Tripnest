@@ -39,7 +39,7 @@ services:
     build: ./front-end
     container_name: frontend
     environment:
-      - NEXT_PUBLIC_API_URL=http://backend:3001  # Change the port to 3001 to match the backend
+      - NEXT_PUBLIC_API_URL=http://localhost:3001  # Change the port to 3001 to match the backend
     ports:
       - "3000:3000"  # Your frontend will be on port 3000
     depends_on:

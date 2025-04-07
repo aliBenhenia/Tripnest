@@ -17,6 +17,7 @@ const generateTokens = (userId) => {
 // Register new user
 exports.register = catchAsync(async (req, res, next) => {
   const { username, email, password } = req.body;
+  
 
   // Check if user already exists
   const existingUser = await User.findOne({ $or: [{ email }, { username }] });

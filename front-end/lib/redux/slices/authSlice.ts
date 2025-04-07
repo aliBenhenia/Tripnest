@@ -1,5 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { AppDispatch } from '../store';
+import axios from 'axios';
 
 // Define user type
 export type User = {
@@ -110,30 +111,18 @@ export const loginUser = (email: string, password: string) => async (dispatch: A
     // Get API endpoints
     const endpoints = await getApiEndpoints();
 
-    // Make login request
+    // Make login request using Axios
     let response;
     try {
-      response = await fetch(`${API_URL}${endpoints.signin}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-    } catch (fetchError) {
+      response = await axios.post(`${API_URL}${endpoints.signin}`, { email, password });
+    } catch (axiosError) {
       dispatch(setAuthError('Network error. Please check your internet connection and try again.'));
       return false;
     }
 
-    let data;
-    try {
-      data = await response.json();
-    } catch (jsonError) {
-      dispatch(setAuthError('Invalid response from server. Please try again later.'));
-      return false;
-    }
+    const data = response.data;
 
-    if (!response.ok) {
+    if (response.status !== 200) {
       // Handle different error scenarios
       if (response.status === 401) {
         dispatch(setAuthError('Invalid email or password. Please try again.'));
@@ -189,18 +178,12 @@ export const signupUser = (name: string, email: string, password: string) => asy
     // Get API endpoints
     const endpoints = await getApiEndpoints();
 
-    // Make signup request
-    const response = await fetch(`${API_URL}${endpoints.signup}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ name, email, password }),
-    });
+    // Make signup request using Axios
+    const response = await axios.post(`${API_URL}${endpoints.signup}`, { name, email, password });
 
-    const data = await response.json();
+    const data = response.data;
 
-    if (!response.ok) {
+    if (response.status !== 200) {
       // Handle different error scenarios
       if (response.status === 409) {
         dispatch(setAuthError('This email is already registered. Please log in instead.'));
@@ -246,41 +229,42 @@ export const validateAuthToken = () => async (dispatch: AppDispatch, getState: a
 
   try {
     // Get the appropriate profile endpoint
-    const infoResponse = await fetch(`${API_URL}/`);
-    const infoData = await infoResponse.json();
+    const infoResponse = await axios.get(`${API_URL}/`);
+    const infoData = infoResponse.data;
     const profileEndpoint = infoData.userEndpoints[0].includes('local')
       ? '/api/local-users/profile'
       : '/api/users/profile';
 
     // Try to get profile with current token
-    const response = await fetch(`${API_URL}${profileEndpoint}`, {
+    const response = await axios.get(`${API_URL}${profileEndpoint}`, {
       headers: {
         Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json'
-      }
+        'Content-Type': 'application/json',
+      },
     });
 
-    return response.ok;
+    return response.status === 200;
   } catch (error) {
     console.error('Token validation error:', error);
     return false;
   }
 };
 
-// Helper function to get API endpoints
+// Helper function to get API endpoints using Axios
 const getApiEndpoints = async () => {
   try {
-    const response = await fetch(`${API_URL}/`);
-    const data = await response.json();
+    const response = await axios.get(`${API_URL}/`);
+    const data = response.data;
+    console.log(data);
     return {
       signup: data.authEndpoints[0].includes('local') ? '/api/local-auth/signup' : '/api/auth/signup',
-      signin: data.authEndpoints[1].includes('local') ? '/api/local-auth/signin' : '/api/auth/signin'
+      signin: data.authEndpoints[1].includes('local') ? '/api/local-auth/signin' : '/api/auth/signin',
     };
   } catch (error) {
     console.error('Error fetching API info:', error);
     return {
       signup: '/api/local-auth/signup',
-      signin: '/api/local-auth/signin'
+      signin: '/api/local-auth/signin',
     };
   }
 };
