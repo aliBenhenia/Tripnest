@@ -114,40 +114,50 @@ export default function ProfilePage() {
       }
 
       const formData = new FormData();
-      if (username) formData.append('username', username);
-      if (bio) formData.append('bio', bio);
-      if (avatarFile) formData.append('avatar', avatarFile);
-      console.log('Form data:', token);
+ formData.append('username', username);
+ formData.append('bio', bio);
+ formData.append('avatar', avatarFile);
+ const dataToSend = {
+  username,
+  bio,
+  avatar: avatarFile ? avatarFile.name : null, // Send the avatar file name (or its base64 if necessary)
+};
+      // Log the FormData content (for debugging purposes)
+      for (let [key, value] of formData.entries()) {
+        console.log(key, value); // This will print all the appended form data
+      }
+      console.log("ss:",dataToSend);
       const response = await axios.patch(
         `${API_URL}/api/users/update`,
-        formData,
+        JSON.stringify(dataToSend),
         {
           headers: {
-            Authorization: `Bearer ${token}`,
-            'Content-Type': 'multipart/form-data', // Assuming formData is being used
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'multipart/form-data', // Important for file uploads
+            'Accept': 'application/json',
           },
         }
       );
-      
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to update profile');
+  
+      // Check if the response status is successful (status code 200-299)
+      if (response.status >= 200 && response.status < 300) {
+        const updatedUser = response.data.data.user;
+        
+        setUser(updatedUser);
+        dispatch(updateUserProfile({
+          username: updatedUser.username,
+          bio: updatedUser.bio,
+        }));
+  
+        toast({
+          title: "Profile updated successfully",
+          variant: "default",
+        });
+      } else {
+        throw new Error('Failed to update profile');
       }
-
-      const data = await response.json();
-      const updatedUser = data.data.user;
-      setUser(updatedUser);
-      dispatch(updateUserProfile({
-        username: updatedUser.username,
-        bio: updatedUser.bio
-      }));
-
-      toast({
-        title: "Profile updated successfully",
-        variant: "default",
-      });
     } catch (error) {
+      console.error('Error updating profile:', error);
       toast({
         title: "Failed to update profile",
         description: error.message || 'An unknown error occurred',
