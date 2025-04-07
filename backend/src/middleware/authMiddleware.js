@@ -11,7 +11,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   if (authHeader && authHeader.startsWith('Bearer')) {
     token = authHeader.split(' ')[1];
   }
-
+  
   if (!token) {
     return next(new AppError('You are not logged in. Please log in to get access.', 401));
   }
@@ -25,9 +25,10 @@ exports.protect = catchAsync(async (req, res, next) => {
     if (!user) {
       return next(new AppError('The user belonging to this token no longer exists.', 401));
     }
-
+   
     // Grant access to protected route
     req.user = user;
+    console.log('Token present:', !!token);
     next();
   } catch (error) {
     if (error.name === 'TokenExpiredError') {

@@ -11,7 +11,7 @@ router.use(protect);
 
 // Profile routes
 router.get('/profile', userController.getProfile);
-router.patch('/profile', userRateLimiter, userController.updateProfile);
+router.patch('/update', userRateLimiter, userController.updateProfile);
 router.patch('/password', userRateLimiter, userController.updatePassword);
 router.delete('/account', userRateLimiter, userController.deleteAccount);
 

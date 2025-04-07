@@ -2,9 +2,11 @@ const userService = require('../services/userService');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/AppError');
 
-exports.updateProfile = catchAsync(async (req, res, next) => {
+exports.updateProfile = catchAsync(async (req, res) => {
+  console.log('HNA: ',req.body);
   const allowedFields = ['username', 'bio', 'avatar'];
   const updateData = {};
+  
 
   Object.keys(req.body).forEach(key => {
     if (allowedFields.includes(key)) {
@@ -12,9 +14,9 @@ exports.updateProfile = catchAsync(async (req, res, next) => {
     }
   });
 
-  if (Object.keys(updateData).length === 0) {
-    return next(new AppError('No valid fields to update', 400));
-  }
+  // if (Object.keys(updateData).length === 0) {
+  //   return next(new AppError('No valid fields to update', 400));
+  // }
 
   const user = await userService.updateUser(req.user.id, updateData);
 
@@ -44,6 +46,7 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
 });
 
 exports.getProfile = catchAsync(async (req, res) => {
+  console.log(req.body);
   const user = await userService.findUserById(req.user.id);
 
   res.status(200).json({
