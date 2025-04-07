@@ -1,13 +1,13 @@
 FROM node:18-alpine
 
-WORKDIR /app
+WORKDIR /
 
 # Copy package.json and package-lock.json first to install dependencies
 COPY package*.json ./
 
 # Install dependencies (including express, locally)
-RUN cd /app && npm install
-RUN cd /app && npm install express
+RUN  npm install && npm install express
+# RUN cd /app && npm install express
 
 # Install nodemon globally
 RUN npm install -g nodemon
