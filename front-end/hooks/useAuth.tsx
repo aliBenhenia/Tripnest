@@ -207,7 +207,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setToken(data.token);
 
       if (isBrowser) {
-        localStorage.setItem(TOKEN_KEY, data.token);
+        localStorage.setItem(TOKEN_KEY, data.data.accessToken);
         localStorage.setItem(USER_KEY, JSON.stringify(data.data.user));
       }
 

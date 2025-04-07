@@ -19,8 +19,8 @@ interface AuthState {
 }
 
 // Local storage keys
-const TOKEN_KEY = 'travila_auth_token';
-const USER_KEY = 'travila_user';
+const TOKEN_KEY = 'TOKEN_KEY';
+const USER_KEY = '';
 
 // API URL
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
@@ -81,6 +81,7 @@ export const initializeAuth = () => async (dispatch: AppDispatch) => {
     if (!isBrowser) return;
 
     const storedToken = localStorage.getItem(TOKEN_KEY);
+    console.log('Stored token:', storedToken);
     const storedUser = localStorage.getItem(USER_KEY);
 
     if (storedToken && storedUser) {
@@ -118,10 +119,10 @@ export const loginUser = (email: string, password: string) => async (dispatch: A
     } catch (axiosError) {
       // check code 
       if (axiosError.response && axiosError.response.status === 401) {
-        dispatch(setAuthError('Invalid email or password. Please try again.'));
+        dispatch(setAuthError(axiosError?.response?.data?.message ||'Invalid email or password. Please try again.'));
         return false;
       }
-      dispatch(setAuthError('Network error. Please check your internet connection and try again.'));
+      dispatch(setAuthError(axiosError?.response?.data?.message ||'Network error. Please check your internet connection and try again.'));
       return false;
     }
 
@@ -146,9 +147,9 @@ export const loginUser = (email: string, password: string) => async (dispatch: A
 
     // Save to state and localStorage
     dispatch(setAuthUser(data.data.user));
-    dispatch(setAuthToken(data.token));
-
-    localStorage.setItem(TOKEN_KEY, data.token);
+    dispatch(setAuthToken(data.accessToken));
+    console.log('Token:', data.data.accessToken);
+    localStorage.setItem(TOKEN_KEY, data.data.accessToken);
     localStorage.setItem(USER_KEY, JSON.stringify(data.data.user));
 
     return true;
@@ -212,12 +213,12 @@ export const signupUser = (username: string, email: string, password: string) =>
     dispatch(setAuthUser(data.data.user));
     dispatch(setAuthToken(data.token));
 
-    localStorage.setItem(TOKEN_KEY, data.token);
+    localStorage.setItem(TOKEN_KEY, data.data.accessToken);
     localStorage.setItem(USER_KEY, JSON.stringify(data.data.user));
 
     return true;
   } catch (err) {
-    console.error('Signup error:', err);
+    // console.error('Signup error:', err);
     // handle status 400 error Email or username already exists
     if (axios.isAxiosError(err) && err.response?.status === 400) {
       dispatch(setAuthError('Email or username already exists'));
@@ -238,18 +239,18 @@ export const logoutUser = () => (dispatch: AppDispatch) => {
 };
 
 export const validateAuthToken = () => async (dispatch: AppDispatch, getState: any) => {
-  const { auth } = getState();
-  const { token } = auth;
+  // const { auth } = getState();
+  // const { token } = auth;
+  const token = localStorage.getItem(TOKEN_KEY);
+  console.log('Validating token:==>', token);
 
   if (!token) return false;
 
   try {
     // Get the appropriate profile endpoint
-    const infoResponse = await axios.get(`${API_URL}/`);
-    const infoData = infoResponse.data;
-    const profileEndpoint = infoData.userEndpoints[0].includes('local')
-      ? '/api/local-users/profile'
-      : '/api/users/profile';
+    // const infoResponse = await axios.get(`${API_URL}/`);
+    // const infoData = infoResponse.data;
+    const profileEndpoint = "/api/users/profile";
 
     // Try to get profile with current token
     const response = await axios.get(`${API_URL}${profileEndpoint}`, {
