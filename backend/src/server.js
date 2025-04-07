@@ -115,7 +115,7 @@ app.post('/api/local-auth/signup', async (req, res) => {
     // Create token
     const token = jwt.sign(
       { id: newUser.id },
-      process.env.JWT_SECRET || 'your-secret-key-for-development',
+      process.env.JWT_SECRET || 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE3NDQwMzc2NjIsImV4cCI6MTc3NTU3MzY3MSwiYXVkIjoid3d3LmV4YW1wbGUuY29tIiwic3ViIjoianJvY2tldEBleGFtcGxlLmNvbSIsIkdpdmVuTmFtZSI6IkpvaG5ueSIsIlN1cm5hbWUiOiJSb2NrZXQiLCJFbWFpbCI6Impyb2NrZXRAZXhhbXBsZS5jb20iLCJSb2xlIjpbIk1hbmFnZXIiLCJQcm9qZWN0IEFkbWluaXN0cmF0b3IiXX0.SjmVHA--kP2v-rc-_om87bJetUu0FAcccu5S2CCWNMc',
       { expiresIn: process.env.JWT_EXPIRES_IN || '30d' }
     );
 
@@ -169,7 +169,7 @@ app.post('/api/local-auth/signin', async (req, res) => {
     // Create token
     const token = jwt.sign(
       { id: user.id },
-      process.env.JWT_SECRET || 'your-secret-key-for-development',
+      process.env.JWT_SECRET || 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE3NDQwMzc2NjIsImV4cCI6MTc3NTU3MzY3MSwiYXVkIjoid3d3LmV4YW1wbGUuY29tIiwic3ViIjoianJvY2tldEBleGFtcGxlLmNvbSIsIkdpdmVuTmFtZSI6IkpvaG5ueSIsIlN1cm5hbWUiOiJSb2NrZXQiLCJFbWFpbCI6Impyb2NrZXRAZXhhbXBsZS5jb20iLCJSb2xlIjpbIk1hbmFnZXIiLCJQcm9qZWN0IEFkbWluaXN0cmF0b3IiXX0.SjmVHA--kP2v-rc-_om87bJetUu0FAcccu5S2CCWNMc',
       { expiresIn: process.env.JWT_EXPIRES_IN || '30d' }
     );
 
@@ -219,7 +219,7 @@ app.get('/api/local-users/profile', async (req, res) => {
 
     try {
       // Verify token
-      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key-for-development');
+      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE3NDQwMzc2NjIsImV4cCI6MTc3NTU3MzY3MSwiYXVkIjoid3d3LmV4YW1wbGUuY29tIiwic3ViIjoianJvY2tldEBleGFtcGxlLmNvbSIsIkdpdmVuTmFtZSI6IkpvaG5ueSIsIlN1cm5hbWUiOiJSb2NrZXQiLCJFbWFpbCI6Impyb2NrZXRAZXhhbXBsZS5jb20iLCJSb2xlIjpbIk1hbmFnZXIiLCJQcm9qZWN0IEFkbWluaXN0cmF0b3IiXX0.SjmVHA--kP2v-rc-_om87bJetUu0FAcccu5S2CCWNMc');
       console.log('Token verified for user ID:', decoded.id);
 
       // Find user
@@ -288,7 +288,7 @@ app.patch('/api/local-users/profile', upload.single('avatar'), async (req, res) 
 
     try {
       // Verify token
-      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key-for-development');
+      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE3NDQwMzc2NjIsImV4cCI6MTc3NTU3MzY3MSwiYXVkIjoid3d3LmV4YW1wbGUuY29tIiwic3ViIjoianJvY2tldEBleGFtcGxlLmNvbSIsIkdpdmVuTmFtZSI6IkpvaG5ueSIsIlN1cm5hbWUiOiJSb2NrZXQiLCJFbWFpbCI6Impyb2NrZXRAZXhhbXBsZS5jb20iLCJSb2xlIjpbIk1hbmFnZXIiLCJQcm9qZWN0IEFkbWluaXN0cmF0b3IiXX0.SjmVHA--kP2v-rc-_om87bJetUu0FAcccu5S2CCWNMc');
       console.log('Token verified for user ID:', decoded.id);
 
       // Find user

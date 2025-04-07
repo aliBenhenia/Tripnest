@@ -5,22 +5,32 @@ const catchAsync = require('../utils/catchAsync');
 
 // Generate tokens
 const generateTokens = (userId) => {
-  const accessToken = jwt.sign({ id: userId }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_ACCESS_EXPIRES
+  // Fetch JWT secret from environment variables
+  const jwtSecret = process.env.JWT_SECRET;
+  const jwtExpiresIn = process.env.JWT_EXPIRES_IN || '1d';  // Default expiration to 1 day if not provided
+
+  // Generate access token using the JWT secret
+  const accessToken = jwt.sign({ id: userId }, jwtSecret, {
+    expiresIn: jwtExpiresIn  // Expiration from env variable
   });
-  const refreshToken = jwt.sign({ id: userId }, process.env.JWT_REFRESH_SECRET, {
-    expiresIn: process.env.JWT_REFRESH_EXPIRES
+
+  // Generate refresh token using a different secret for security (can also be in the environment variables)
+  const refreshToken = jwt.sign({ id: userId }, process.env.JWT_REFRESH_SECRET || 'yourDefaultRefreshTokenSecret', {
+    expiresIn: '7d'  // 7 days expiration for refresh token
   });
+
   return { accessToken, refreshToken };
 };
 
 // Register new user
 exports.register = catchAsync(async (req, res, next) => {
   const { username, email, password } = req.body;
+  console.log(req.body);
   
 
   // Check if user already exists
   const existingUser = await User.findOne({ $or: [{ email }, { username }] });
+  console.log("user,ddddd");
   if (existingUser) {
     return next(new AppError('Email or username already exists', 400));
   }

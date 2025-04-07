@@ -154,13 +154,13 @@ export const loginUser = (email: string, password: string) => async (dispatch: A
   }
 };
 
-export const signupUser = (name: string, email: string, password: string) => async (dispatch: AppDispatch) => {
+export const signupUser = (username: string, email: string, password: string) => async (dispatch: AppDispatch) => {
   dispatch(setAuthLoading(true));
   dispatch(setAuthError(null));
 
   try {
     // Validate inputs
-    if (!name || !email || !password) {
+    if (!username || !email || !password) {
       dispatch(setAuthError('All fields are required'));
       return false;
     }
@@ -179,12 +179,13 @@ export const signupUser = (name: string, email: string, password: string) => asy
     const endpoints = await getApiEndpoints();
 
     // Make signup request using Axios
-    const response = await axios.post(`${API_URL}${endpoints.signup}`, { name, email, password });
+    const response = await axios.post(`${API_URL}${endpoints.signup}`, { username, email, password });
 
     const data = response.data;
 
     if (response.status !== 200) {
       // Handle different error scenarios
+      
       if (response.status === 409) {
         dispatch(setAuthError('This email is already registered. Please log in instead.'));
         return false;
@@ -207,6 +208,11 @@ export const signupUser = (name: string, email: string, password: string) => asy
     return true;
   } catch (err) {
     console.error('Signup error:', err);
+    // handle status 400 error Email or username already exists
+    if (axios.isAxiosError(err) && err.response?.status === 400) {
+      dispatch(setAuthError('Email or username already exists'));
+      return false;
+    }
     dispatch(setAuthError(err instanceof Error ? err.message : 'An unknown error occurred'));
     return false;
   }
@@ -257,13 +263,13 @@ const getApiEndpoints = async () => {
     const data = response.data;
     console.log(data);
     return {
-      signup: data.authEndpoints[0].includes('local') ? '/api/local-auth/signup' : '/api/auth/signup',
-      signin: data.authEndpoints[1].includes('local') ? '/api/local-auth/signin' : '/api/auth/signin',
+      signup: '/api/auth/register',
+      signin: '/api/auth/login',
     };
   } catch (error) {
     console.error('Error fetching API info:', error);
     return {
-      signup: '/api/local-auth/signup',
+      signup: '/api/auth/register',
       signin: '/api/local-auth/signin',
     };
   }
