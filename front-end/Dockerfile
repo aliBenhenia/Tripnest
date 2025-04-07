@@ -8,7 +8,8 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies inside the container
-RUN npm install && npm install next@latest
+RUN npm install && npm install framer-motion
+
 
 # Copy the rest of the application code
 COPY . .

@@ -46,6 +46,7 @@ services:
       - backend
     volumes:
       - ./front-end:/app
+      - /app/node_modules  # This ensures node_modules stays inside the container
     networks:
       - app_network
 
