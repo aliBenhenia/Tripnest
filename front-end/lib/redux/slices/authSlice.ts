@@ -116,6 +116,11 @@ export const loginUser = (email: string, password: string) => async (dispatch: A
     try {
       response = await axios.post(`${API_URL}${endpoints.signin}`, { email, password });
     } catch (axiosError) {
+      // check code 
+      if (axiosError.response && axiosError.response.status === 401) {
+        dispatch(setAuthError('Invalid email or password. Please try again.'));
+        return false;
+      }
       dispatch(setAuthError('Network error. Please check your internet connection and try again.'));
       return false;
     }
