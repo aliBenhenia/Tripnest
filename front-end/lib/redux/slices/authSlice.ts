@@ -197,7 +197,12 @@ export const signupUser = (username: string, email: string, password: string) =>
       } else if (data.errors && Array.isArray(data.errors)) {
         dispatch(setAuthError(data.errors.map((err: any) => err.msg).join('. ')));
         return false;
-      } else {
+      } 
+      else if (response.status === 201) {
+        dispatch(setAuthError('Account created successfully. Please log in.'));
+        return true;
+      }
+      else {
         dispatch(setAuthError(data.message || 'Failed to create account. Please try again.'));
         return false;
       }
