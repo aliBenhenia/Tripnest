@@ -118,7 +118,7 @@ export default function SignupPage() {
     try {
       const success = await signup(name, email, password);
       if (success) {
-        router.push('/'); // Redirect to home page after successful signup
+        router.push('/auth/login'); // Redirect to home page after successful signup
       }
     } catch (err) {
       console.error('Signup error:', err);

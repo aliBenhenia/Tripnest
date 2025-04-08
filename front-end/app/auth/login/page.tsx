@@ -5,6 +5,9 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import useAuthRedux from '@/hooks/useAuthRedux';
 import { AlertCircle, Loader2, Eye, EyeOff } from 'lucide-react';
+import { useAppDispatch } from "@/lib/redux/hooks";
+import {setUserSuccess} from "@/lib/redux/slices/userSlice"
+import axios from "axios";
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -14,6 +17,8 @@ export default function LoginPage() {
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const dispatch = useAppDispatch();
+
   
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -23,7 +28,7 @@ export default function LoginPage() {
   // Redirect if already authenticated
   useEffect(() => {
     if (isAuthenticated) {
-      router.push(returnUrl);
+      router.push("/profile");
     }
   }, [isAuthenticated, router, returnUrl]);
 
@@ -78,7 +83,22 @@ export default function LoginPage() {
     try {
       const success = await login(email, password);
       if (success) {
-        router.push(returnUrl); // Redirect to the return URL or home page
+        const fetchUserProfile = async () => {
+          const token = localStorage.getItem('TOKEN_KEY');
+          const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+          try {
+            const response = await axios.get(`${API_URL}/api/users/profile`, {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+            })
+            console.log("user profile data", response.data)
+            dispatch(setUserSuccess(response.data.data.user))
+          } catch (error) {}
+        }
+        fetchUserProfile()
+        router.push("/"); // Redirect to the return URL or home page
       }
     } catch (err) {
       console.error('Login error:', err);
