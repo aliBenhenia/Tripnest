@@ -8,7 +8,9 @@ import useAuthRedux from "@/hooks/useAuthRedux"
 import { useState, useEffect } from "react"
 import { useAppSelector } from "@/lib/redux/hooks"
 import { useRouter } from "next/navigation"
-
+import { useAppDispatch } from "@/lib/redux/hooks";
+import {setUserSuccess} from "@/lib/redux/slices/userSlice"
+import axios from "axios";
 // API URL
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
@@ -17,7 +19,30 @@ export default function BottomNavigation() {
   const { user: authUser, isAuthenticated, logout } = useAuthRedux()
   const [showProfileMenu, setShowProfileMenu] = useState(false)
   const router = useRouter()
-  
+  const dispatch = useAppDispatch();
+  const token = typeof window !== 'undefined' ? localStorage.getItem('TOKEN_KEY') : null;
+  useEffect(() => {
+    if (token) {
+      // fetch user profile and update Redux store 
+      console.log("token", token)
+      const fetchUserProfile = async () => {
+        try {
+          const response = await axios.get(`${API_URL}/api/users/profile`, {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          })
+          dispatch(setUserSuccess(response.data.data.user))
+          console.log("user profile data", response.data)
+        } catch (error) {
+          console.error("Error fetching user profile:", error)
+        }
+      }
+      
+      fetchUserProfile()
+    }
+  },[])
   // Get user from Redux store
   const reduxUser = useAppSelector(state => state.user.currentUser)
   
@@ -77,6 +102,7 @@ export default function BottomNavigation() {
   // Get user avatar URL
   const getAvatarUrl = () => {
     // First check the Redux state
+    console.log("user slice state",user)
     if (reduxUser?.avatar) {
       return `${API_URL}${reduxUser.avatar}`
     } 

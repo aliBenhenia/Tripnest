@@ -2,11 +2,12 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 // Define user type
 export type User = {
-  id: string;
-  name: string;
-  email: string;
-  avatar: string | null;
-  createdAt: string;
+  id?: string;
+  username?: string;
+  bio?: string | null;
+  email?: string;
+  avatar?: string | null;
+  createdAt?: string;
 };
 
 // Define initial state

@@ -76,6 +76,7 @@ export default function ProfilePage() {
       setUser(userData);
       setUsername(userData.username || '');
       setBio(userData.bio || '');
+      dispatch(setUserSuccess(userData));
     } catch (error) {
       console.error('Error fetching profile:', error);
     }
@@ -121,7 +122,6 @@ export default function ProfilePage() {
       for (let [key, value] of formData.entries()) {
         console.log(key, value); // This will print all the appended form data
       }
-      console.log("ss: ",formData.get('bio'));
       const response = await axios.patch(
         `${API_URL}/api/users/update`,
         formData,
@@ -138,11 +138,7 @@ export default function ProfilePage() {
         const updatedUser = response.data.data.user;
         
         setUser(updatedUser);
-        dispatch(updateUserProfile({
-          username: updatedUser.username,
-          bio: updatedUser.bio,
-        }));
-  
+        dispatch(setUserSuccess(updatedUser));
         toast({
           title: "Profile updated successfully",
           variant: "default",

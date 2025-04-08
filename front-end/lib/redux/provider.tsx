@@ -10,6 +10,14 @@ export function Providers({ children }: { children: ReactNode }) {
   useEffect(() => {
     store.dispatch(initializeAuth());
   }, []);
+  const token = typeof window !== 'undefined' ? localStorage.getItem('TOKEN_KEY') : null;
+  useEffect(() => {
+    if (token) {
+      // fetch user profile and update Redux store 
+      
+      
+    }
+  }, [token]);
 
   return(
       <Provider store={store}>
