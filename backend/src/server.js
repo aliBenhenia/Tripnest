@@ -73,8 +73,10 @@ const upload = multer({
 });
 
 // Serve static files from the uploads directory
-app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
-
+app.use('/uploads', express.static(path.join(__dirname, 'routes', 'uploads')));
+app.get('/test', (req, res) => {
+  res.sendFile(path.join(__dirname, 'routes', 'uploads', 'aya.png'));
+});
 // In-memory user storage for when MongoDB is unavailable
 let inMemoryUsers = [];
 let isMongoDBConnected = false;
