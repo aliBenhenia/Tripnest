@@ -115,7 +115,7 @@ export const loginUser = (email: string, password: string) => async (dispatch: A
     // Make login request using Axios
     let response;
     try {
-      response = await axios.post(`${API_URL}${endpoints.signin}`, { email, password });
+      response = await axios.post(`${API_URL}/api/auth/login`, { email, password });
     } catch (axiosError) {
       // check code 
       if (axiosError.response && axiosError.response.status === 401) {
@@ -200,7 +200,7 @@ export const signupUser = (username: string, email: string, password: string) =>
         return false;
       } 
       else if (response.status === 201) {
-        dispatch(setAuthError('Account created successfully. Please log in.'));
+        // set success create account
         return true;
       }
       else {
