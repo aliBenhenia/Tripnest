@@ -6,7 +6,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies (including express, locally)
-RUN  npm install && npm install express
+RUN  npm install 
 # RUN cd /app && npm install express
 
 # Install nodemon globally
