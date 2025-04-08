@@ -185,7 +185,7 @@ export const signupUser = (username: string, email: string, password: string) =>
     const endpoints = await getApiEndpoints();
 
     // Make signup request using Axios
-    const response = await axios.post(`${API_URL}${endpoints.signup}`, { username, email, password });
+    const response = await axios.post(`${API_URL}/api/auth/register`, { username, email, password });
 
     const data = response.data;
 
@@ -269,21 +269,10 @@ export const validateAuthToken = () => async (dispatch: AppDispatch, getState: a
 
 // Helper function to get API endpoints using Axios
 const getApiEndpoints = async () => {
-  try {
-    const response = await axios.get(`${API_URL}/`);
-    const data = response.data;
-    console.log(data);
     return {
       signup: '/api/auth/register',
       signin: '/api/auth/login',
     };
-  } catch (error) {
-    console.error('Error fetching API info:', error);
-    return {
-      signup: '/api/auth/register',
-      signin: '/api/local-auth/signin',
-    };
-  }
 };
 
 // Export reducer
