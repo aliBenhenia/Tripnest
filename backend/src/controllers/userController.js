@@ -3,23 +3,24 @@ const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/AppError');
 
 exports.updateProfile = catchAsync(async (req, res) => {
- 
-  const allowedFields = ['username', 'bio', 'avatar'];
+  const allowedFields = ['username', 'bio'];
   const updateData = {};
-  
 
+  // req.body is now populated correctly by multer
   Object.keys(req.body).forEach(key => {
     if (allowedFields.includes(key)) {
       updateData[key] = req.body[key];
     }
   });
 
-  // if (Object.keys(updateData).length === 0) {
-  //   return next(new AppError('No valid fields to update', 400));
-  // }
+  // Handle file (optional)
+  if (req.file) {
+    updateData.avatar = `http://localhost:3001/routes/uploads/${req.file.filename}`; // or save filename if stored on disk
+    // You can also do something like `req.file.originalname`, `mimetype`, etc.
+  }
 
   const user = await userService.updateUser(req.user.id, updateData);
- console.log('HNA: ',req.body);
+  console.log("==>", req.body);
   res.status(200).json({
     status: 'success',
     data: { user }

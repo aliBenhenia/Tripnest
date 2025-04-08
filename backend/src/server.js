@@ -35,6 +35,13 @@ app.use(express.json());
 
 // Set up multer storage configuration
 const storage = multer.diskStorage({
+  /**
+   * Specify the destination directory for uploaded files.
+   * @param {express.Request} req - The Express request object.
+   * @param {multer.File} file - The multer file object.
+   * @param {function(Error, string)} cb - The callback function.
+   * @returns {void}
+   */
   destination: function (req, file, cb) {
     const uploadDir = path.join(__dirname, '..', 'uploads');
     // Create directory if it doesn't exist
@@ -260,6 +267,8 @@ app.get('/api/local-users/profile', async (req, res) => {
   }
 });
 
+// ...all your imports and previous code...
+
 app.patch('/api/local-users/profile', upload.single('avatar'), async (req, res) => {
   try {
     if (isMongoDBConnected) {
@@ -275,87 +284,61 @@ app.patch('/api/local-users/profile', upload.single('avatar'), async (req, res) 
       token = req.headers.authorization.split(' ')[1];
     }
 
-    console.log('Profile update request received. Token present:', !!token);
-    console.log('Request body:', req.body);
-    console.log('File uploaded:', req.file ? req.file.filename : 'None');
-
     if (!token) {
       return res.status(401).json({
         status: 'fail',
-        message: 'Not authenticated. Please log in to access this resource.'
+        message: 'Not authenticated. Please log in.'
       });
     }
 
+    let decoded;
     try {
-      // Verify token
-      const decoded = jwt.verify(token, process.env.JWT_SECRET || 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJPbmxpbmUgSldUIEJ1aWxkZXIiLCJpYXQiOjE3NDQwMzc2NjIsImV4cCI6MTc3NTU3MzY3MSwiYXVkIjoid3d3LmV4YW1wbGUuY29tIiwic3ViIjoianJvY2tldEBleGFtcGxlLmNvbSIsIkdpdmVuTmFtZSI6IkpvaG5ueSIsIlN1cm5hbWUiOiJSb2NrZXQiLCJFbWFpbCI6Impyb2NrZXRAZXhhbXBsZS5jb20iLCJSb2xlIjpbIk1hbmFnZXIiLCJQcm9qZWN0IEFkbWluaXN0cmF0b3IiXX0.SjmVHA--kP2v-rc-_om87bJetUu0FAcccu5S2CCWNMc');
-      console.log('Token verified for user ID:', decoded.id);
-
-      // Find user
-      const userIndex = inMemoryUsers.findIndex(u => u.id === decoded.id);
-      if (userIndex === -1) {
-        console.log('User not found with ID:', decoded.id);
-        console.log('Available users:', inMemoryUsers.map(u => u.id));
-        return res.status(404).json({
-          status: 'fail',
-          message: 'User not found'
-        });
-      }
-
-      // Update user data
-      const { name, email } = req.body;
-      
-      if (name) inMemoryUsers[userIndex].name = name;
-      if (email) inMemoryUsers[userIndex].email = email;
-
-      // Handle avatar upload
-      if (req.file) {
-        // If user already has an avatar that's not the default, delete it
-        if (inMemoryUsers[userIndex].avatar) {
-          try {
-            // Extract the filename from the avatar path
-            const avatarPath = inMemoryUsers[userIndex].avatar;
-            const uploadPath = path.join(__dirname, '..', 'uploads');
-            const filename = avatarPath.split('/').pop();
-            const oldAvatarPath = path.join(uploadPath, filename);
-            
-            console.log('Attempting to delete old avatar:', oldAvatarPath);
-            if (fs.existsSync(oldAvatarPath)) {
-              fs.unlinkSync(oldAvatarPath);
-              console.log('Old avatar deleted successfully');
-            } else {
-              console.log('Old avatar file not found');
-            }
-          } catch (err) {
-            console.error('Error deleting old avatar:', err);
-          }
-        }
-
-        // Update user's avatar field
-        inMemoryUsers[userIndex].avatar = `/uploads/${req.file.filename}`;
-        console.log('Avatar updated to:', inMemoryUsers[userIndex].avatar);
-      }
-
-      // Remove password from response
-      const userResponse = { ...inMemoryUsers[userIndex] };
-      delete userResponse.password;
-
-      console.log('Profile updated successfully');
-      res.status(200).json({
-        status: 'success',
-        data: {
-          user: userResponse
-        }
-      });
-    } catch (jwtError) {
-      console.error('JWT verification error:', jwtError.message);
+      decoded = jwt.verify(token, process.env.JWT_SECRET || 'default_jwt_secret');
+    } catch (err) {
       return res.status(401).json({
         status: 'fail',
-        message: 'Invalid or expired token. Please log in again.'
+        message: 'Invalid or expired token.'
       });
     }
+
+    const userIndex = inMemoryUsers.findIndex(u => u.id === decoded.id);
+    if (userIndex === -1) {
+      return res.status(404).json({
+        status: 'fail',
+        message: 'User not found'
+      });
+    }
+
+    const user = inMemoryUsers[userIndex];
+
+    // Update fields if provided
+    const { name, email } = req.body;
+    if (name) user.name = name;
+    if (email) user.email = email;
+
+    // Handle avatar upload
+    if (req.file) {
+      // Delete old avatar if exists
+      if (user.avatar && fs.existsSync(path.join(__dirname, '..', 'uploads', user.avatar))) {
+        fs.unlinkSync(path.join(__dirname, '..', 'uploads', user.avatar));
+      }
+
+      user.avatar = req.file.filename;
+    }
+
+    inMemoryUsers[userIndex] = user;
+
+    const userResponse = { ...user };
+    delete userResponse.password;
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        user: userResponse
+      }
+    });
   } catch (err) {
-    console.error('Server error in profile update route:', err);
+    console.error('Error updating profile:', err);
     res.status(500).json({
       status: 'error',
       message: err.message
@@ -363,51 +346,20 @@ app.patch('/api/local-users/profile', upload.single('avatar'), async (req, res) 
   }
 });
 
-// Test route
-app.get('/', (req, res) => {
-  res.json({ 
-    message: 'Welcome to Travila API',
-    mongoDBStatus: isMongoDBConnected ? 'Connected' : 'Not Connected',
-    authEndpoints: isMongoDBConnected 
-      ? ['/api/auth/signup', '/api/auth/signin'] 
-      : ['/api/local-auth/signup', '/api/local-auth/signin'],
-    userEndpoints: isMongoDBConnected
-      ? ['/api/users/profile'] 
-      : ['/api/local-users/profile']
-  });
-});
-
-// Error handling middleware
-app.use((err, req, res, next) => {
-  const statusCode = err.statusCode || 500;
-  res.status(statusCode).json({
-    status: 'error',
-    message: err.message || 'Internal Server Error',
-    stack: process.env.NODE_ENV === 'development' ? err.stack : {}
-  });
-});
-
-// Connect to database and start server
+// MongoDB connection check (async)
 const startServer = async () => {
   try {
     await connectDB();
     isMongoDBConnected = true;
-    console.log('MongoDB connection successful');
-  } catch (error) {
-    console.error(`MongoDB connection error: ${error.message}`);
-    console.log('WARNING: Server starting with in-memory storage. Data will be lost when server restarts.');
+    console.log('MongoDB connected');
+  } catch (err) {
     isMongoDBConnected = false;
+    console.log('MongoDB connection failed, switching to in-memory mode');
   }
 
-  // Start server whether MongoDB connects or not
-  app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Server running on http://0.0.0.0:${PORT}`);
-    if (!isMongoDBConnected) {
-      console.log(`Since MongoDB is not connected, use these endpoints instead:`);
-      console.log(`- POST /api/local-auth/signup`);
-      console.log(`- POST /api/local-auth/signin`);
-    }
+  app.listen(PORT, () => {
+    console.log(`Server is running on http://localhost:${PORT}`);
   });
 };
 
-startServer(); 
+startServer();

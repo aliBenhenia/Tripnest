@@ -117,24 +117,18 @@ export default function ProfilePage() {
  formData.append('username', username);
  formData.append('bio', bio);
  formData.append('avatar', avatarFile);
- const dataToSend = {
-  username,
-  bio,
-  avatar: avatarFile ? avatarFile.name : null, // Send the avatar file name (or its base64 if necessary)
-};
       // Log the FormData content (for debugging purposes)
       for (let [key, value] of formData.entries()) {
         console.log(key, value); // This will print all the appended form data
       }
-      console.log("ss:",dataToSend);
+      console.log("ss: ",formData.get('bio'));
       const response = await axios.patch(
         `${API_URL}/api/users/update`,
-        JSON.stringify(dataToSend),
+        formData,
         {
           headers: {
             'Authorization': `Bearer ${token}`,
             'Content-Type': 'multipart/form-data', // Important for file uploads
-            'Accept': 'application/json',
           },
         }
       );
