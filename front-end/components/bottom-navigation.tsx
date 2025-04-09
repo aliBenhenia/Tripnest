@@ -102,8 +102,9 @@ export default function BottomNavigation() {
   // Get user avatar URL
   const getAvatarUrl = () => {
     // First check the Redux state
-    console.log("user slice state",user)
     if (reduxUser?.avatar) {
+      if (reduxUser.avatar === "default-avatar.png")
+          return ("https://static.vecteezy.com/system/resources/previews/001/840/612/large_2x/picture-profile-icon-male-icon-human-or-people-sign-and-symbol-free-vector.jpg")
       return `${API_URL}${reduxUser.avatar}`
     } 
     // Then check auth context user data 
