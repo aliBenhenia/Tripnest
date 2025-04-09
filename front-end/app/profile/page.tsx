@@ -184,8 +184,7 @@ export default function ProfilePage() {
                   <div className="relative w-24 h-24 mb-4">
                     <div className="h-24 w-24 rounded-full overflow-hidden">
                       <img
-                        src={avatarPreview || (user?.avatar ? `${API_URL}${user.avatar}` : 
-                          `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.username || '')}&background=random&size=128`)}
+                        src={ avatarPreview ? avatarPreview : (user?.avatar === "default-avatar.png" ? `https://static.vecteezy.com/system/resources/previews/001/840/612/large_2x/picture-profile-icon-male-icon-human-or-people-sign-and-symbol-free-vector.jpg` : `${API_URL}${user?.avatar}`) }
                         alt={user?.username || "Profile"}
                         className="h-full w-full object-cover"
                       />
@@ -242,8 +241,7 @@ export default function ProfilePage() {
                 <div className="flex items-center space-x-4 mb-4">
                   <div className="h-24 w-24 rounded-full overflow-hidden">
                     <img
-                      src={user?.avatar ? `${API_URL}${user.avatar}` : 
-                        `https://ui-avatars.com/api/?name=${encodeURIComponent(user?.username || '')}&background=random&size=128`}
+                      src={user?.avatar === "default-avatar.png" ? `https://static.vecteezy.com/system/resources/previews/001/840/612/large_2x/picture-profile-icon-male-icon-human-or-people-sign-and-symbol-free-vector.jpg ` : `${API_URL}${user?.avatar}`}
                       alt={user?.username || "Profile"}
                       className="h-full w-full object-cover"
                     />
