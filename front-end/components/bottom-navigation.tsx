@@ -16,7 +16,8 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
 export default function BottomNavigation() {
   const pathname = usePathname()
-  const { user: authUser, isAuthenticated, logout } = useAuthRedux()
+  const { user: authUser, logout } = useAuthRedux()
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false)
   const router = useRouter()
   const dispatch = useAppDispatch();
@@ -33,16 +34,18 @@ export default function BottomNavigation() {
               Authorization: `Bearer ${token}`,
             },
           })
+          setIsAuthenticated(true);
           dispatch(setUserSuccess(response.data.data.user))
           console.log("user profile data", response.data)
         } catch (error) {
+          setIsAuthenticated(false);
           console.error("Error fetching user profile:", error)
         }
       }
       
       fetchUserProfile()
     }
-  },[])
+  },[pathname])
   // Get user from Redux store
   const reduxUser = useAppSelector(state => state.user.currentUser)
   
@@ -84,11 +87,7 @@ export default function BottomNavigation() {
   const handleLogout = () => {
     logout()
     setShowProfileMenu(false)
-    
-    // Clear localStorage items if needed beyond what's in useAuth
-    localStorage.removeItem('travila_user')
-    localStorage.removeItem('travila_token')
-    
+    setIsAuthenticated(false);
     // If the current page is one that requires authentication, redirect to home
     if (pathname.startsWith('/profile') || pathname.startsWith('/saved')) {
       router.push('/')

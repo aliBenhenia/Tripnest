@@ -13,7 +13,7 @@ export type User = {
 // Define auth state
 interface AuthState {
   user: User | null;
-  token: string | null;
+  accessToken: string | null;
   isLoading: boolean;
   error: string | null;
 }
@@ -28,7 +28,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 // Define initial state
 const initialState: AuthState = {
   user: null,
-  token: null,
+  accessToken: null,
   isLoading: false,
   error: null,
 };
@@ -54,11 +54,11 @@ const authSlice = createSlice({
       state.error = null;
     },
     setAuthToken: (state, action: PayloadAction<string | null>) => {
-      state.token = action.payload;
+      state.accessToken = action.payload;
     },
     clearAuth: (state) => {
       state.user = null;
-      state.token = null;
+      state.accessToken = null;
       state.isLoading = false;
       state.error = null;
     },
@@ -81,7 +81,7 @@ export const initializeAuth = () => async (dispatch: AppDispatch) => {
     if (!isBrowser) return;
 
     const storedToken = localStorage.getItem(TOKEN_KEY);
-    console.log('Stored token:', storedToken);
+    console.log('Stored accessToken:', storedToken);
     const storedUser = localStorage.getItem(USER_KEY);
 
     if (storedToken && storedUser) {
@@ -211,7 +211,7 @@ export const signupUser = (username: string, email: string, password: string) =>
 
     // Save to state and localStorage
     dispatch(setAuthUser(data.data.user));
-    dispatch(setAuthToken(data.token));
+    dispatch(setAuthToken(data.accessToken));
 
     localStorage.setItem(TOKEN_KEY, data.data.accessToken);
     localStorage.setItem(USER_KEY, JSON.stringify(data.data.user));
@@ -240,11 +240,11 @@ export const logoutUser = () => (dispatch: AppDispatch) => {
 
 export const validateAuthToken = () => async (dispatch: AppDispatch, getState: any) => {
   // const { auth } = getState();
-  // const { token } = auth;
-  const token = localStorage.getItem(TOKEN_KEY);
-  console.log('Validating token:==>', token);
+  // const { accessToken } = auth;
+  const accessToken = localStorage.getItem(TOKEN_KEY);
+  console.log('Validating accessToken:==>', accessToken);
 
-  if (!token) return false;
+  if (!accessToken) return false;
 
   try {
     // Get the appropriate profile endpoint
@@ -252,10 +252,10 @@ export const validateAuthToken = () => async (dispatch: AppDispatch, getState: a
     // const infoData = infoResponse.data;
     const profileEndpoint = "/api/users/profile";
 
-    // Try to get profile with current token
+    // Try to get profile with current accessToken
     const response = await axios.get(`${API_URL}${profileEndpoint}`, {
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${accessToken}`,
         'Content-Type': 'application/json',
       },
     });

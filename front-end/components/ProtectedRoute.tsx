@@ -9,15 +9,15 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
-  const { isAuthenticated, isLoading } = useAuthRedux();
+  const token = typeof window !== 'undefined' ? localStorage.getItem('TOKEN_KEY') : null;
+  const { isLoading } = useAuthRedux();
   const router = useRouter();
 
   useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
-      // Redirect to login page with return URL
-      router.push(`/auth/login?returnUrl=${encodeURIComponent(window.location.pathname)}`);
+    if (!token) {
+      router.push('/auth/login'); // Redirect to login page if not authenticated
     }
-  }, [isAuthenticated, isLoading, router]);
+  }, [router]);
 
   // Show loading state while checking authentication
   if (isLoading) {
@@ -32,7 +32,7 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   }
 
   // If not authenticated, don't render children
-  if (!isAuthenticated) {
+  if (!token) {
     return null;
   }
 

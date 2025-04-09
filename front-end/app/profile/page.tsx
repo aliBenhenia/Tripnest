@@ -37,6 +37,7 @@ export default function ProfilePage() {
           fetchUserProfile();
           setServerError(false);
         } else {
+          
           toast({
             title: "Authentication expired",
             description: "Please log in again",

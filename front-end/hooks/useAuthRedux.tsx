@@ -17,7 +17,7 @@ const useAuthRedux = () => {
   const router = useRouter();
   
   // Select auth state from Redux store
-  const { user, token, isLoading, error } = useAppSelector((state) => state.auth);
+  const { user, accessToken, isLoading, error } = useAppSelector((state) => state.auth);
   
   // Initialize auth from localStorage
   const initialize = useCallback(() => {
@@ -52,8 +52,8 @@ const useAuthRedux = () => {
   
   return {
     user,
-    token,
-    isAuthenticated: !!token,
+    accessToken,
+    isAuthenticated: !!accessToken,
     isLoading,
     error,
     login,
