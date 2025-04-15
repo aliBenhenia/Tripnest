@@ -18,13 +18,19 @@ exports.updateProfile = catchAsync(async (req, res) => {
     updateData.avatar = `/uploads/${req.file.filename}`; // or save filename if stored on disk
     // You can also do something like `req.file.originalname`, `mimetype`, etc.
   }
-
-  const user = await userService.updateUser(req.user.id, updateData);
-  console.log("==>", req.body);
-  res.status(200).json({
-    status: 'success',
-    data: { user }
-  });
+  try {
+    const user = await userService.updateUser(req.user.id, updateData);
+    res.status(200).json({
+      status: 'success',
+      data: { user }
+    });
+  } catch (err) {
+      res.status(400).json({
+        status: 'fail',
+        message: err.message
+    });
+  }
+  
 });
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
