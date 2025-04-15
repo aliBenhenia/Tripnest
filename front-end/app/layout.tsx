@@ -6,6 +6,7 @@ import BottomNavigation from "@/components/bottom-navigation"
 import { ErrorBoundary } from "@/components/ErrorBoundary"
 import { Toaster } from "@/components/ui/toaster"
 import { Providers } from "@/lib/redux/provider"
+import { ToastContainer } from 'react-toastify';
 
 // Optimize font loading
 const inter = Inter({ 
