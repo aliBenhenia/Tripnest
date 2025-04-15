@@ -114,7 +114,17 @@ export default function ProfilePage() {
 
       toast.success("Profile updated successfully");
     } catch (error: any) {
-      toast.error("Failed to update profile. Please try again.");
+      console.log("=> ",error);
+      if (error.response && error.response.status === 401) {
+        toast.error("Authentication expired. Please log in again.");
+        logout();
+      }
+      else if (error.response && error.response.status === 500) {
+        toast.error("Server error. Please try again later.");
+      } else if (error.response && error.response.data) {
+        toast.error(error.response.data.message || "Failed to update profile. Please try again.");
+      } else
+        toast.error(error.response.data.message || "Failed to update profile. Please try again.");
     } finally {
       setLoading(false);
     }
