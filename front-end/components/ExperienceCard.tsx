@@ -41,7 +41,7 @@ export function ExperienceCard({
         
         <div className="absolute top-4 right-4">
           <div className="bg-white/90 backdrop-blur-sm shadow-sm px-3 py-1.5 rounded-full">
-            <span className="text-sm font-semibold text-gray-900">${price}</span>
+            <span className="text-sm font-semibold text-gray-900">MAD {price}</span>
           </div>
         </div>
       </div>

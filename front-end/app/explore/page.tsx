@@ -26,7 +26,7 @@ const exploreItems = [
     type: 'experience' as const,
     rating: 4.8,
     location: 'Merzouga',
-    price: '$120'
+    price: 'MD120'
   },
   {
     id: 'place-1',
@@ -36,7 +36,7 @@ const exploreItems = [
     type: 'place' as const,
     rating: 4.9,
     location: 'Marrakech',
-    price: '$85'
+    price: 'MD85'
   },
   {
     id: 'city-1',
@@ -55,7 +55,7 @@ const exploreItems = [
     type: 'experience' as const,
     rating: 4.6,
     location: 'High Atlas',
-    price: '$95'
+    price: 'MD95'
   },
   {
     id: 'place-2',
@@ -65,7 +65,7 @@ const exploreItems = [
     type: 'place' as const,
     rating: 4.5,
     location: 'Essaouira',
-    price: '$110'
+    price: 'MD110'
   },
   {
     id: 'city-2',
