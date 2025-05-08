@@ -1,6 +1,6 @@
-# Trivalo App
+# Gomorroco App
 
-Trivalo is a modern web application built using **Next.js**. It offers a seamless user experience with high performance, scalability, and an intuitive UI.
+Gomorroco is a modern web application built using **Next.js**. It offers a seamless user experience with high performance, scalability, and an intuitive UI.
 
 ## 🚀 Features
 
