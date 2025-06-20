@@ -1,6 +1,6 @@
 # Gomorroco App
 
-**Gomorroco** is a modern, performant travel & entertainment web application built with Next.js 14, featuring a clean architecture on both frontend and backend. This README covers setup, folder structure, architectural principles, and deployment steps using AWS Lambda & SAM.
+**Gomorroco** is a modern, performant travel & entertainment web application built with the **MERN stack** (MongoDB, Express, React/Next.js, Node.js), following clean architecture principles for scalability and maintainability.
 
 ---
 
@@ -14,52 +14,38 @@
 * **Interactive Games**: Trivia, challenges, and leaderboards
 * **Dashboard**: Real-time user stats & achievements
 * **Mobile-First**: Fully responsive across devices
+* **Express.js**: RESTful backend API
+* **MongoDB**: NoSQL database integration
 
 ---
 
 ## 🏗️ Clean Architecture Overview
 
-This project follows the **Clean Architecture** paradigm (Uncle Bob) to enforce separation of concerns and ease of maintenance:
+The project follows **Clean Architecture** to ensure separation of concerns:
 
 ```text
 ├── frontend/                # Next.js app (Presentation Layer)
-│   ├── pages/               # Route & page components (Controllers)
-│   ├── components/          # Reusable UI components (Views)
-│   ├── store/               # Redux slices & middleware (Application Layer)
-│   ├── services/            # API service wrappers (Infrastructure)
-│   └── styles/              # Tailwind CSS config & globals
+│   ├── pages/               # Route & page components
+│   ├── components/          # Reusable UI components
+│   ├── store/               # Redux slices (Application Layer)
+│   ├── services/            # API service wrappers
+│   └── styles/              # Tailwind CSS config
 │
-└── backend/                 # AWS Lambda functions via SAM
+└── backend/                 # Node.js + Express app
     ├── src/
     │   ├── domain/          # Entities & business rules
-    │   ├── usecases/        # Application-specific logic (Interactors)
-    │   ├── adapters/        # Interfaces & implementations (Controllers & Gateways)
-    │   ├── infrastructure/  # DB clients, external integrations
-    │   └── handlers/        # Lambda function entry points
-    └── template.yml         # AWS SAM template
+    │   ├── usecases/        # Application-specific logic
+    │   ├── adapters/        # Controllers & data interfaces
+    │   ├── infrastructure/  # MongoDB client, auth, etc.
+    │   └── server.ts        # Express server entry point
 ```
-
-### Layer Responsibilities
-
-1. **Presentation (frontend)**
-
-   * Renders pages, handles user interaction, dispatches actions
-2. **Application (store + usecases)**
-
-   * Defines application workflows and orchestrates domain entities
-3. **Domain**
-
-   * Core business models, entities, and domain logic
-4. **Infrastructure**
-
-   * External systems: databases, APIs, email services, etc.
 
 ---
 
 ## 📂 Frontend Setup
 
 ```bash
-# Clone repo
+# Clone the repo
 git clone https://github.com/your-username/gomorroco.git
 cd gomorroco/frontend
 
@@ -67,18 +53,17 @@ cd gomorroco/frontend
 npm install
 
 # Create .env.local
-NEXT_PUBLIC_API_URL=https://api.yourdomain.com
+NEXT_PUBLIC_API_URL=http://localhost:5000/api
 
-# Run locally
+# Run development server
 npm run dev
 ```
 
-* Development server runs on `http://localhost:3000`
-* Uses Tailwind JIT by default
+Runs at `http://localhost:3000`
 
 ---
 
-## 📂 Backend Setup (AWS SAM)
+## 📂 Backend Setup (Node.js + Express)
 
 ```bash
 cd gomorroco/backend
@@ -86,68 +71,39 @@ cd gomorroco/backend
 # Install dependencies
 npm install
 
-# Build & package
-sam build
-sam deploy --guided
+# Create a .env file
+PORT=5000
+MONGO_URI=mongodb://localhost:27017/gomorroco
+JWT_SECRET=your_jwt_secret_key
+
+# Start the server
+npm run dev
 ```
 
-* **template.yml** defines all Lambda functions, IAM roles, API Gateway endpoints, and DynamoDB tables.
-* Sample SAM snippet:
+Runs at `http://localhost:5000`
 
-```yaml
-Globals:
-  Function:
-    Runtime: nodejs18.x
-    Timeout: 10
-
-Resources:
-  UserFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      Handler: handlers/user.handler
-      Events:
-        ApiGetUser:
-          Type: Api
-          Properties:
-            Path: /users/{id}
-            Method: get
-      Policies:
-        - DynamoDBCrudPolicy:
-            TableName: !Ref UserTable
-
-  UserTable:
-    Type: AWS::Serverless::SimpleTable
-    Properties:
-      PrimaryKey:
-        Name: id
-        Type: String
-```
-
-### Local Testing
-
-* Install [AWS SAM CLI](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-sam-cli-install.html).
-* Run `sam local start-api` to spin up a local API Gateway + Lambda environment.
+> Ensure MongoDB is running locally or use MongoDB Atlas.
 
 ---
 
 ## 🔧 Deployment Architecture
 
-1. **Frontend**: Hosted on Vercel with automatic deployments from `main`
-2. **Backend**: Packaged & deployed via AWS SAM to Lambda + API Gateway
-3. **Database**: DynamoDB (or PostgreSQL on RDS) depending on service
-4. **Storage & Media**: S3 + CloudFront CDN
-5. **Monitoring**: CloudWatch Logs + X-Ray
+1. **Frontend**: Hosted on [Vercel](https://vercel.com) or any static host
+2. **Backend**: Hosted on [Render](https://render.com), [Railway](https://railway.app), or VPS
+3. **Database**: MongoDB Atlas (or self-hosted MongoDB)
+4. **Media Storage**: Optional S3, Cloudinary, or local storage
+5. **Monitoring**: Basic logging with `morgan`, add APM tools if needed
 
 ---
 
 ## 🛠️ Scripts & Commands
 
-| Command                          | Description                      |
-| -------------------------------- | -------------------------------- |
-| `npm run dev` (frontend)         | Start Next.js dev server         |
-| `npm run build && npm run start` | Build & start Next.js production |
-| `sam build`                      | Build back-end (SAM)             |
-| `sam deploy --guided`            | Deploy back-end via SAM          |
+| Command                      | Location | Description                         |
+| ---------------------------- | -------- | ----------------------------------- |
+| `npm run dev`                | frontend | Start Next.js development server    |
+| `npm run build && npm start` | frontend | Build and start in production       |
+| `npm run dev`                | backend  | Start Express API server (dev mode) |
+| `npm run build && npm start` | backend  | Compile TypeScript and run server   |
 
 ---
 
@@ -159,10 +115,10 @@ Resources:
 4. Push to branch (`git push origin feature/xyz`)
 5. Open a Pull Request
 
-Please follow the existing code style and ensure all tests pass.
+Follow the existing code style and ensure all changes are tested.
 
 ---
 
 ## 📄 License
 
-MIT © Your Name
+MIT © ali benhenia
