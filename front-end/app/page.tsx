@@ -217,7 +217,7 @@ export default function Home() {
                 className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-8 justify-center w-full max-w-md mx-auto"
               >
                 <Button className="bg-white text-black hover:bg-white/90 font-medium rounded-full px-4 sm:px-6 py-6 text-base sm:text-lg w-full">
-                  Explore Cities
+                  Explore Cities (9)
                 </Button>
                 <Button variant="outline" className="border-white border-2 text-black rounded-full px-4 sm:px-6 py-6 text-base sm:text-lg w-full transition-colors">
                   View Experiences

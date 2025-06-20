@@ -1,6 +1,6 @@
-# Travila Backend API
+# GoMorocco Backend API
 
-Backend API for Travila application with authentication system.
+Backend API for GoMorocco application with authentication system.
 
 ## Setup
 
@@ -13,7 +13,7 @@ Backend API for Travila application with authentication system.
    ```
    NODE_ENV=development
    PORT=5000
-   MONGO_URI=mongodb://localhost:27017/travila
+   MONGO_URI=mongodb://localhost:27017/GoMorocco
    JWT_SECRET=your-secret-key
    JWT_EXPIRES_IN=30d
    ```

@@ -27,7 +27,7 @@ const app = express();
 // Middleware
 app.use(cors({
   // Allow requests from any origin
-  origin: 'http://localhost:3000',
+  origin: '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));

@@ -11,7 +11,7 @@ export function Footer() {
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-8 sm:gap-6 lg:gap-8">
           {/* About Section */}
           <div className="col-span-2 sm:col-span-1">
-            <h3 className="font-medium text-gray-900 mb-3 text-sm sm:text-base">About Travila</h3>
+            <h3 className="font-medium text-gray-900 mb-3 text-sm sm:text-base">About GoMorocco</h3>
             <ul className="space-y-2">
               <li><Link href="/about" className="text-gray-600 hover:text-gray-900 text-xs sm:text-sm">About Us</Link></li>
               <li><Link href="/press" className="text-gray-600 hover:text-gray-900 text-xs sm:text-sm">Press</Link></li>
@@ -57,9 +57,9 @@ export function Footer() {
             </ul>
           </div>
 
-          {/* Travila Sites Section */}
+          {/* GoMorocco Sites Section */}
           <div className="col-span-2 sm:col-span-1">
-            <h3 className="font-medium text-gray-900 mb-3 text-sm sm:text-base">Travila Sites</h3>
+            <h3 className="font-medium text-gray-900 mb-3 text-sm sm:text-base">GoMorocco Sites</h3>
             <ul className="space-y-2">
               <li>
                 <p className="text-xs sm:text-sm text-gray-600">Book the best restaurants with <Link href="/thefork" className="text-gray-900 hover:underline">TheFork</Link></p>
@@ -116,7 +116,7 @@ export function Footer() {
 
           {/* Copyright and Selectors */}
           <div className="mt-6 sm:mt-4 flex flex-col sm:flex-row justify-between items-center gap-4">
-            <p className="text-xs sm:text-sm text-gray-500 text-center sm:text-left">© 2024 Travila LLC All rights reserved.</p>
+            <p className="text-xs sm:text-sm text-gray-500 text-center sm:text-left">© 2024 GoMorocco LLC All rights reserved.</p>
             <div className="flex items-center gap-3">
               <select className="bg-transparent text-xs sm:text-sm text-gray-600 border border-gray-300 rounded px-2 py-1">
                 <option value="USD">$ USD</option>
@@ -129,7 +129,7 @@ export function Footer() {
 
           {/* Region Text */}
           <p className="mt-4 text-xs sm:text-sm text-gray-500 text-center sm:text-left">
-            This is the version of our website addressed to speakers of English in the United States. If you are a resident of another country or region, please select the appropriate version of Travila for your country or region in the drop-down menu.
+            This is the version of our website addressed to speakers of English in the United States. If you are a resident of another country or region, please select the appropriate version of GoMorocco for your country or region in the drop-down menu.
           </p>
         </div>
       </div>

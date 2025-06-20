@@ -8,7 +8,7 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
 // Token key in localStorage
-const TOKEN_KEY = 'travila_auth_token';
+const TOKEN_KEY = 'GoMorocco_auth_token';
 
 // Create axios instance with default config
 const axiosInstance: AxiosInstance = axios.create({

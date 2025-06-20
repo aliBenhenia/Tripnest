@@ -30,8 +30,8 @@ type AuthContextType = {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 // Local storage keys
-const TOKEN_KEY = 'travila_auth_token';
-const USER_KEY = 'travila_user';
+const TOKEN_KEY = 'GoMorocco_auth_token';
+const USER_KEY = 'GoMorocco_user';
 
 // API URL
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';

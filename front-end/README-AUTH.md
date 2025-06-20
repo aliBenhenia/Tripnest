@@ -1,6 +1,6 @@
 # Authentication Integration
 
-This document explains how the authentication system is integrated between the frontend and backend of the Travila application.
+This document explains how the authentication system is integrated between the frontend and backend of the GoMorocco application.
 
 ## Overview
 

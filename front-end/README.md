@@ -1,6 +1,6 @@
-# Travila - Morocco Travel Explorer
+# GoMorocco - Morocco Travel Explorer
 
-Travila is a travel application focused on exploring Morocco's beautiful cities, attractions, and experiences.
+GoMorocco is a travel application focused on exploring Morocco's beautiful cities, attractions, and experiences.
 
 ## Features
 

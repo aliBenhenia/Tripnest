@@ -13,7 +13,8 @@ import { useAppDispatch } from '@/lib/redux/hooks';
 import { setUserSuccess } from '@/lib/redux/slices/userSlice';
 import axios from "axios";
 
-const API_URL = 'http://localhost:3001';
+// const API_URL = 'http://localhost:3001';
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export default function ProfilePage() {
   const { user: authUser, validateToken, logout } = useAuthRedux();
