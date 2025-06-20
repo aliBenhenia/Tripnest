@@ -30,6 +30,7 @@ router.use(protect);
 
 // Profile routes
 router.get('/profile', userController.getProfile);
+router.get('/places', userController.getPlaces);
 router.patch('/update', userRateLimiter, upload.single('avatar'), userController.updateProfile);
 router.patch('/password', userRateLimiter, userController.updatePassword);
 router.delete('/account', userRateLimiter, userController.deleteAccount);

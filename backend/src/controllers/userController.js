@@ -1,4 +1,5 @@
 const userService = require('../services/userService');
+const {fetchTopMoroccanCities} = require('../services/fetchTopMoroccanCities');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/AppError');
 
@@ -70,3 +71,12 @@ exports.deleteAccount = catchAsync(async (req, res) => {
     data: null
   });
 });
+exports.getPlaces = async (req, res) => {
+  try {
+    const cities = await fetchTopMoroccanCities();
+    res.status(200).json(cities);
+  } catch (error) {
+    console.error('Error fetching cities:', error.message);
+    res.status(500).json({ error: 'Failed to fetch cities' });
+  }
+};
