@@ -21,11 +21,13 @@ services:
     build: ./backend
     container_name: backend
     environment:
-      - MONGO_URI=mongodb://mongodb:27017/travila
+      # - MONGO_URI=mongodb://mongodb:27017/travila
+      - MONGO_URI=mongodb+srv://alibenhenia1:3TkEK63GFAfL8ZZf@cluster0.l3xb1ca.mongodb.net/mydatabase?retryWrites=true&w=majority&appName=Cluster0
       - PORT=3001
       - NODE_ENV=development
       - JWT_EXPIRES_IN=30d
-      - JWT_SECRET=b741773ad1a181dcbda38ca6cec2dbee33258ea0f3bc7f740211ffcd4f68de99992a88e838949e084025b8df0f381797d93576bac8884478ac93047bd49ca003102c29274546f1d0a50b764fe3cdf26c39d2224fea3d0941396178a17575e69b2728f078d466e05c42452bc74af487d4ef3215f34492408bcda1659aa38d60e225d18500096e06e375694b3ec34e5678d6e1653c9446b4c4c57eb3c1a4b86d5cf98720ed98a4729a738a4c78a305e0d69094bbe8afae9a963b802035d72f2a7f1c65423d133ed2f0bade66cf9726c703d31399434e0caef07a9c6c85f988083176679a4a4277a182f1afbee7c4ec7c416eb24528d16fa5099d7b0f4d4cbbf77b
+      - JWT_SECRET=ILm0yG0tXtyjR1729dVJ5dBVUVN+FHm0dNC8ErHyW6TntpDo5r1azrRP53pdKCkvhnQFDRIfW5CMWUyUV/p6w==
+      - JWT_REFRESH_SECRET=CHXxGQwdjyjVI28bYO/m2vQv4YLAZBG693IW/4DWOZmNSbndL9Rv/JKhBm06HqWKJigTHuf6VbxJcvIW8e9ToQ==
     ports:
       - "3001:3001"  # Your backend API will be on port 3001
     depends_on:

@@ -7,6 +7,7 @@ const catchAsync = require('../utils/catchAsync');
 const generateTokens = (userId) => {
   // Fetch JWT secret from environment variables
   const jwtSecret = process.env.JWT_SECRET;
+  console.log("=====> ",jwtSecret);
   const jwtExpiresIn = process.env.JWT_EXPIRES_IN || '1d';  // Default expiration to 1 day if not provided
 
   // Generate access token using the JWT secret
