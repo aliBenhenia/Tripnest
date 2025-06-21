@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { ArrowLeft, ChevronLeft, ChevronRight, Maximize2, MapPin, Star } from "lucide-react"
+import { ArrowLeft, ChevronLeft, ChevronRight, Maximize2, MapPin, Star,Volleyball } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import BottomNavigation from "@/components/bottom-navigation"
@@ -138,6 +138,61 @@ export default function ClientCityPage({ city }: ClientCityPageProps) {
   return (
     <div className="w-full mx-auto bg-white min-h-screen pb-16 md:pb-0 md:max-w-none">
       {/* Header & slider unchanged */}
+       {/* Header Image Slider */}
+      <div className="relative h-[240px] md:h-[400px] lg:h-[500px] w-full">
+        <Link href="/" className="absolute top-4 left-4 z-10 bg-white/30 backdrop-blur-sm p-2 rounded-full">
+          <ArrowLeft className="h-5 w-5 text-white" />
+        </Link>
+        <div className="absolute right-4 bottom-4 z-10 bg-white/30 backdrop-blur-sm p-2 rounded-full">
+          <Maximize2 className="h-5 w-5 text-white" />
+        </div>
+        <div className="relative h-full w-full overflow-hidden">
+          <div
+            className="flex h-full transition-transform duration-300 ease-in-out"
+            style={{ transform: `translateX(-${currentSlide * 100}%)` }}
+          >
+            <Image
+              src={city.imageUrl || "/placeholder.svg"}
+              alt={city.name}
+              className="object-cover w-full h-full flex-shrink-0"
+              width={1200}
+              height={500}
+              priority
+            />
+            <Image
+              src={city.imageUrl2 || city.imageUrl}
+              alt={city.name}
+              className="object-cover w-full h-full flex-shrink-0"
+              width={1200}
+              height={500}
+            />
+          </div>
+
+          {/* Slider Controls */}
+          <button
+            onClick={prevSlide}
+            className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/30 backdrop-blur-sm p-1 md:p-2 rounded-full"
+          >
+            <ChevronLeft className="h-5 w-5 md:h-6 md:w-6 text-white" />
+          </button>
+          <button
+            onClick={nextSlide}
+            className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/30 backdrop-blur-sm p-1 md:p-2 rounded-full"
+          >
+            <ChevronRight className="h-5 w-5 md:h-6 md:w-6 text-white" />
+          </button>
+
+          {/* Pagination Dots */}
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2">
+            {[0, 1].map((index) => (
+              <div
+                key={index}
+                className={`h-2 w-2 md:h-3 md:w-3 rounded-full ${currentSlide === index ? "bg-white" : "bg-white/50"}`}
+              />
+            ))}
+          </div>
+        </div>
+      </div>
       {/* Your existing header and slider code here */}
 
       {/* Categories filter */}
@@ -156,9 +211,8 @@ export default function ClientCityPage({ city }: ClientCityPageProps) {
                   selectedCategory === "all" ? "bg-blue-100 shadow-md" : "bg-gray-50"
                 }`}
               >
-                <Image
-                  src="/all-icon.png"
-                  alt="All"
+                <Volleyball
+                  // src="/all-icon.png"alt="All"
                   width={40}
                   height={40}
                   className={`md:w-12 md:h-12 transition-all ${
