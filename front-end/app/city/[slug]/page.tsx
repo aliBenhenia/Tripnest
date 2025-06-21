@@ -11,8 +11,9 @@ export default async function CityPage({ params }: PageProps) {
 
   // Find the city data
   const city = moroccanCities.find((city) => city.slug === slug) || moroccanCities[0]
-  const activities = cityActivities[city.id] || []
+  // const activities = cityActivities[city.id] || []
 
   // Pass the resolved data to the client component
-  return <ClientCityPage city={city} activities={activities} />
+  
+  return <ClientCityPage city={city} />
 }
