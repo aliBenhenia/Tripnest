@@ -2,13 +2,14 @@
 export const moroccanCities = [
   {
     id: 1,
-    name: "Marrakech",
-    slug: "marrakech",
+    name: "El Jadida",
+    slug: "ElJadida",
     properties: 783,
-    imageUrl: "/images/marrakech.jpg",
-    imageUrl2: "/images/marrakech.jpg",
-    description: "Known for its vibrant souks, historic palaces, and the famous Jemaa el-Fnaa square.",
+    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Forteresse_Jadida_01.JPG/330px-Forteresse_Jadida_01.JPG",
+    imageUrl2: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/76/Forteresse_Jadida_01.JPG/330px-Forteresse_Jadida_01.JPG",
+    description: "major port city on the Atlantic coast of Morocco, located 96 kilometres (60 mi) south of the city of Casablanca,",
   },
+ 
   {
     id: 2,
     name: "Casablanca",
@@ -146,7 +147,16 @@ export const moroccanCities = [
     imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Montage_of_Istanbul_2020.jpg/330px-Montage_of_Istanbul_2020.jpg",
     imageUrl2: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fe/Montage_of_Istanbul_2020.jpg/330px-Montage_of_Istanbul_2020.jpg",
     description: "A futuristic desert city with luxury shopping, skyscrapers, and man-made islands.",
-  }
+  },
+   {
+    id: 18,
+    name: "Marrakech",
+    slug: "marrakech",
+    properties: 783,
+    imageUrl: "/images/marrakech.jpg",
+    imageUrl2: "/images/marrakech.jpg",
+    description: "Known for its vibrant souks, historic palaces, and the famous Jemaa el-Fnaa square.",
+  },
 ];
 
 // Popular Experiences
