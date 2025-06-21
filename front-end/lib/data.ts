@@ -566,37 +566,133 @@ interface Activity {
 }
 
 export const cities: City[] = [
+  // Morocco
   {
     name: "Marrakech",
     region: "Marrakech-Safi",
-    image: "/images/marrakech.jpg",
+    image: "https://images.unsplash.com/photo-1570732603861-c5f69d84e8c6?auto=format&fit=crop&w=800&q=80",
   },
   {
     name: "Fes",
     region: "Fès-Meknès",
-    image: "/images/fes.jpg",
+    image: "https://images.unsplash.com/photo-1608452965800-786a3d5c5883?auto=format&fit=crop&w=800&q=80",
   },
   {
     name: "Chefchaouen",
     region: "Tanger-Tétouan-Al Hoceïma",
-    image: "/images/chefchaouen.jpg",
+    image: "https://images.unsplash.com/photo-1562183241-b937e95585b6?auto=format&fit=crop&w=800&q=80",
   },
   {
     name: "Casablanca",
     region: "Casablanca-Settat",
-    image: "/images/casablanca.jpg",
+    image: "https://images.unsplash.com/photo-1597750048176-66f0ad8db5aa?auto=format&fit=crop&w=800&q=80",
   },
   {
     name: "Tangier",
     region: "Tanger-Tétouan-Al Hoceïma",
-    image: "/images/tangier.jpg",
+    image: "https://images.unsplash.com/photo-1583341602054-a184f245985e?auto=format&fit=crop&w=800&q=80",
+  },
+
+  // Europe
+  {
+    name: "Paris",
+    region: "Île-de-France",
+    image: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=800&q=80",
   },
   {
-    name: "Essaouira",
-    region: "Marrakech-Safi",
-    image: "/images/essaouira.jpg",
+    name: "Barcelona",
+    region: "Catalonia",
+    image: "https://images.unsplash.com/photo-1505765050516-f72dcac9c60b?auto=format&fit=crop&w=800&q=80",
+  },
+  {
+    name: "Rome",
+    region: "Lazio",
+    image: "https://images.unsplash.com/photo-1580137189272-c9379f8864fd?auto=format&fit=crop&w=800&q=80",
+  },
+  {
+    name: "Amsterdam",
+    region: "North Holland",
+    image: "https://images.unsplash.com/photo-1508599589923-12ff7f2e0dd4?auto=format&fit=crop&w=800&q=80",
+  },
+  {
+    name: "Prague",
+    region: "Czech Republic",
+    image: "https://images.unsplash.com/photo-1573575153722-01b4f09da6ee?auto=format&fit=crop&w=800&q=80",
+  },
+
+  // Asia
+  {
+    name: "Tokyo",
+    region: "Kantō",
+    image: "https://images.unsplash.com/photo-1576086213369-97a306d36512?auto=format&fit=crop&w=800&q=80",
+  },
+  {
+    name: "Bangkok",
+    region: "Central Thailand",
+    image: "https://images.unsplash.com/photo-1550134709-937effa694d3?auto=format&fit=crop&w=800&q=80",
+  },
+  {
+    name: "Seoul",
+    region: "South Korea",
+    image: "https://images.unsplash.com/photo-1549693578-d683be217e58?auto=format&fit=crop&w=800&q=80",
+  },
+  {
+    name: "Bali",
+    region: "Indonesia",
+    image: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80",
+  },
+  {
+    name: "Singapore",
+    region: "Singapore",
+    image: "https://images.unsplash.com/photo-1586201375761-83865001e17b?auto=format&fit=crop&w=800&q=80",
+  },
+
+  // Americas
+  {
+    name: "New York",
+    region: "New York",
+    image: "https://images.unsplash.com/photo-1549924231-f129b911e442?auto=format&fit=crop&w=800&q=80",
+  },
+  {
+    name: "Rio de Janeiro",
+    region: "Brazil",
+    image: "https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=800&q=80",
+  },
+  {
+    name: "San Francisco",
+    region: "California",
+    image: "https://images.unsplash.com/photo-1501594907352-04cda38ebc29?auto=format&fit=crop&w=800&q=80",
+  },
+
+  // Middle East
+  {
+    name: "Dubai",
+    region: "UAE",
+    image: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=800&q=80",
+  },
+  {
+    name: "Istanbul",
+    region: "Turkey",
+    image: "https://images.unsplash.com/photo-1504280390368-56c835b70303?auto=format&fit=crop&w=800&q=80",
+  },
+
+  // Oceania
+  {
+    name: "Sydney",
+    region: "New South Wales",
+    image: "https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?auto=format&fit=crop&w=800&q=80",
+  },
+  {
+    name: "Auckland",
+    region: "New Zealand",
+    image: "https://images.unsplash.com/photo-1598837344034-b0d7f47e3872?auto=format&fit=crop&w=800&q=80",
+  },
+  {
+    name: "isatnbul",
+    region: "turkey",
+    image: "https://images.unsplash.com/photo-1598837344034-b0d7f47e3872?auto=format&fit=crop&w=800&q=80",
   }
-]
+];
 
 export const activities: Activity[] = [
   {
