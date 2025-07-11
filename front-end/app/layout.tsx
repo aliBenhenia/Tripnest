@@ -7,6 +7,8 @@ import { ErrorBoundary } from "@/components/ErrorBoundary"
 import { Toaster } from "@/components/ui/toaster"
 import { Providers } from "@/lib/redux/provider"
 import { ToastContainer } from 'react-toastify';
+// import 'leaflet/dist/leaflet.css';
+
 
 // Optimize font loading
 const inter = Inter({ 
