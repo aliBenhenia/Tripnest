@@ -1,6 +1,6 @@
-# GoMorocco - Morocco Travel Explorer
+# Tripnest - Morocco Travel Explorer
 
-GoMorocco is a travel application focused on exploring Morocco's beautiful cities, attractions, and experiences.
+Tripnest is a travel application focused on exploring Morocco's beautiful cities, attractions, and experiences.
 
 ## Features
 

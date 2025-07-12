@@ -1,6 +1,6 @@
 # Authentication Integration
 
-This document explains how the authentication system is integrated between the frontend and backend of the GoMorocco application.
+This document explains how the authentication system is integrated between the frontend and backend of the Tripnest application.
 
 ## Overview
 

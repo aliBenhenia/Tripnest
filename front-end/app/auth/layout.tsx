@@ -52,7 +52,7 @@ export default function AuthLayout({
               />
             </svg>
           </Link>
-          <h1 className="text-xl font-semibold text-center flex-1 pr-6">GoMorocco</h1>
+          <h1 className="text-xl font-semibold text-center flex-1 pr-6">Tripnest</h1>
         </div>
       </header>
 
@@ -63,7 +63,7 @@ export default function AuthLayout({
 
       {/* Footer */}
       <footer className="py-6 text-center text-gray-500 text-sm">
-        <p>© {new Date().getFullYear()} GoMorocco. All rights reserved.</p>
+        <p>© {new Date().getFullYear()} Tripnest. All rights reserved.</p>
       </footer>
     </div>
   );

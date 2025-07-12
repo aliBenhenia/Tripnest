@@ -1,6 +1,6 @@
-# GoMorocco Backend API
+# Tripnest Backend API
 
-Backend API for GoMorocco application with authentication system.
+Backend API for Tripnest application with authentication system.
 
 ## Setup
 
@@ -13,7 +13,7 @@ Backend API for GoMorocco application with authentication system.
    ```
    NODE_ENV=development
    PORT=5000
-   MONGO_URI=mongodb://localhost:27017/GoMorocco
+   MONGO_URI=mongodb://localhost:27017/Tripnest
    JWT_SECRET=your-secret-key
    JWT_EXPIRES_IN=30d
    ```

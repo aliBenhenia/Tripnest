@@ -11,6 +11,7 @@ import { useRouter } from "next/navigation"
 import { useAppDispatch } from "@/lib/redux/hooks";
 import {setUserSuccess} from "@/lib/redux/slices/userSlice"
 import axios from "axios";
+import TripnestLogo from "./logo"
 // API URL
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
@@ -146,28 +147,7 @@ export default function BottomNavigation() {
           <div className="h-16 flex items-center justify-between">
             {/* Left section with logo and main nav */}
             <div className="flex items-center gap-8">
-              <Link 
-                href="/" 
-                className="group relative flex items-center transition-all duration-300
-                  after:absolute after:inset-0 after:rounded-2xl after:border after:border-transparent 
-                  after:transition-all after:duration-300 hover:after:border-primary/10 
-                  hover:after:bg-primary/[0.02] after:-m-3 after:p-3"
-              >
-                <div className="relative transition-transform duration-300 group-hover:scale-[1.02]">
-                  <div className="w-28 h-10 flex items-center justify-center font-bold text-xl">
-                    <span className="text-blue-600">Go</span>
-                    <span className="text-red-500">M</span>
-                    <span className="text-orange-500">o</span>
-                    <span className="text-green-500">r</span>
-                    <span className="text-blue-500">o</span>
-                    <span className="text-purple-500">c</span>
-                    <span className="text-red-600">c</span>
-                    <span className="text-orange-600">o</span>
-                  </div>
-                  <div className="absolute inset-0 bg-gradient-to-r from-primary/0 via-primary/[0.02] to-primary/0 
-                    opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-lg" />
-                </div>
-              </Link>
+              <TripnestLogo />
               <nav className="flex gap-1">
                 {navigation.slice(0, 3).map((item) => (
                   <Link 
