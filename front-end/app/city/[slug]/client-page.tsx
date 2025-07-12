@@ -5,7 +5,7 @@ import { ArrowLeft, ChevronLeft, ChevronRight, Maximize2, MapPin, Star,Volleybal
 import Image from "next/image"
 import Link from "next/link"
 import BottomNavigation from "@/components/bottom-navigation"
-
+import ActivityDrawer from "@/components/ActivityDrawer"
 export const categories = [
   {
     id: 1,
@@ -54,6 +54,18 @@ export default function ClientCityPage({ city }: ClientCityPageProps) {
   const [cityActivitiesList, setCityActivitiesList] = useState<WikiActivity[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [drawerOpen, setDrawerOpen] = useState(false);
+const [selectedActivity, setSelectedActivity] = useState<WikiActivity | null>(null);
+const openActivityDrawer = (activity: WikiActivity) => {
+  setSelectedActivity(activity);
+  setDrawerOpen(true);
+};
+
+const closeActivityDrawer = () => {
+  setDrawerOpen(false);
+  setSelectedActivity(null);
+};
+
 
   const handleCategoryClick = (categoryType: string) => {
     setSelectedCategory(categoryType)
@@ -300,10 +312,12 @@ export default function ClientCityPage({ city }: ClientCityPageProps) {
               <div className="overflow-x-auto flex gap-3 pb-2 scrollbar-hide scroll-smooth">
                 {filteredActivities.map((activity) => (
                   <div
+                  
                     key={activity.id}
-                    className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-200 flex-shrink-0 w-[280px] scroll-ml-4"
+                    className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-200 flex-shrink-0 w-[280px] scroll-ml-4 cursor-pointer"
                   >
                     <div className="relative h-48">
+                      
                       <Image
                         src={activity.imageUrl}
                         alt={activity.name}
@@ -337,7 +351,8 @@ export default function ClientCityPage({ city }: ClientCityPageProps) {
               {filteredActivities.map((activity) => (
                 <div
                   key={activity.id}
-                  className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-200"
+                  onClick={() => openActivityDrawer(activity)}
+                  className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-200 cursor-pointer"
                 >
                   <div className="relative h-64">
                     <Image
@@ -370,7 +385,16 @@ export default function ClientCityPage({ city }: ClientCityPageProps) {
           </>
         )}
       </div>
-
+      {
+        selectedActivity && ( <ActivityDrawer
+  open={drawerOpen}
+  activity={selectedActivity}
+  onClose={closeActivityDrawer}
+  lat={48.8584}
+  lon={2.2945}
+/>)
+      }
+       
       <BottomNavigation />
     </div>
   )
