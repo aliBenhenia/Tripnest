@@ -52,7 +52,8 @@ export function SearchBar({ onSearch }: SearchBarProps) {
         name: city.city,
         region: city.region,
         country: city.country,
-        image: `https://source.unsplash.com/160x160/?${city.city}-city`,
+        image: `https://source.unsplash.com/featured/160x160?${encodeURIComponent(city.city)}%20city&sig=${city.id}`
+
       }))
       setSearchResults(results)
     } catch (err) {
@@ -142,7 +143,7 @@ export function SearchBar({ onSearch }: SearchBarProps) {
         {showDropdown && (
           <div
             ref={dropdownRef}
-            className="absolute z-20 w-full mt-2 bg-white/90 backdrop-blur-md rounded-xl shadow-2xl border border-gray-200 max-h-96 overflow-y-auto scrollbar-thin scrollbar-thumb-primary scrollbar-track-gray-100"
+            className="absolute z-20 w-full mt-2 bg-white backdrop-blur-md rounded-xl shadow-2xl border border-gray-200 max-h-86 overflow-y-auto scrollbar-thin scrollbar-thumb-primary scrollbar-track-gray-100"
           >
             {loading ? (
               <div className="px-6 py-10 text-center text-gray-600 flex flex-col items-center">
@@ -159,22 +160,22 @@ export function SearchBar({ onSearch }: SearchBarProps) {
                 <Link
                   key={city.id}
                   href={`/city/${city.name.toLowerCase()}`}
-                  className="flex items-center px-4 py-3 mx-3 my-1 rounded-lg hover:bg-primary/10 transition cursor-pointer"
+                  className="flex px-4 py-3 mx-3 my-1 rounded-lg hover:bg-primary/10 transition cursor-pointer"
                   onClick={() => {
                     setShowDropdown(false)
                     setSearchQuery('')
                   }}
                 >
-                  <div className="h-12 w-12 rounded-xl overflow-hidden shadow-sm border border-gray-200 mr-4 flex-shrink-0">
+                  {/* <div className="h-12 w-12 rounded-xl overflow-hidden shadow-sm border border-gray-200 mr-4 flex-shrink-0">
                     <img
                       src={city.image}
                       alt={city.name}
                       className="h-full w-full object-cover"
                       loading="lazy"
                     />
-                  </div>
+                  </div> */}
                   <div>
-                    <p className="font-semibold text-gray-800">{city.name}</p>
+                    <p className="font-semibold text-gray-800 text-left">{city.name}</p>
                     <p className="text-sm text-gray-500">{city.region}, {city.country}</p>
                   </div>
                 </Link>
