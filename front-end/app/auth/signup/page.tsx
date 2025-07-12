@@ -3,300 +3,259 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { AlertCircle, Loader2 } from 'lucide-react';
 import useAuthRedux from '@/hooks/useAuthRedux';
-import { AlertCircle, Loader2, CheckCircle2 } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Form, Input, Button, Alert, Progress, message } from 'antd';
 
 export default function SignupPage() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formError, setFormError] = useState('');
-  const [nameError, setNameError] = useState('');
-  const [emailError, setEmailError] = useState('');
-  const [passwordError, setPasswordError] = useState('');
-  const [confirmPasswordError, setConfirmPasswordError] = useState('');
-  
-  // Password strength
-  const [passwordStrength, setPasswordStrength] = useState(0);
   const [passwordChecks, setPasswordChecks] = useState({
     length: false,
     lowercase: false,
     uppercase: false,
-    number: false
+    number: false,
   });
-  
+  const [passwordStrength, setPasswordStrength] = useState(0);
+  const [formError, setFormError] = useState('');
+  const [form] = Form.useForm();
+
   const router = useRouter();
   const { signup, error } = useAuthRedux();
 
-  // Handle errors from auth provider
+  // Sync external error from auth provider into AntD form
   useEffect(() => {
     if (error) {
-      // Parse specific error types
+      setFormError(error);
+      // Optionally set specific field errors:
       if (error.toLowerCase().includes('email')) {
-        setEmailError(error);
+        form.setFields([
+          { name: 'email', errors: [error] }
+        ]);
       } else if (error.toLowerCase().includes('password')) {
-        setPasswordError(error);
+        form.setFields([
+          { name: 'password', errors: [error] }
+        ]);
       } else if (error.toLowerCase().includes('name')) {
-        setNameError(error);
-      } else {
-        setFormError(error);
+        form.setFields([
+          { name: 'name', errors: [error] }
+        ]);
       }
     }
-  }, [error]);
+  }, [error, form]);
 
-  // Check password strength
-  useEffect(() => {
+  // Handle password strength on password field change
+  const onPasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const password = e.target.value;
     const checks = {
       length: password.length >= 8,
       lowercase: /[a-z]/.test(password),
       uppercase: /[A-Z]/.test(password),
-      number: /[0-9]/.test(password)
+      number: /[0-9]/.test(password),
     };
-    
     setPasswordChecks(checks);
-    
-    // Calculate strength (0-4)
-    const strength = Object.values(checks).filter(Boolean).length;
-    setPasswordStrength(strength);
-    
-  }, [password]);
-
-  const validateForm = () => {
-    let isValid = true;
-    
-    // Reset all errors
-    setNameError('');
-    setEmailError('');
-    setPasswordError('');
-    setConfirmPasswordError('');
-    setFormError('');
-    
-    // Validate name
-    if (!name.trim()) {
-      setNameError('Name is required');
-      isValid = false;
-    }
-    
-    // Validate email
-    if (!email) {
-      setEmailError('Email is required');
-      isValid = false;
-    } else if (!email.includes('@') || !email.includes('.')) {
-      setEmailError('Please enter a valid email address');
-      isValid = false;
-    }
-    
-    // Validate password
-    if (!password) {
-      setPasswordError('Password is required');
-      isValid = false;
-    } else if (password.length < 6) {
-      setPasswordError('Password must be at least 6 characters');
-      isValid = false;
-    }
-    
-    // Validate password confirmation
-    if (password !== confirmPassword) {
-      setConfirmPasswordError('Passwords do not match');
-      isValid = false;
-    }
-    
-    return isValid;
+    setPasswordStrength(Object.values(checks).filter(Boolean).length);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!validateForm()) {
-      return;
+  const passwordProgressColor = () => {
+    switch (passwordStrength) {
+      case 4: return 'success';
+      case 3: return 'normal';
+      case 2: return 'exception';
+      default: return 'exception';
     }
-    
+  };
+
+  // Custom validator for confirming passwords
+  const validateConfirmPassword = (_: any, value: string) => {
+    if (!value || form.getFieldValue('password') === value) {
+      return Promise.resolve();
+    }
+    return Promise.reject(new Error('Passwords do not match'));
+  };
+
+  // On successful form submit
+  const onFinish = async (values: any) => {
+    setFormError('');
     setIsSubmitting(true);
-    
     try {
-      const success = await signup(name, email, password);
+      const success = await signup(values.name, values.email, values.password);
       if (success) {
-        router.push('/auth/login'); // Redirect to home page after successful signup
+        message.success('Account created successfully!');
+        router.push('/auth/login');
       }
     } catch (err) {
-      console.error('Signup error:', err);
+      setFormError('Failed to create account. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="container max-w-md mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-center mb-6">Create Your Account</h1>
-      
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+      className="container max-w-md mx-auto px-6 py-10 bg-white rounded-lg shadow-lg"
+    >
+      <h1 className="text-3xl font-bold text-center mb-8 text-gray-900">
+        Create Your Account
+      </h1>
+
       {formError && (
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6 flex items-start">
-          <AlertCircle className="h-5 w-5 text-red-500 mt-0.5 mr-2 flex-shrink-0" />
-          <p className="text-red-700">{formError}</p>
-        </div>
+        <Alert
+          showIcon
+          type="error"
+          message={formError}
+          className="mb-6"
+          icon={<AlertCircle />}
+        />
       )}
-      
-      <form onSubmit={handleSubmit} className="space-y-5">
-        <div>
-          <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-            Full Name
-          </label>
-          <input
-            id="name"
-            type="text"
-            value={name}
-            onChange={(e) => {
-              setName(e.target.value);
-              setNameError('');
-            }}
-            className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${
-              nameError 
-                ? 'border-red-300 focus:ring-red-200' 
-                : 'border-gray-300 focus:ring-blue-500'
-            }`}
-            placeholder="John Doe"
-          />
-          {nameError && (
-            <p className="mt-1 text-sm text-red-600">{nameError}</p>
-          )}
-        </div>
-        
-        <div>
-          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-            Email Address
-          </label>
-          <input
-            id="email"
-            type="email"
-            value={email}
-            onChange={(e) => {
-              setEmail(e.target.value);
-              setEmailError('');
-            }}
-            className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${
-              emailError 
-                ? 'border-red-300 focus:ring-red-200' 
-                : 'border-gray-300 focus:ring-blue-500'
-            }`}
-            placeholder="your@email.com"
-          />
-          {emailError && (
-            <p className="mt-1 text-sm text-red-600">{emailError}</p>
-          )}
-        </div>
-        
-        <div>
-          <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">
-            Password
-          </label>
-          <input
-            id="password"
-            type="password"
-            value={password}
-            onChange={(e) => {
-              setPassword(e.target.value);
-              setPasswordError('');
-            }}
-            className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${
-              passwordError 
-                ? 'border-red-300 focus:ring-red-200' 
-                : 'border-gray-300 focus:ring-blue-500'
-            }`}
-            placeholder="********"
-          />
-          {passwordError && (
-            <p className="mt-1 text-sm text-red-600">{passwordError}</p>
-          )}
-          
-          {/* Password strength indicator */}
-          {password.length > 0 && (
-            <div className="mt-2">
-              <div className="flex w-full h-1.5 bg-gray-200 rounded-full overflow-hidden">
-                <div 
-                  className={`flex flex-col justify-center rounded-full ${
-                    passwordStrength === 0 ? 'bg-red-500 w-1/4' :
-                    passwordStrength === 1 ? 'bg-red-500 w-1/4' : 
-                    passwordStrength === 2 ? 'bg-yellow-500 w-2/4' : 
-                    passwordStrength === 3 ? 'bg-yellow-500 w-3/4' : 
-                    'bg-green-500 w-full'
-                  }`}
-                ></div>
-              </div>
-              
-              <div className="grid grid-cols-2 gap-x-4 gap-y-1 mt-2 text-xs">
-                <div className="flex items-center">
-                  <div className={`w-3 h-3 mr-1.5 rounded-full ${passwordChecks.length ? 'bg-green-500' : 'bg-gray-300'}`}></div>
-                  <span>At least 8 characters</span>
-                </div>
-                <div className="flex items-center">
-                  <div className={`w-3 h-3 mr-1.5 rounded-full ${passwordChecks.lowercase ? 'bg-green-500' : 'bg-gray-300'}`}></div>
-                  <span>Lowercase letter</span>
-                </div>
-                <div className="flex items-center">
-                  <div className={`w-3 h-3 mr-1.5 rounded-full ${passwordChecks.uppercase ? 'bg-green-500' : 'bg-gray-300'}`}></div>
-                  <span>Uppercase letter</span>
-                </div>
-                <div className="flex items-center">
-                  <div className={`w-3 h-3 mr-1.5 rounded-full ${passwordChecks.number ? 'bg-green-500' : 'bg-gray-300'}`}></div>
-                  <span>Number</span>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-        
-        <div>
-          <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-1">
-            Confirm Password
-          </label>
-          <input
-            id="confirmPassword"
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => {
-              setConfirmPassword(e.target.value);
-              setConfirmPasswordError('');
-            }}
-            className={`w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 ${
-              confirmPasswordError 
-                ? 'border-red-300 focus:ring-red-200' 
-                : 'border-gray-300 focus:ring-blue-500'
-            }`}
-            placeholder="********"
-          />
-          {confirmPasswordError && (
-            <p className="mt-1 text-sm text-red-600">{confirmPasswordError}</p>
-          )}
-        </div>
-        
-        <button
-          type="submit"
-          disabled={isSubmitting}
-          className={`w-full py-2.5 px-4 rounded-md text-white font-medium flex items-center justify-center ${
-            isSubmitting ? 'bg-blue-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
-          }`}
+
+      <Form
+        form={form}
+        layout="vertical"
+        onFinish={onFinish}
+        requiredMark={false}
+        scrollToFirstError
+      >
+        <Form.Item
+          label="Full Name"
+          name="name"
+          rules={[
+            { required: true, message: 'Please enter your full name' },
+            { min: 2, message: 'Name must be at least 2 characters' },
+          ]}
         >
-          {isSubmitting ? (
-            <>
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Creating Account...
-            </>
-          ) : (
-            'Sign Up'
-          )}
-        </button>
-      </form>
-      
-      <div className="mt-8 text-center">
-        <p className="text-gray-600">
-          Already have an account?{' '}
-          <Link href="/auth/login" className="text-blue-600 hover:underline font-medium">
-            Log in
-          </Link>
-        </p>
+          <Input
+            size="large"
+            placeholder="John Doe"
+            disabled={isSubmitting}
+            autoComplete="name"
+          />
+        </Form.Item>
+
+        <Form.Item
+          label="Email Address"
+          name="email"
+          rules={[
+            { required: true, message: 'Please enter your email' },
+            { type: 'email', message: 'Please enter a valid email' },
+          ]}
+        >
+          <Input
+            size="large"
+            placeholder="your@email.com"
+            disabled={isSubmitting}
+            autoComplete="email"
+          />
+        </Form.Item>
+
+        <Form.Item
+          label="Password"
+          name="password"
+          rules={[
+            { required: true, message: 'Please enter your password' },
+            { min: 6, message: 'Password must be at least 6 characters' },
+          ]}
+          hasFeedback
+        >
+          <Input.Password
+            size="large"
+            placeholder="********"
+            onChange={onPasswordChange}
+            disabled={isSubmitting}
+            autoComplete="new-password"
+          />
+        </Form.Item>
+
+        {/* Password strength progress */}
+        {form.getFieldValue('password') && (
+          <Progress
+            percent={(passwordStrength / 4) * 100}
+            showInfo={false}
+            status={passwordProgressColor()}
+            strokeWidth={6}
+            className="mb-4"
+          />
+        )}
+
+        <div className="grid grid-cols-2 gap-2 text-xs mb-6">
+          <div className="flex items-center gap-1">
+            <span
+              className={`w-3 h-3 rounded-full ${
+                passwordChecks.length ? 'bg-green-500' : 'bg-gray-300'
+              }`}
+            />
+            At least 8 characters
+          </div>
+          <div className="flex items-center gap-1">
+            <span
+              className={`w-3 h-3 rounded-full ${
+                passwordChecks.lowercase ? 'bg-green-500' : 'bg-gray-300'
+              }`}
+            />
+            Lowercase letter
+          </div>
+          <div className="flex items-center gap-1">
+            <span
+              className={`w-3 h-3 rounded-full ${
+                passwordChecks.uppercase ? 'bg-green-500' : 'bg-gray-300'
+              }`}
+            />
+            Uppercase letter
+          </div>
+          <div className="flex items-center gap-1">
+            <span
+              className={`w-3 h-3 rounded-full ${
+                passwordChecks.number ? 'bg-green-500' : 'bg-gray-300'
+              }`}
+            />
+            Number
+          </div>
+        </div>
+
+        <Form.Item
+          label="Confirm Password"
+          name="confirmPassword"
+          dependencies={['password']}
+          hasFeedback
+          rules={[
+            { required: true, message: 'Please confirm your password' },
+            { validator: validateConfirmPassword },
+          ]}
+        >
+          <Input.Password
+            size="large"
+            placeholder="********"
+            disabled={isSubmitting}
+            autoComplete="new-password"
+          />
+        </Form.Item>
+
+        <Form.Item>
+          <motion.div
+            whileTap={{ scale: 0.95 }}
+          >
+            <Button
+              type="primary"
+              htmlType="submit"
+              size="large"
+              block
+              loading={isSubmitting}
+            >
+              Sign Up
+            </Button>
+          </motion.div>
+        </Form.Item>
+      </Form>
+
+      <div className="mt-8 text-center text-gray-700">
+        Already have an account?{' '}
+        <Link href="/auth/login" className="text-blue-600 hover:underline font-medium">
+          Log in
+        </Link>
       </div>
-    </div>
+    </motion.div>
   );
 }
