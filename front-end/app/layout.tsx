@@ -66,14 +66,24 @@ export default function RootLayout({
       </head>
       <body className="min-h-screen bg-gray-100">
         <ErrorBoundary>
-          <Providers>
-              <main className="md:pt-16 pb-16 md:pb-0">
-                {children}
-              </main>
-              <BottomNavigation />
-              <Toaster />
-          </Providers>
-        </ErrorBoundary>
+  <div className="min-h-screen w-full bg-white text-black">
+    <div className="container mx-auto px-4 md:px-6">
+      <Providers>
+        {/* Main content section */}
+        <main className="md:pt-16 pb-16 md:pb-0">
+          {children}
+        </main>
+
+        {/* Bottom navigation */}
+        <BottomNavigation />
+
+        {/* Toast notifications */}
+        <Toaster />
+      </Providers>
+    </div>
+  </div>
+</ErrorBoundary>
+
       </body>
     </html>
   )

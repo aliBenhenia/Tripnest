@@ -1,9 +1,18 @@
 'use client'
 
-import { Search, Home, MapPin } from "lucide-react"
-import { useState, useEffect, useRef } from "react"
-import { cities } from "../lib/data"
-import Link from "next/link"
+import { useState, useEffect, useRef } from 'react'
+import { Search, Home, MapPin, Loader } from 'lucide-react'
+import Link from 'next/link'
+import axios from 'axios'
+import debounce from 'lodash.debounce'
+
+interface City {
+  id: string
+  name: string
+  region: string
+  country: string
+  image: string
+}
 
 interface SearchBarProps {
   onSearch: (query: string) => void
@@ -12,139 +21,195 @@ interface SearchBarProps {
 export function SearchBar({ onSearch }: SearchBarProps) {
   const [activeTab, setActiveTab] = useState('all')
   const [searchQuery, setSearchQuery] = useState('')
-  const [searchResults, setSearchResults] = useState<Array<{name: string, region: string, image: string}>>([])
+  const [searchResults, setSearchResults] = useState<City[]>([])
   const [showDropdown, setShowDropdown] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
   const dropdownRef = useRef<HTMLDivElement>(null)
 
+  const fetchCities = async (query: string) => {
+    if (!query) return
+    setLoading(true)
+    setError('')
+    try {
+      const { data } = await axios.get(
+        `https://wft-geo-db.p.rapidapi.com/v1/geo/cities`,
+        {
+          headers: {
+            'X-RapidAPI-Key': "5b8a5a02f3msh2cbb0edd5b9cad9p1f7c83jsn0f12ae7e07fe",
+            'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com',
+          },
+          params: {
+            namePrefix: query,
+            limit: 10,
+            sort: '-population',
+          },
+        }
+      )
+
+      const results = data.data.map((city: any) => ({
+        id: city.id,
+        name: city.city,
+        region: city.region,
+        country: city.country,
+        image: `https://source.unsplash.com/160x160/?${city.city}-city`,
+      }))
+      setSearchResults(results)
+    } catch (err) {
+      setError('Failed to load results.')
+      setSearchResults([])
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const debouncedFetch = useRef(
+    debounce((query: string) => fetchCities(query), 500)
+  ).current
+
   useEffect(() => {
-    // Filter cities based on search query
-    if (searchQuery.trim() === '') {
+    if (!searchQuery.trim()) {
       setSearchResults([])
       setShowDropdown(false)
+      setLoading(false)
+      onSearch('')
       return
     }
 
-    const filtered = cities.filter(city => 
-      city.name.toLowerCase().includes(searchQuery.toLowerCase())
-    )
-    setSearchResults(filtered)
-    setShowDropdown(true) // Always show dropdown when searching
-    
-    // Pass the search query to parent component
+    debouncedFetch(searchQuery.trim())
+    setShowDropdown(true)
     onSearch(searchQuery)
-  }, [searchQuery, onSearch])
+  }, [searchQuery, onSearch, debouncedFetch])
 
-  // Close dropdown when clicking outside
   useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
         setShowDropdown(false)
       }
     }
-    
-    document.addEventListener("mousedown", handleClickOutside)
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside)
-    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
+  const trending = [
+    { name: 'Dubai' },
+    { name: 'Tokyo' },
+    { name: 'Istanbul' },
+  ]
+
   return (
-    <div className="w-full max-w-5xl mx-auto">
-      <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 sm:gap-4 md:gap-6 mb-2">
-        <button
-          onClick={() => setActiveTab('all')}
-          className={`flex items-center gap-1 sm:gap-2 py-2 px-1 border-b-2 text-xs sm:text-sm md:text-base transition-colors ${
-            activeTab === 'all'
-              ? 'border-primary text-primary font-medium'
-              : 'border-transparent text-gray-600 hover:text-gray-900'
-          }`}
-        >
-          <Search className="w-4 h-4 sm:w-5 sm:h-5" />
-          <span>Search All</span>
-        </button>
-        <button
-          onClick={() => setActiveTab('hotels')}
-          className={`flex items-center gap-1 sm:gap-2 py-2 px-1 border-b-2 text-xs sm:text-sm md:text-base transition-colors ${
-            activeTab === 'hotels'
-              ? 'border-primary text-primary font-medium'
-              : 'border-transparent text-gray-600 hover:text-gray-900'
-          }`}
-        >
-          <Home className="w-4 h-4 sm:w-5 sm:h-5" />
-          <span>Hotels</span>
-        </button>
-        <button
-          onClick={() => setActiveTab('things')}
-          className={`flex items-center gap-1 sm:gap-2 py-2 px-1 border-b-2 text-xs sm:text-sm md:text-base transition-colors ${
-            activeTab === 'things'
-              ? 'border-primary text-primary font-medium'
-              : 'border-transparent text-gray-600 hover:text-gray-900'
-          }`}
-        >
-          <MapPin className="w-4 h-4 sm:w-5 sm:h-5" />
-          <span>Things to Do</span>
-        </button>
+    <div className="w-full max-w-5xl mx-auto px-4 sm:px-0">
+      {/* Tabs */}
+      <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 sm:gap-6 mb-5">
+        {[
+          { id: 'all', label: 'Search All', icon: <Search className="w-5 h-5 text-blue-500/80" /> },
+          { id: 'hotels', label: 'Hotels', icon: <Home className="w-5 h-5 text-rose-500/80" /> },
+          { id: 'things', label: 'Things to Do', icon: <MapPin className="w-5 h-5 text-emerald-500/80" /> },
+        ].map(tab => (
+          <button
+            key={tab.id}
+            onClick={() => setActiveTab(tab.id)}
+            className={`relative flex items-center gap-2 py-2 px-3 text-sm sm:text-base font-medium transition-colors
+              ${activeTab === tab.id ? 'text-primary' : 'text-gray-600 hover:text-gray-900'}
+            `}
+          >
+            {tab.icon}
+            <span>{tab.label}</span>
+            {activeTab === tab.id && (
+              <span className="absolute bottom-0 left-0 w-full h-[3px] bg-primary rounded-full" />
+            )}
+          </button>
+        ))}
       </div>
 
+      {/* Search Input */}
       <div className="relative">
-        <div className="absolute inset-y-0 left-2 sm:left-4 flex items-center pointer-events-none">
-          <Search className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
+        <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+          <Search className="h-5 w-5 text-gray-400" />
         </div>
         <input
           type="text"
           placeholder="Search destinations, hotels, activities..."
-          className="w-full pl-8 sm:pl-12 pr-3 sm:pr-4 py-2.5 sm:py-3.5 text-sm sm:text-base text-gray-900 bg-white border border-gray-200 rounded-full shadow-sm placeholder:text-gray-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary hover:border-gray-300 transition-colors"
+          className="w-full pl-12 pr-5 py-3 text-base text-gray-900 bg-white border border-gray-300 rounded-full shadow-md placeholder:text-gray-400
+            focus:outline-none focus:ring-2 focus:ring-primary focus:border-primary hover:border-gray-400 transition"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           onFocus={() => searchQuery.trim() !== '' && setShowDropdown(true)}
+          autoComplete="off"
         />
-        
-        {/* Search Results Dropdown */}
+
+        {/* Dropdown */}
         {showDropdown && (
-          <div 
+          <div
             ref={dropdownRef}
-            className="absolute z-10 w-full mt-1 bg-white rounded-md shadow-lg border border-gray-200 max-h-80 overflow-y-auto"
+            className="absolute z-20 w-full mt-2 bg-white/90 backdrop-blur-md rounded-xl shadow-2xl border border-gray-200 max-h-96 overflow-y-auto scrollbar-thin scrollbar-thumb-primary scrollbar-track-gray-100"
           >
-            <div className="py-1">
-              {searchResults.length > 0 ? (
-                searchResults.map((city, index) => (
-                  <Link 
-                    href={`/city/${city.name.toLowerCase()}`} 
-                    key={index}
-                    className="flex items-center px-4 py-3 hover:bg-gray-50 transition-colors cursor-pointer"
-                    onClick={() => {
-                      setShowDropdown(false)
-                      setSearchQuery('')
-                    }}
-                  >
-                    <div className="h-10 w-10 rounded-md overflow-hidden mr-3">
-                      <img 
-                        src={city.image} 
-                        alt={city.name}
-                        className="h-full w-full object-cover"
-                      />
-                    </div>
-                    <div>
-                      <p className="font-medium text-gray-900">{city.name}</p>
-                      <p className="text-sm text-gray-500">{city.region}</p>
-                    </div>
-                  </Link>
-                ))
-              ) : (
-                <div className="px-4 py-6 text-center">
-                  <div className="mb-2">
-                    <Search className="h-8 w-8 text-gray-400 mx-auto" />
+            {loading ? (
+              <div className="px-6 py-10 text-center text-gray-600 flex flex-col items-center">
+                <Loader className="h-6 w-6 animate-spin mb-2" />
+                <p>Loading results...</p>
+              </div>
+            ) : error ? (
+              <div className="px-6 py-8 text-center text-red-600">
+                <p className="font-semibold">Error</p>
+                <p className="text-sm">{error}</p>
+              </div>
+            ) : searchResults.length > 0 ? (
+              searchResults.map(city => (
+                <Link
+                  key={city.id}
+                  href={`/city/${city.name.toLowerCase()}`}
+                  className="flex items-center px-4 py-3 mx-3 my-1 rounded-lg hover:bg-primary/10 transition cursor-pointer"
+                  onClick={() => {
+                    setShowDropdown(false)
+                    setSearchQuery('')
+                  }}
+                >
+                  <div className="h-12 w-12 rounded-xl overflow-hidden shadow-sm border border-gray-200 mr-4 flex-shrink-0">
+                    <img
+                      src={city.image}
+                      alt={city.name}
+                      className="h-full w-full object-cover"
+                      loading="lazy"
+                    />
                   </div>
-                  <p className="text-gray-900 font-medium">No results found</p>
-                  <p className="text-gray-500 text-sm mt-1">
-                    We couldn't find "{searchQuery}" in our destinations
-                  </p>
+                  <div>
+                    <p className="font-semibold text-gray-800">{city.name}</p>
+                    <p className="text-sm text-gray-500">{city.region}, {city.country}</p>
+                  </div>
+                </Link>
+              ))
+            ) : searchQuery.trim() !== '' ? (
+              <div className="px-6 py-10 text-center text-gray-700">
+                <Search className="mx-auto mb-3 h-10 w-10 text-gray-400" />
+                <p className="font-semibold text-gray-900 text-lg">No results found</p>
+                <p className="mt-1 text-sm">
+                  We couldn't find "{searchQuery}" in our destinations.
+                </p>
+              </div>
+            ) : (
+              <div className="px-6 py-4 text-gray-700">
+                <p className="mb-3 font-semibold text-gray-900">Trending Destinations</p>
+                <div className="flex flex-wrap gap-3">
+                  {trending.map((city, i) => (
+                    <button
+                      key={i}
+                      onClick={() => {
+                        setSearchQuery(city.name)
+                        setShowDropdown(false)
+                        onSearch(city.name)
+                      }}
+                      className="px-3 py-1 rounded-full bg-primary/10 text-primary text-sm font-medium hover:bg-primary/20 transition"
+                    >
+                      {city.name}
+                    </button>
+                  ))}
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         )}
       </div>
     </div>
   )
-} 
+}

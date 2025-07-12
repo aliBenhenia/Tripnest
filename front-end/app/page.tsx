@@ -153,7 +153,7 @@ export default function Home() {
   };
 
   return (
-    <div className="w-full mx-auto bg-white min-h-screen md:max-w-none">
+    <div className="w-full mx-auto bg-white min-h-screen md:max-w-none ">
       <ErrorBoundary>
         <Header 
           username="aLi"
@@ -244,59 +244,70 @@ export default function Home() {
         </div>
 
         {/* Why Choose Us Section */}
-        <div className="py-12 md:py-16 px-4 md:px-8 lg:px-16 bg-gray-50">
-          <ClientOnly>
-            <motion.div 
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              variants={fadeInVariants}
-              transition={{ duration: 0.5 }}
-              className="text-center mb-10"
-            >
-              <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Why Travel With Us</h2>
-              <p className="text-gray-600 max-w-2xl mx-auto">Experience Morocco like never before with our curated selection of destinations and experiences</p>
-            </motion.div>
-          </ClientOnly>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            {[
-              { 
-                icon: <Compass className="h-8 w-8 text-primary" />, 
-                title: "Authentic Local Experiences", 
-                description: "Connect with local guides who share the hidden gems of Morocco" 
-              },
-              { 
-                icon: <TrendingUp className="h-8 w-8 text-primary" />, 
-                title: "Curated Selection", 
-                description: "Handpicked destinations and activities vetted for quality and authenticity" 
-              },
-              { 
-                icon: <MapPin className="h-8 w-8 text-primary" />, 
-                title: "Exclusive Locations", 
-                description: "Access to unique destinations off the usual tourist path" 
-              }
-            ].map((feature, index) => (
-              <ClientOnly key={index}>
-                <motion.div
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true }}
-                  variants={fadeInVariants}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300"
-                >
-                  <div className="mb-4 inline-block p-3 bg-primary/10 rounded-full">{feature.icon}</div>
-                  <h3 className="text-xl font-semibold mb-2 text-gray-900">{feature.title}</h3>
-                  <p className="text-gray-600">{feature.description}</p>
-                </motion.div>
-              </ClientOnly>
-            ))}
-          </div>
-        </div>
+<div className="py-12 sm:py-14 md:py-16 bg-gray-50 mx-14 mt-5">
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <ClientOnly>
+      <motion.div 
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        variants={fadeInVariants}
+        transition={{ duration: 0.5 }}
+        className="text-center mb-10 sm:mb-12"
+      >
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-2">
+          Why Travel With Us
+        </h2>
+        <p className="text-gray-600 max-w-2xl mx-auto text-sm sm:text-base">
+          Experience Morocco like never before with our curated selection of destinations and experiences
+        </p>
+      </motion.div>
+    </ClientOnly>
+
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
+      {[
+        { 
+          icon: <Compass className="h-8 w-8 text-primary" />, 
+          title: "Authentic Local Experiences", 
+          description: "Connect with local guides who share the hidden gems of Morocco" 
+        },
+        { 
+          icon: <TrendingUp className="h-8 w-8 text-primary" />, 
+          title: "Curated Selection", 
+          description: "Handpicked destinations and activities vetted for quality and authenticity" 
+        },
+        { 
+          icon: <MapPin className="h-8 w-8 text-primary" />, 
+          title: "Exclusive Locations", 
+          description: "Access to unique destinations off the usual tourist path" 
+        }
+      ].map((feature, index) => (
+        <ClientOnly key={index}>
+          <motion.div
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={fadeInVariants}
+            transition={{ duration: 0.5, delay: index * 0.1 }}
+            className="bg-white p-6 rounded-xl shadow-sm hover:shadow-md hover:bg-gray-100 transition-all duration-300"
+          >
+            <div className="mb-4 inline-block p-3 bg-primary/10 rounded-full">
+              {feature.icon}
+            </div>
+            <h3 className="text-lg sm:text-xl font-semibold mb-2 text-gray-900">
+              {feature.title}
+            </h3>
+            <p className="text-sm sm:text-base text-gray-600">{feature.description}</p>
+          </motion.div>
+        </ClientOnly>
+      ))}
+    </div>
+  </div>
+</div>
+
 
         {/* Popular Places */}
-        <div className="py-12 md:py-16">
+        <div className="py-12 md:py-16 py-12 md:py-16">
           <div className="px-4 md:px-8 lg:px-16 flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-8">
             <div>
               <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">
@@ -368,102 +379,108 @@ export default function Home() {
         </div>
 
         {/* Popular Experiences */}
-        <div className="py-12 md:py-16 bg-gray-50">
-          <div className="px-4 md:px-8 lg:px-16">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-              <div>
-                <div className="flex items-center gap-2">
-                  <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">
-                    Popular Experiences
-                  </h2>
-                  {!isLoading && experiences.length > 0 && (
-                    <span className="text-base text-gray-500">
-                      ({experiences.length})
-                    </span>
-                  )}
-                </div>
-                <p className="mt-1 text-sm sm:text-base text-gray-600">
-                  Discover unique activities with local experts
-                </p>
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="hidden md:flex items-center gap-2">
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="rounded-full transition-all duration-200 hover:bg-primary/5 hover:border-primary/30"
-                    onClick={() => {
-                      const container = document.getElementById('experiences-container')
-                      if (container) {
-                        container.scrollBy({ left: -400, behavior: 'smooth' })
-                      }
-                    }}
-                  >
-                    <ChevronLeft className="h-5 w-5" />
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="rounded-full transition-all duration-200 hover:bg-primary/5 hover:border-primary/30"
-                    onClick={() => {
-                      const container = document.getElementById('experiences-container')
-                      if (container) {
-                        container.scrollBy({ left: 400, behavior: 'smooth' })
-                      }
-                    }}
-                  >
-                    <ChevronRight className="h-5 w-5" />
-                  </Button>
-                </div>
-                <Link href="/experiences">
-                  <Button
-                    variant="ghost"
-                    className="text-sm sm:text-base text-gray-600 hover:text-gray-900 font-medium"
-                  >
-                    View all experiences
-                  </Button>
-                </Link>
-              </div>
+        {/* Popular Experiences */}
+<div className="px-4 sm:px-6 md:px-10 lg:px-16 w-full max-w-[1600px] mx-auto">
+  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-6">
+    {/* Heading and Subtext */}
+    <div>
+      <div className="flex items-center gap-2">
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">
+          Popular Experiences
+        </h2>
+        {!isLoading && experiences.length > 0 && (
+          <span className="text-base text-gray-500">
+            ({experiences.length})
+          </span>
+        )}
+      </div>
+      <p className="mt-1 text-sm sm:text-base text-gray-600">
+        Discover unique activities with local experts
+      </p>
+    </div>
+
+    {/* Controls */}
+    <div className="flex items-center gap-2">
+      {/* Scroll Arrows (hidden on small screens) */}
+      <div className="hidden md:flex items-center gap-2">
+        <Button
+          variant="outline"
+          size="icon"
+          className="rounded-full transition hover:bg-primary/5 hover:border-primary/30"
+          onClick={() => {
+            const container = document.getElementById('experiences-container')
+            if (container) container.scrollBy({ left: -400, behavior: 'smooth' })
+          }}
+        >
+          <ChevronLeft className="h-5 w-5" />
+        </Button>
+        <Button
+          variant="outline"
+          size="icon"
+          className="rounded-full transition hover:bg-primary/5 hover:border-primary/30"
+          onClick={() => {
+            const container = document.getElementById('experiences-container')
+            if (container) container.scrollBy({ left: 400, behavior: 'smooth' })
+          }}
+        >
+          <ChevronRight className="h-5 w-5" />
+        </Button>
+      </div>
+
+      {/* View All */}
+      <Link href="/experiences">
+        <Button
+          variant="ghost"
+          className="text-sm sm:text-base text-gray-600 hover:text-gray-900 font-medium"
+        >
+          View all experiences
+        </Button>
+      </Link>
+    </div>
+  </div>
+
+  {/* Content */}
+  <Suspense
+    fallback={
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
+        {[1, 2, 3, 4].map((i) => (
+          <div key={i} className="animate-pulse">
+            <div className="rounded-xl bg-gray-200 h-[180px] md:h-[200px] w-full" />
+            <div className="mt-3 space-y-2">
+              <div className="h-4 bg-gray-200 rounded w-1/4" />
+              <div className="h-4 bg-gray-200 rounded w-3/4" />
+              <div className="h-4 bg-gray-200 rounded w-1/2" />
             </div>
           </div>
+        ))}
+      </div>
+    }
+  >
+    <div className="relative mt-6">
+      <div
+        id="experiences-container"
+        className="overflow-x-auto flex gap-4 snap-x scroll-smooth scrollbar-hide pr-2 sm:pr-4 md:pr-8 lg:pr-16"
+      >
+        {experiences.map((experience, index) => (
+          <ClientOnly key={experience.id}>
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.05, duration: 0.3 }}
+              className="min-w-[280px] sm:min-w-[300px] md:min-w-[320px] snap-start"
+            >
+              <ExperienceCard
+                {...experience}
+                className="hover:z-10"
+              />
+            </motion.div>
+          </ClientOnly>
+        ))}
+      </div>
+    </div>
+  </Suspense>
+</div>
 
-          <Suspense fallback={
-            <div className="px-4 md:px-8 lg:px-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="animate-pulse">
-                  <div className="rounded-xl bg-gray-200 h-[180px] md:h-[200px] w-full" />
-                  <div className="mt-3 space-y-2">
-                    <div className="h-4 bg-gray-200 rounded w-1/4" />
-                    <div className="h-4 bg-gray-200 rounded w-3/4" />
-                    <div className="h-4 bg-gray-200 rounded w-1/2" />
-                  </div>
-                </div>
-              ))}
-            </div>
-          }>
-            <div className="relative mt-6">
-              <div
-                id="experiences-container"
-                className="pl-4 md:pl-8 lg:pl-16 pb-4 overflow-x-auto flex gap-4 snap-x scrollbar-hide scroll-smooth relative pr-4 md:pr-8 lg:pr-16"
-              >
-                {experiences.map((experience, index) => (
-                  <ClientOnly key={experience.id}>
-                    <motion.div
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.05, duration: 0.3 }}
-                    >
-                      <ExperienceCard 
-                        {...experience}
-                        className="hover:z-10" 
-                      />
-                    </motion.div>
-                  </ClientOnly>
-                ))}
-              </div>
-            </div>
-          </Suspense>
-        </div>
 
         {/* CTA Section */}
         <div className="py-16 px-4 md:px-8 lg:px-16">
