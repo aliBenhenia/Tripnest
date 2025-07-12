@@ -144,7 +144,7 @@ export function SearchBar({ onSearch }: SearchBarProps) {
           <div
             ref={dropdownRef}
             className="absolute z-20 w-full mt-2 bg-white backdrop-blur-md rounded-xl shadow-2xl border border-gray-200 max-h-86 overflow-y-auto scrollbar-thin scrollbar-thumb-primary scrollbar-track-gray-100"
-          >
+          > 
             {loading ? (
               <div className="px-6 py-10 text-center text-gray-600 flex flex-col items-center">
                 <Loader className="h-6 w-6 animate-spin mb-2" />
