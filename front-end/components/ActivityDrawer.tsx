@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Drawer, Button, Skeleton, message } from "antd";
+import { Drawer, Modal, Button, Skeleton, message ,notification} from "antd";
 import { HeartOutlined, CalendarOutlined } from "@ant-design/icons";
 import axios from "axios";
 import { motion } from "framer-motion";
@@ -33,6 +33,7 @@ const ActivityDrawer: React.FC<ActivityDrawerProps> = ({
 }) => {
   const [weather, setWeather] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
 
   const fetchWeather = async () => {
     try {
@@ -43,9 +44,17 @@ const ActivityDrawer: React.FC<ActivityDrawerProps> = ({
       setWeather(res.data.current_weather);
     } catch (err) {
       message.error("Failed to fetch weather data.");
-      console.error("Weather fetch error", err);
     }
   };
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   useEffect(() => {
     if (open) {
@@ -59,102 +68,154 @@ const ActivityDrawer: React.FC<ActivityDrawerProps> = ({
   }, [open, lat, lon, showWeather]);
 
   const handleAddToFavorites = () => {
+    notification.open({
+    message: 'Notification Title',
+    description: 'This is the content of the notification.',
+    onClick: () => {
+      console.log('Notification Clicked!');
+    },
+  });
     message.success(`✅ ${activity.name} added to favorites!`);
   };
 
   const handlePlanVisit = () => {
+     notification.open({
+    message: 'Notification Title',
+    description: 'This is the content of the notification.',
+    onClick: () => {
+      console.log('Notification Clicked!');
+    },
+  });
     message.info("📅 Planning feature coming soon!");
   };
 
-  return (
-    <Drawer
-      title={
-        <span className="text-gray-800 text-xl font-semibold">
-          {activity.name}
-        </span>
-      }
-      placement="right"
-      width={420}
-      onClose={onClose}
-      open={open}
-      className="custom-scrollbar"
-      styles={{
-        body: { background: "#ffffff", color: "#000", paddingBottom: 40 },
-      }}
+  const Content = (
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ type: "spring", stiffness: 180 }}
+      className="space-y-6"
     >
-      {loading ? (
-        <Skeleton active paragraph={{ rows: 6 }} />
+      {activity.imageUrl ? (
+        <motion.img
+          src={activity.imageUrl}
+          alt={activity.name}
+          className="w-full rounded-xl shadow"
+          initial={{ scale: 0.98 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 0.4 }}
+        />
       ) : (
-        <motion.div
-          initial={{ opacity: 0, x: 50 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ type: "spring", stiffness: 200 }}
-          className="space-y-5"
-        >
-          {activity.imageUrl && (
-            <motion.img
-              src={activity.imageUrl}
-              alt={activity.name}
-              className="rounded-2xl w-full shadow-md"
-              initial={{ scale: 0.95 }}
-              animate={{ scale: 1 }}
-              transition={{ duration: 0.4 }}
-            />
-          )}
-
-          <p className="text-gray-700 text-sm leading-relaxed whitespace-pre-wrap">
-            {activity.description}
-          </p>
-
-          {weather && (
-            <div className="bg-gray-100 p-4 rounded-xl text-gray-800 border border-gray-200">
-              <p className="text-sm">
-                <strong>Temperature:</strong> {weather.temperature}°C
-              </p>
-              <p className="text-sm">
-                <strong>Wind Speed:</strong> {weather.windspeed} km/h
-              </p>
-            </div>
-          )}
-
-          {lat && lon && (
-            <div className="rounded-xl overflow-hidden shadow-lg border border-gray-200">
-              <iframe
-                className="w-full"
-                height="200"
-                loading="lazy"
-                allowFullScreen
-                referrerPolicy="no-referrer-when-downgrade"
-                src={`https://maps.google.com/maps?q=${lat},${lon}&hl=es;&output=embed`}
-              />
-            </div>
-          )}
-
-          <div className="flex gap-3 justify-between pt-4">
-            <motion.div whileTap={{ scale: 0.95 }} className="w-full">
-              <Button
-                block
-                icon={<HeartOutlined />}
-                onClick={handleAddToFavorites}
-                className="hover:border-pink-500 hover:text-pink-500"
-              >
-                Add to Favorites
-              </Button>
-            </motion.div>
-            <motion.div whileTap={{ scale: 0.95 }} className="w-full">
-              <Button
-                block
-                type="primary"
-                icon={<CalendarOutlined />}
-                onClick={handlePlanVisit}
-              >
-                Plan Visit
-              </Button>
-            </motion.div>
-          </div>
-        </motion.div>
+        <div className="w-full h-48 bg-gray-100 flex items-center justify-center text-gray-400 rounded-xl">
+          No image available
+        </div>
       )}
-    </Drawer>
+
+      <p className="text-gray-700 leading-relaxed text-sm whitespace-pre-wrap">
+        {activity.description}
+      </p>
+
+      {weather && (
+        <div className="bg-blue-50 p-4 rounded-lg border border-blue-100 text-blue-800 text-sm">
+          <p>
+            <strong>🌡 Temperature:</strong> {weather.temperature}°C
+          </p>
+          <p>
+            <strong>💨 Wind Speed:</strong> {weather.windspeed} km/h
+          </p>
+        </div>
+      )}
+
+      {lat && lon && (
+        <div className="overflow-hidden rounded-xl border border-gray-200 shadow">
+          <iframe
+            className="w-full"
+            height="200"
+            loading="lazy"
+            allowFullScreen
+            referrerPolicy="no-referrer-when-downgrade"
+            src={`https://maps.google.com/maps?q=${lat},${lon}&hl=es;&output=embed`}
+          />
+        </div>
+      )}
+
+      <div className="flex flex-col sm:flex-row gap-3">
+        <motion.div whileTap={{ scale: 0.95 }} className="w-full">
+          <Button
+            block
+            icon={<HeartOutlined />}
+            onClick={handleAddToFavorites}
+            className="hover:border-pink-500 hover:text-pink-500"
+          >
+            Add to Favorites
+          </Button>
+        </motion.div>
+        <motion.div whileTap={{ scale: 0.95 }} className="w-full">
+          <Button
+            block
+            type="primary"
+            icon={<CalendarOutlined />}
+            onClick={handlePlanVisit}
+          >
+            Plan Visit
+          </Button>
+        </motion.div>
+      </div>
+    </motion.div>
+  );
+
+  return (
+    <>
+      {/* Desktop Drawer */}
+      {!isMobile && (
+        <Drawer
+          title={
+            <span className="text-xl font-semibold text-gray-800">
+              {activity.name}
+            </span>
+          }
+          placement="right"
+          width={420}
+          onClose={onClose}
+          open={open}
+          forceRender
+          destroyOnClose={false}
+          styles={{
+            body: {
+              background: "#fff",
+              color: "#000",
+              paddingBottom: 40,
+              overflowY: "auto",
+            },
+          }}
+        >
+          {loading ? <Skeleton active paragraph={{ rows: 5 }} /> : Content}
+        </Drawer>
+      )}
+
+      {/* Mobile Modal */}
+      {isMobile && (
+        <Modal
+          open={open}
+          onCancel={onClose}
+          footer={null}
+          title={
+            <span className="text-lg font-semibold text-gray-800">
+              {activity.name}
+            </span>
+          }
+          centered
+          width="100%"
+          style={{ top: 0, paddingBottom: 0 }}
+          bodyStyle={{
+            maxHeight: "calc(100vh - 60px)",
+            overflowY: "auto",
+          }}
+        >
+          {loading ? <Skeleton active paragraph={{ rows: 5 }} /> : Content}
+        </Modal>
+      )}
+    </>
   );
 };
 

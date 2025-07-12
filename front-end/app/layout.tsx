@@ -7,6 +7,8 @@ import { ErrorBoundary } from "@/components/ErrorBoundary"
 import { Toaster } from "@/components/ui/toaster"
 import { Providers } from "@/lib/redux/provider"
 import { ToastContainer } from 'react-toastify';
+import 'antd/dist/reset.css'; // or 'antd/dist/antd.css' depending on your antd version
+
 // import 'leaflet/dist/leaflet.css';
 
 

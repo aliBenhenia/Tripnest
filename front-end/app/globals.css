@@ -17,6 +17,10 @@ body,
   width: 100%;
 }
 
+.ant-notification {
+  z-index: 1050 !important;
+}
+
 
 @layer base {
   :root {
