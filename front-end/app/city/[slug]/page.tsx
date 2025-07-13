@@ -10,7 +10,7 @@ export default async function CityPage({ params }: PageProps) {
   const { slug } = await Promise.resolve(params) 
 
   // Find the city data
-  const city = moroccanCities.find((city) => city.slug === slug) || moroccanCities[0]
+  const city = moroccanCities.find((city) => city.slug === slug) || moroccanCities[2]
   // const activities = cityActivities[city.id] || []
 
   // Pass the resolved data to the client component

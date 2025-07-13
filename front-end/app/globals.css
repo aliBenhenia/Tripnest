@@ -12,14 +12,6 @@ body,
   padding: 0;
 }
 
-.leaflet-container {
-  height: 100%;
-  width: 100%;
-}
-
-.ant-notification {
-  z-index: 1050 !important;
-}
 
 
 @layer base {

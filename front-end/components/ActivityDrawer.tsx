@@ -164,10 +164,16 @@ const ActivityDrawer: React.FC<ActivityDrawerProps> = ({
     </motion.div>
   );
 
-  return (
-    <>
-      {/* Desktop Drawer */}
-      {!isMobile && (
+ return (
+  <>
+    {/* Blur background when drawer/modal is open */}
+    {open && (
+      <div className="fixed inset-0 z-40 backdrop-blur-sm bg-black/30 transition-opacity duration-300"></div>
+    )}
+
+    {/* Desktop Drawer */}
+    {!isMobile && (
+      <div className="relative z-50">
         <Drawer
           title={
             <span className="text-xl font-semibold text-gray-800">
@@ -191,10 +197,12 @@ const ActivityDrawer: React.FC<ActivityDrawerProps> = ({
         >
           {loading ? <Skeleton active paragraph={{ rows: 5 }} /> : Content}
         </Drawer>
-      )}
+      </div>
+    )}
 
-      {/* Mobile Modal */}
-      {isMobile && (
+    {/* Mobile Modal */}
+    {isMobile && (
+      <div className="relative z-50">
         <Modal
           open={open}
           onCancel={onClose}
@@ -214,9 +222,11 @@ const ActivityDrawer: React.FC<ActivityDrawerProps> = ({
         >
           {loading ? <Skeleton active paragraph={{ rows: 5 }} /> : Content}
         </Modal>
-      )}
-    </>
-  );
+      </div>
+    )}
+  </>
+);
+
 };
 
 export default ActivityDrawer;
