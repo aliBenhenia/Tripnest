@@ -48,7 +48,7 @@ interface WikiActivity {
   type: string
 }
 
-export default function ClientCityPage({ city }: ClientCityPageProps) {
+export default function ClientCityPage({ city }: any) {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [selectedCategory, setSelectedCategory] = useState("all")
   const [cityActivitiesList, setCityActivitiesList] = useState<WikiActivity[]>([])
@@ -172,7 +172,7 @@ const closeActivityDrawer = () => {
               priority
             />
             <Image
-              src={city.imageUrl2 || city.imageUrl}
+              src={city.imageUrl2 || city.imageUrl || "/placeholder.svg"}
               alt={city.name}
               className="object-cover w-full h-full flex-shrink-0"
               width={1200}
@@ -319,7 +319,7 @@ const closeActivityDrawer = () => {
                     <div className="relative h-48">
                       
                       <Image
-                        src={activity.imageUrl}
+                        src={activity.imageUrl || "/placeholder.svg"}
                         alt={activity.name}
                         fill
                         className="object-cover"
@@ -356,7 +356,7 @@ const closeActivityDrawer = () => {
                 >
                   <div className="relative h-64">
                     <Image
-                      src={activity.imageUrl}
+                      src={activity.imageUrl || "/placeholder.svg"}
                       alt={activity.name}
                       fill
                       className="object-cover"
