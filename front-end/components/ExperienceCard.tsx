@@ -1,5 +1,8 @@
-import Image from "next/image"
-import { Star, Clock, Users } from "lucide-react"
+import Image from "next/image";
+import { Star, Clock, Users, Heart, PlaneTakeoff } from "lucide-react";
+import { Button, Carousel, Tooltip } from "antd";
+import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 
 interface ExperienceCardProps {
   id: string | number;
@@ -23,30 +26,62 @@ export function ExperienceCard({
   groupSize = "1-8",
   className = ""
 }: ExperienceCardProps) {
+  const [images, setImages] = useState<string[]>([]);
+
+  useEffect(() => {
+    // Use Wikimedia API as a free source for related city images
+    const fetchImages = async () => {
+      try {
+        const res = await fetch(`https://en.wikipedia.org/w/api.php?action=query&format=json&origin=*&prop=pageimages&titles=${encodeURIComponent(title)}&piprop=original`);
+        const data = await res.json();
+        const pages = data.query.pages;
+        const imageList: string[] = [];
+
+        for (let key in pages) {
+          const img = pages[key]?.original?.source;
+          if (img) imageList.push(img);
+        }
+
+        // Always ensure at least one image
+        setImages(imageList.length > 0 ? imageList : [imageUrl]);
+      } catch (error) {
+        setImages([imageUrl]);
+      }
+    };
+
+    fetchImages();
+  }, [title, imageUrl]);
+
   return (
-    <div 
-      className={`group snap-start shrink-0 w-[280px] md:w-[300px] lg:w-[320px] scroll-ml-4 
-      bg-white rounded-xl sm:rounded-2xl transition-all duration-300 relative overflow-hidden
-      hover:shadow-xl ${className}`}
+    <motion.div
+      whileHover={{ scale: 1.02 }}
+      className={`group snap-start shrink-0 w-[280px] md:w-[300px] lg:w-[340px] scroll-ml-4 bg-white rounded-2xl transition-all duration-300 relative overflow-hidden shadow hover:shadow-2xl ${className}`}
     >
-      <div className="relative h-[180px] md:h-[200px] w-full overflow-hidden">
-        <Image
-          src={imageUrl || "/placeholder.svg"}
-          alt={title}
-          fill
-          className="object-cover transition-transform duration-300 group-hover:scale-105"
-          sizes="(max-width: 768px) 280px, (max-width: 1024px) 300px, 320px"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent" />
-        
-        <div className="absolute top-4 right-4">
-          <div className="bg-white/90 backdrop-blur-sm shadow-sm px-3 py-1.5 rounded-full">
-            <span className="text-sm font-semibold text-gray-900">MAD {price}</span>
-          </div>
+      <div className="relative h-[200px] w-full">
+        <Carousel dots autoplay className="h-full">
+          {images.map((img, index) => (
+            <div key={index} className="relative h-[200px] w-full">
+              <Image
+                src={img}
+                alt={`${title} image ${index + 1}`}
+                fill
+                className="object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/20 to-transparent" />
+            </div>
+          ))}
+        </Carousel>
+        <div className="absolute top-4 right-4 flex gap-2">
+          <Tooltip title="Save Trip">
+            <Button shape="circle" icon={<Heart className="w-4 h-4" />} />
+          </Tooltip>
+          <Tooltip title="Book Now">
+            <Button shape="circle" icon={<PlaneTakeoff className="w-4 h-4" />} type="primary" />
+          </Tooltip>
         </div>
       </div>
 
-      <div className="p-4 md:p-5">
+      <div className="p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center bg-amber-50 px-2.5 py-1 rounded-full">
             <Star className="h-3.5 w-3.5 fill-amber-400 stroke-amber-400" />
@@ -78,6 +113,6 @@ export function ExperienceCard({
           </div>
         </div>
       </div>
-    </div>
-  )
-} 
+    </motion.div>
+  );
+}
