@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useState } from 'react';
 import type { NextPage } from 'next';
 import {
@@ -25,6 +25,7 @@ import {
   DollarSign,
   Box,
   List as ListIcon,
+  MoreVertical,
 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import 'tailwindcss/tailwind.css';
@@ -59,58 +60,81 @@ const Home: NextPage = () => {
   };
 
   return (
-    <Layout className="min-h-screen">
+    <Layout className="min-h-screen bg-gray-100">
       <Sider
         collapsible
         collapsed={collapsed}
         onCollapse={setCollapsed}
-        breakpoint="md"
-        collapsedWidth={collapsed ? 0 : 80}
-        className="bg-gradient-to-b from-blue-800 to-blue-600 fixed h-full"
+        width={240}
+        className="bg-white border-r"
+        breakpoint="lg"
+        collapsedWidth={80}
       >
         <motion.div
-          className="text-white text-center p-4"
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
+          className="flex items-center justify-between px-4 py-6"
+          initial={{ x: -50, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
         >
-          {!collapsed && <span className="text-xl font-bold">TripPlanner</span>}
+          {!collapsed && <h2 className="text-xl font-semibold">TripPlanner</h2>}
+          {collapsed && <MoreVertical size={24} />}
         </motion.div>
-        <Menu theme="dark" mode="inline" defaultSelectedKeys={["1"]}>
+        <Menu
+          theme="light"
+          mode="inline"
+          defaultSelectedKeys={["1"]}
+          className="border-none px-2"
+        >
           {[
             { key: '1', icon: <CalIcon size={20} />, label: 'Schedule' },
             { key: '2', icon: <DollarSign size={20} />, label: 'Budget' },
             { key: '3', icon: <Box size={20} />, label: 'Packing' },
             { key: '4', icon: <MapPin size={20} />, label: 'Map' },
           ].map((m) => (
-            <Menu.Item key={m.key} icon={m.icon} className="text-lg">
+            <Menu.Item
+              key={m.key}
+              icon={m.icon}
+              className="py-4 text-base hover:bg-gray-100"
+            >
               {m.label}
             </Menu.Item>
           ))}
         </Menu>
       </Sider>
 
-      <Layout className="ml-0 md:ml-80 transition-all">
-        <Content className="p-4 md:p-8 bg-gray-50">
-          <Card className="shadow-lg rounded-lg">
-            <Tabs defaultActiveKey="1" tabBarGutter={24} className="overflow-auto">
+      <Layout className="ml-0 lg:ml-60 transition-all duration-300">
+        <Content className="p-6 lg:p-10">
+          <Card className="shadow-md rounded-lg bg-white">
+            <Tabs
+              defaultActiveKey="1"
+              tabBarGutter={32}
+              className="overflow-auto px-4 py-2"
+            >
               <TabPane
                 tab={
-                  <span><CalIcon size={18} /> Schedule</span>
+                  <span className="flex items-center">
+                    <CalIcon size={18} className="mr-1" />
+                    Schedule
+                  </span>
                 }
                 key="1"
               >
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                  <Row gutter={[16, 16]}>
-                    <Col xs={24} md={8} lg={6}>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <Row gutter={[24, 24]}>
+                    <Col xs={24} sm={12} md={8} lg={6}>
                       <RangePicker
                         format="YYYY-MM-DD"
                         onChange={(vals) => setDates(vals as [any, any])}
                         className="w-full mb-4"
+                        placeholder={['Check-in', 'Check-out']}
                       />
                       <Form layout="inline" className="mb-4">
                         <Form.Item>
                           <Input
-                            placeholder="Activity"
+                            placeholder="New activity"
                             value={item}
                             onChange={(e) => setItem(e.target.value)}
                             className="w-48"
@@ -127,16 +151,19 @@ const Home: NextPage = () => {
                         </Form.Item>
                       </Form>
                     </Col>
-                    <Col xs={24} md={16} lg={18}>
+                    <Col xs={24} sm={24} md={16} lg={18}>
                       {dates[0] ? (
                         Object.keys(itinerary).map((day) => (
                           <Card
                             key={day}
                             title={day}
-                            className="mb-4"
-                            size="small"
+                            className="mb-6"
+                            bordered={false}
                           >
-                            <Timeline>
+                            <Timeline
+                              mode="left"
+                              className="ml-4"
+                            >
                               {itinerary[day].map((act, i) => (
                                 <Timeline.Item key={i}>{act}</Timeline.Item>
                               ))}
@@ -144,8 +171,8 @@ const Home: NextPage = () => {
                           </Card>
                         ))
                       ) : (
-                        <div className="text-center text-gray-500">
-                          Select check‑in/check‑out to see daily timeline
+                        <div className="text-center text-gray-500 py-20">
+                          Select check‑in/check‑out to view your schedule by day
                         </div>
                       )}
                     </Col>
@@ -153,30 +180,51 @@ const Home: NextPage = () => {
                 </motion.div>
               </TabPane>
 
-              <TabPane tab={<span><DollarSign size={18} /> Budget</span>} key="2">
-                <Row gutter={16} className="text-center">
-                  <Col xs={24} sm={12} lg={8}>
-                    <Statistic title="Spent" value={budget} prefix="$" />
+              <TabPane
+                tab={
+                  <span className="flex items-center">
+                    <DollarSign size={18} className="mr-1" />
+                    Budget
+                  </span>
+                }
+                key="2"
+              >
+                <Row gutter={[24, 24]} className="text-center py-4">
+                  <Col xs={24} sm={8}>
+                    <Statistic title="Total Spent" value={budget} prefix="$" />
                   </Col>
-                  <Col xs={24} sm={12} lg={8}>
-                    <Button block onClick={() => setBudget((b) => b + 50)}>
-                      +$50
+                  <Col xs={24} sm={8}>
+                    <Button
+                      block
+                      className="py-4"
+                      onClick={() => setBudget((b) => b + 100)}
+                    >
+                      +$100
                     </Button>
                   </Col>
-                  <Col xs={24} sm={12} lg={8}>
+                  <Col xs={24} sm={8}>
                     <Button
                       block
                       danger
-                      onClick={() => setBudget((b) => Math.max(0, b - 50))}
+                      className="py-4"
+                      onClick={() => setBudget((b) => Math.max(0, b - 100))}
                     >
-                      -$50
+                      -$100
                     </Button>
                   </Col>
                 </Row>
               </TabPane>
 
-              <TabPane tab={<span><Box size={18} /> Packing</span>} key="3">
-                <Row className="pb-4">
+              <TabPane
+                tab={
+                  <span className="flex items-center">
+                    <Box size={18} className="mr-1" />
+                    Packing
+                  </span>
+                }
+                key="3"
+              >
+                <Row gutter={16} className="py-4">
                   <Col xs={24} md={12} lg={8}>
                     <List
                       bordered
@@ -192,7 +240,7 @@ const Home: NextPage = () => {
                             }}
                           />
                           <span
-                            className={`ml-2 ${
+                            className={`ml-2 text-base $
                               p.done ? 'line-through text-gray-400' : ''
                             }`}
                           >
@@ -201,22 +249,31 @@ const Home: NextPage = () => {
                         </List.Item>
                       )}
                     />
+                    <Button
+                      type="dashed"
+                      block
+                      className="mt-4"
+                      onClick={() =>
+                        setPacking((prev) => [...prev, { label: 'New Item', done: false }])
+                      }
+                    >
+                      Add Item
+                    </Button>
                   </Col>
                 </Row>
-                <Button
-                  type="dashed"
-                  block
-                  onClick={() =>
-                    setPacking((prev) => [...prev, { label: 'New Item', done: false }])
-                  }
-                >
-                  Add Item
-                </Button>
               </TabPane>
 
-              <TabPane tab={<span><MapPin size={18} /> Map</span>} key="4">
-                <Row gutter={[16, 16]}>
-                  <Col xs={24} md={8} lg={6}>
+              <TabPane
+                tab={
+                  <span className="flex items-center">
+                    <MapPin size={18} className="mr-1" />
+                    Map
+                  </span>
+                }
+                key="4"
+              >
+                <Row gutter={[24, 24]} className="py-4">
+                  <Col xs={24} sm={8} md={6} lg={4}>
                     <Select
                       defaultValue={activeCity.title}
                       onChange={(val) => {
@@ -232,9 +289,9 @@ const Home: NextPage = () => {
                       ))}
                     </Select>
                   </Col>
-                  <Col xs={24} md={16} lg={18}>
+                  <Col xs={24} sm={16} md={18} lg={20}>
                     <iframe
-                      className="w-full h-64 md:h-96 rounded-lg shadow"
+                      className="w-full h-80 md:h-[500px] rounded-lg shadow-lg"
                       loading="lazy"
                       allowFullScreen
                       referrerPolicy="no-referrer-when-downgrade"
