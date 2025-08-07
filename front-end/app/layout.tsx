@@ -8,6 +8,8 @@ import { Toaster } from "@/components/ui/toaster"
 import { Providers } from "@/lib/redux/provider"
 import { ToastContainer } from 'react-toastify';
 import 'antd/dist/reset.css'; // or 'antd/dist/antd.css' depending on your antd version
+import TripPlannerButton from '@/components/TripPlannerButton';
+
 
 // import 'leaflet/dist/leaflet.css';
 
@@ -74,6 +76,7 @@ export default function RootLayout({
         {/* Main content section */}
         <main className="md:pt-16 pb-16 md:pb-0">
           {children}
+        <TripPlannerButton />
         </main>
 
         {/* Bottom navigation */}
