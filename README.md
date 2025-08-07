@@ -1,6 +1,6 @@
-# Gomorroco App
+# Tripnest App
 
-**Gomorroco** is a modern, performant travel & entertainment web application built with the **MERN stack** (MongoDB, Express, React/Next.js, Node.js), following clean architecture principles for scalability and maintainability.
+**Tripnest** is a modern, performant travel & entertainment web application built with the **MERN stack** (MongoDB, Express, React/Next.js, Node.js), following clean architecture principles for scalability and maintainability.
 
 ---
 
@@ -46,8 +46,8 @@ The project follows **Clean Architecture** to ensure separation of concerns:
 
 ```bash
 # Clone the repo
-git clone https://github.com/your-username/gomorroco.git
-cd gomorroco/frontend
+git clone https://github.com/alibenhenia/Tripnest.git
+cd Tripnest/frontend
 
 # Install dependencies
 npm install
@@ -66,14 +66,14 @@ Runs at `http://localhost:3000`
 ## 📂 Backend Setup (Node.js + Express)
 
 ```bash
-cd gomorroco/backend
+cd Tripnest/backend
 
 # Install dependencies
 npm install
 
 # Create a .env file
 PORT=5000
-MONGO_URI=mongodb://localhost:27017/gomorroco
+MONGO_URI=mongodb://localhost:27017/Tripnest
 JWT_SECRET=your_jwt_secret_key
 
 # Start the server
