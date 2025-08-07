@@ -23,7 +23,8 @@ import {
   Filter,
   Home,
   User,
-  Settings
+  Settings,
+  Map
 } from 'lucide-react';
 
 const App = () => {
@@ -580,9 +581,9 @@ const App = () => {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center">
               <div className="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center text-white font-bold text-xl mr-3">
-                T
+                <Map />
               </div>
-              <h1 className="text-xl font-bold text-gray-900">Trip Planner</h1>
+              {/* <h1 className="text-xl font-bold text-gray-900">Planner</h1> */}
             </div>
             <div className="flex items-center space-x-4">
               <div className="relative">
@@ -593,13 +594,13 @@ const App = () => {
                   className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 />
               </div>
-              <button className="flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
+              {/* <button className="flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors">
                 <Plus size={16} className="mr-1" />
                 New Trip
               </button>
               <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
                 <User size={20} className="text-gray-600" />
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
