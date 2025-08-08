@@ -4,11 +4,13 @@ import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import BottomNavigation from "@/components/bottom-navigation"
 import { ErrorBoundary } from "@/components/ErrorBoundary"
-import { Toaster } from "@/components/ui/toaster"
+// import { Toaster } from "@/components/ui/toaster"
 import { Providers } from "@/lib/redux/provider"
 import { ToastContainer } from 'react-toastify';
 import 'antd/dist/reset.css'; // or 'antd/dist/antd.css' depending on your antd version
 import TripPlannerButton from '@/components/TripPlannerButton';
+import { Toaster } from 'react-hot-toast';
+
 
 
 // import 'leaflet/dist/leaflet.css';
@@ -77,13 +79,15 @@ export default function RootLayout({
         <main className="md:pt-16 pb-16 md:pb-0">
           {children}
         <TripPlannerButton />
+       
         </main>
 
         {/* Bottom navigation */}
         <BottomNavigation />
 
         {/* Toast notifications */}
-        <Toaster />
+        <Toaster position="center-top" reverseOrder={false} />
+
       </Providers>
     </div>
   </div>

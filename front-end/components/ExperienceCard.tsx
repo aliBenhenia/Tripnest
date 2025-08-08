@@ -3,6 +3,8 @@ import { Star, Clock, Users, Heart, PlaneTakeoff } from "lucide-react";
 import { Button, Carousel, Tooltip } from "antd";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+// import toast from 'react-hot-toast';
+import notify from "@/lib/notify";
 
 interface ExperienceCardProps {
   id: string | number;
@@ -27,6 +29,8 @@ export function ExperienceCard({
   className = ""
 }: ExperienceCardProps) {
   const [images, setImages] = useState<string[]>([]);
+    // const notifySuccess = () => toast.success('Visit planned successfully!');
+
 
   useEffect(() => {
     // Use Wikimedia API as a free source for related city images
@@ -77,10 +81,14 @@ export function ExperienceCard({
         </Carousel>
         <div className="absolute top-4 right-4 flex gap-2">
           <Tooltip title="Save Trip">
-            <Button shape="circle" icon={<Heart className="w-4 h-4" />} />
+            <Button
+            onClick={()=> notify({message : "save action comming sooon !",type :"success"})}
+            shape="circle" icon={<Heart className="w-4 h-4" />} />
           </Tooltip>
           <Tooltip title="add to trip">
-            <Button shape="circle" icon={<PlaneTakeoff className="w-4 h-4" />} type="primary" />
+            <Button
+             onClick={()=> notify({message : "trip comming sooon !",type :"success"})}
+            shape="circle" icon={<PlaneTakeoff className="w-4 h-4" />} type="primary" />
           </Tooltip>
         </div>
       </div>
