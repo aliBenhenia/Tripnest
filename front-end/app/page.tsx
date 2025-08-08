@@ -405,7 +405,7 @@ export default function Home() {
               initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.05, duration: 0.3 }}
-              className="min-w-[280px] sm:min-w-[300px] md:min-w-[320px] snap-start"
+              className="min-w-[280px] sm:min-w-[300px] md:min-w-[320px] snap-start flex-shrink-0"
             >
               <ExperienceCard
                 {...experience}

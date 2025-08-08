@@ -55,7 +55,11 @@ export function ExperienceCard({
   return (
     <motion.div
       whileHover={{ scale: 1.02 }}
-      className={`group snap-start shrink-0 w-[280px] md:w-[300px] lg:w-[340px] scroll-ml-4 bg-white rounded-2xl transition-all duration-300 relative overflow-hidden shadow hover:shadow-2xl ${className}`}
+      style={{
+        // marginLeft : "10px",
+        // background : "red"
+      }}
+      className={`group snap-start shrink-0 w-[280px] md:w-[300px] lg:w-[340px] scroll-ml-4 bg-white rounded-2xl transition-all duration-300 relative overflow-hidden shadow hover:shadow-2xl  ${className}`}
     >
       <div className="relative h-[200px] w-full">
         <Carousel dots autoplay className="h-full">
@@ -75,7 +79,7 @@ export function ExperienceCard({
           <Tooltip title="Save Trip">
             <Button shape="circle" icon={<Heart className="w-4 h-4" />} />
           </Tooltip>
-          <Tooltip title="Book Now">
+          <Tooltip title="add to trip">
             <Button shape="circle" icon={<PlaneTakeoff className="w-4 h-4" />} type="primary" />
           </Tooltip>
         </div>
