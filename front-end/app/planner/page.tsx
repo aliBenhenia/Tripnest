@@ -1,5 +1,5 @@
+// ```jsx
 "use client";
-
 // app/App.jsx
 import React, { useState, useEffect } from 'react';
 import { 
@@ -26,6 +26,78 @@ import {
   Settings,
   Map
 } from 'lucide-react';
+import  {toast} from 'react-toastify';
+
+// get token from localStorage
+const token = localStorage.getItem('TOKEN_KEY') || '';
+
+// Mock API service using axios (since we can't actually use axios in this environment)
+const api = {
+  // Base URL from environment variables
+  baseURL:  'http://localhost:3001',
+
+  // Helper function to make requests with /api/planner prefix
+  request: async (url, options = {}) => {
+    // const fullUrl = `/api/planner${url}`;
+    const fullUrl = `${api.baseURL}/api/planner${url}`; // Use baseURL
+    const response = await fetch(fullUrl, {
+      ...options,
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`, // Include token in headers
+        ...options.headers
+      }
+    });
+    // check status 401 
+    if (!response.ok) {
+      if (response.status === 401) {
+        toast.error('Unauthorized access. Please log in again.');
+        // Redirect to login or handle unauthorized access
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'An error occurred');
+      }
+    }
+
+
+    return response.json();
+  },
+
+  // Trip endpoints
+  getTrips: () => api.request('/trips'),
+  createTrip: (trip) => api.request('/trips', { method: 'POST', body: JSON.stringify(trip) }),
+  updateTrip: (id, trip) => api.request(`/trips/${id}`, { method: 'PUT', body: JSON.stringify(trip) }),
+  deleteTrip: (id) => api.request(`/trips/${id}`, { method: 'DELETE' }),
+  
+  // Packing items endpoints
+  getPackingItems: (tripId) => api.request(`/trips/${tripId}/packing-items`),
+  createPackingItem: (tripId, item) => api.request(`/trips/${tripId}/packing-items`, { method: 'POST', body: JSON.stringify(item) }),
+  updatePackingItem: (id, item) => api.request(`/packing-items/${id}`, { method: 'PUT', body: JSON.stringify(item) }),
+  deletePackingItem: (id) => api.request(`/packing-items/${id}`, { method: 'DELETE' }),
+  
+  // Expenses endpoints
+  getExpenses: (tripId) => api.request(`/trips/${tripId}/expenses`),
+  createExpense: (tripId, expense) => api.request(`/trips/${tripId}/expenses`, { method: 'POST', body: JSON.stringify(expense) }),
+  updateExpense: (id, expense) => api.request(`/expenses/${id}`, { method: 'PUT', body: JSON.stringify(expense) }),
+  deleteExpense: (id) => api.request(`/expenses/${id}`, { method: 'DELETE' }),
+  
+  // Companions endpoints
+  getCompanions: (tripId) => api.request(`/trips/${tripId}/companions`),
+  createCompanion: (tripId, companion) => api.request(`/trips/${tripId}/companions`, { method: 'POST', body: JSON.stringify(companion) }),
+  updateCompanion: (id, companion) => api.request(`/companions/${id}`, { method: 'PUT', body: JSON.stringify(companion) }),
+  deleteCompanion: (id) => api.request(`/companions/${id}`, { method: 'DELETE' }),
+  
+  // Documents endpoints
+  getDocuments: (tripId) => api.request(`/trips/${tripId}/documents`),
+  createDocument: (tripId, document) => api.request(`/trips/${tripId}/documents`, { method: 'POST', body: JSON.stringify(document) }),
+  deleteDocument: (id) => api.request(`/documents/${id}`, { method: 'DELETE' }),
+  
+  // Activities endpoints
+  getActivities: (tripId) => api.request(`/trips/${tripId}/activities`),
+  createActivity: (tripId, activity) => api.request(`/trips/${tripId}/activities`, { method: 'POST', body: JSON.stringify(activity) }),
+  updateActivity: (id, activity) => api.request(`/activities/${id}`, { method: 'PUT', body: JSON.stringify(activity) }),
+  deleteActivity: (id) => api.request(`/activities/${id}`, { method: 'DELETE' })
+};
 
 const App = () => {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -36,107 +108,79 @@ const App = () => {
   const [newTime, setNewTime] = useState('');
   const [newNotes, setNewNotes] = useState('');
   const [editingTrip, setEditingTrip] = useState(null);
-  const [trips, setTrips] = useState([
-    {
-      id: 1,
-      name: "Summer in Italy 🇮🇹",
-      dates: "Aug 5 - Aug 12, 2023",
-      destinations: "Rome, Florence, Venice",
-      status: "planning"
-    },
-    {
-      id: 2,
-      name: "Beach Vacation in Bali 🇮🇩",
-      dates: "Sep 15 - Sep 22, 2023",
-      destinations: "Bali, Ubud",
-      status: "confirmed"
-    },
-    {
-      id: 3,
-      name: "Business Trip to Tokyo 🇯🇵",
-      dates: "Oct 5 - Oct 10, 2023",
-      destinations: "Tokyo",
-      status: "in-progress"
-    }
-  ]);
-  const [selectedTrip, setSelectedTrip] = useState(trips[0]);
-
-  // Mock data for selected trip
-  const [packingItems, setPackingItems] = useState([
-    { id: 1, name: 'Passport', packed: false },
-    { id: 2, name: 'Flight tickets', packed: true },
-    { id: 3, name: 'Camera', packed: false },
-    { id: 4, name: 'Travel adapter', packed: false },
-    { id: 5, name: 'Toothbrush', packed: false },
-  ]);
-
-  const [expenses, setExpenses] = useState([
-    { id: 1, category: 'Flights', amount: 850, description: 'Round-trip flight' },
-    { id: 2, category: 'Accommodation', amount: 600, description: 'Hotel stay' },
-    { id: 3, category: 'Food', amount: 300, description: 'Meals and snacks' },
-    { id: 4, category: 'Activities', amount: 200, description: 'Colosseum tour' },
-  ]);
-
-  const [companions, setCompanions] = useState([
-    { id: 1, name: 'Sarah Johnson', role: 'Accommodation', sharedExpenses: 150 },
-    { id: 2, name: 'Michael Chen', role: 'Transportation', sharedExpenses: 80 },
-    { id: 3, name: 'Emma Rodriguez', role: 'Activities', sharedExpenses: 120 },
-  ]);
-
-  const [documents, setDocuments] = useState([
-    { id: 1, name: 'Passport Scan', type: 'PDF', date: '2023-07-15' },
-    { id: 2, name: 'Hotel Confirmation', type: 'PDF', date: '2023-07-20' },
-    { id: 3, name: 'Flight E-ticket', type: 'PDF', date: '2023-07-10' },
-  ]);
-
-  const [itinerary, setItinerary] = useState([
-    { 
-      day: 1, 
-      date: 'Aug 5', 
-      activities: [
-        { id: 1, time: '2:00 PM', activity: '✈️ Arrival in Rome', notes: '' },
-        { id: 2, time: '3:30 PM', activity: '🏨 Check-in: Hotel Roma', notes: '' },
-        { id: 3, time: '7:00 PM', activity: '🍝 Dinner at Trattoria', notes: '' },
-      ]
-    },
-    { 
-      day: 2, 
-      date: 'Aug 6', 
-      activities: [
-        { id: 4, time: '9:00 AM', activity: '📍 Visit: Colosseum', notes: 'Book tickets online' },
-        { id: 5, time: '12:00 PM', activity: '🍽️ Lunch at Pantheon', notes: '' },
-        { id: 6, time: '3:00 PM', activity: '🏛️ Visit: Vatican Museums', notes: '' },
-      ]
-    },
-    { 
-      day: 3, 
-      date: 'Aug 7', 
-      activities: [
-        { id: 7, time: '10:00 AM', activity: '🎨 Visit: Galleria Borghese', notes: '' },
-        { id: 8, time: '2:00 PM', activity: '🚶‍♂️ Walking tour of Trastevere', notes: '' },
-        { id: 9, time: '6:00 PM', activity: '🍷 Wine tasting', notes: '' },
-      ]
-    }
-  ]);
-
+  const [trips, setTrips] = useState([]);
+  const [selectedTrip, setSelectedTrip] = useState(null);
+  const [packingItems, setPackingItems] = useState([]);
+  const [expenses, setExpenses] = useState([]);
+  const [companions, setCompanions] = useState([]);
+  const [documents, setDocuments] = useState([]);
+  const [itinerary, setItinerary] = useState([]);
   const [newTrip, setNewTrip] = useState({
     name: '',
     dates: '',
     destinations: ''
   });
 
+  // Load initial data
+  useEffect(() => {
+    loadTrips();
+  }, []);
+
+  const loadTrips = async () => {
+    try {
+      const data = await api.getTrips();
+      setTrips(data);
+      if (data.length > 0) {
+        setSelectedTrip(data[0]);
+        loadTripData(data[0].id);
+      }
+    } catch (error) {
+      console.error('Error loading trips:', error);
+    }
+  };
+
+  const loadTripData = async (tripId) => {
+    try {
+      const [packing, expense, companion, document, activity] = await Promise.all([
+        api.getPackingItems(tripId),
+        api.getExpenses(tripId),
+        api.getCompanions(tripId),
+        api.getDocuments(tripId),
+        api.getActivities(tripId)
+      ]);
+      
+      setPackingItems(packing);
+      setExpenses(expense);
+      setCompanions(companion);
+      setDocuments(document);
+      setItinerary(activity);
+    } catch (error) {
+      console.error('Error loading trip data:', error);
+    }
+  };
+
   const showModal = () => {
     setIsModalVisible(true);
   };
 
-  const handleOk = () => {
-    if (newActivity && selectedDate) {
-      // Add new activity logic here
+  const handleOk = async () => {
+    if (newActivity && selectedDate && selectedTrip) {
+      try {
+        const activity = await api.createActivity(selectedTrip.id, {
+          time: newTime,
+          activity: newActivity,
+          notes: newNotes,
+          day: 1 // Default day, you might want to make this dynamic
+        });
+        setItinerary([...itinerary, activity]);
+        setNewActivity('');
+        setNewTime('');
+        setNewNotes('');
+      } catch (error) {
+        console.error('Error adding activity:', error);
+      }
     }
     setIsModalVisible(false);
-    setNewActivity('');
-    setNewTime('');
-    setNewNotes('');
   };
 
   const handleCancel = () => {
@@ -146,16 +190,22 @@ const App = () => {
     setNewNotes('');
   };
 
-  const handleTripOk = () => {
+  const handleTripOk = async () => {
     if (newTrip.name && newTrip.dates && newTrip.destinations) {
-      const trip = {
-        id: Date.now(),
-        ...newTrip,
-        status: 'planning'
-      };
-      setTrips([...trips, trip]);
-      setNewTrip({ name: '', dates: '', destinations: '' });
-      setIsTripModalVisible(false);
+      try {
+        const trip = await api.createTrip({
+          ...newTrip,
+          status: 'planning'
+        });
+        setTrips([...trips, trip]);
+        setNewTrip({ name: '', dates: '', destinations: '' });
+        setIsTripModalVisible(false);
+        if (!selectedTrip) {
+          setSelectedTrip(trip);
+        }
+      } catch (error) {
+        console.error('Error creating trip:', error);
+      }
     }
   };
 
@@ -164,23 +214,43 @@ const App = () => {
     setNewTrip({ name: '', dates: '', destinations: '' });
   };
 
-  const togglePacked = (id) => {
-    setPackingItems(packingItems.map(item => 
-      item.id === id ? { ...item, packed: !item.packed } : item
-    ));
-  };
-
-  const deleteTrip = (id) => {
-    setTrips(trips.filter(trip => trip.id !== id));
-    if (selectedTrip.id === id) {
-      setSelectedTrip(trips.find(trip => trip.id !== id) || trips[0]);
+  const togglePacked = async (id) => {
+    try {
+      const item = packingItems.find(item => item.id === id);
+      const updatedItem = await api.updatePackingItem(id, { ...item, packed: !item.packed });
+      setPackingItems(packingItems.map(item => 
+        item.id === id ? updatedItem : item
+      ));
+    } catch (error) {
+      console.error('Error updating packing item:', error);
     }
   };
 
-  const updateTrip = (id, updates) => {
-    setTrips(trips.map(trip => 
-      trip.id === id ? { ...trip, ...updates } : trip
-    ));
+  const deleteTrip = async (id) => {
+    try {
+      await api.deleteTrip(id);
+      const updatedTrips = trips.filter(trip => trip.id !== id);
+      setTrips(updatedTrips);
+      if (selectedTrip?.id === id) {
+        setSelectedTrip(updatedTrips[0] || null);
+        if (updatedTrips[0]) {
+          loadTripData(updatedTrips[0].id);
+        }
+      }
+    } catch (error) {
+      console.error('Error deleting trip:', error);
+    }
+  };
+
+  const updateTrip = async (id, updates) => {
+    try {
+      const updatedTrip = await api.updateTrip(id, updates);
+      setTrips(trips.map(trip => 
+        trip.id === id ? updatedTrip : trip
+      ));
+    } catch (error) {
+      console.error('Error updating trip:', error);
+    }
   };
 
   const totalBudget = 2500;
@@ -199,7 +269,6 @@ const App = () => {
           New Trip
         </button>
       </div>
-
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl p-6 text-white">
           <div className="flex justify-between items-start">
@@ -210,7 +279,6 @@ const App = () => {
             <Home size={32} className="text-blue-200" />
           </div>
         </div>
-        
         <div className="bg-gradient-to-r from-green-500 to-green-600 rounded-xl p-6 text-white">
           <div className="flex justify-between items-start">
             <div>
@@ -220,7 +288,6 @@ const App = () => {
             <Calendar size={32} className="text-green-200" />
           </div>
         </div>
-        
         <div className="bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl p-6 text-white">
           <div className="flex justify-between items-start">
             <div>
@@ -231,12 +298,13 @@ const App = () => {
           </div>
         </div>
       </div>
-
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
         <h2 className="text-xl font-semibold mb-4">Recent Trips</h2>
         <div className="space-y-4">
-          {trips.map((trip) => (
-            <div key={trip.id} className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+          {trips.map((trip, index) => (
+            <div 
+            key={index}
+             className="flex items-center justify-between p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
               <div className="flex items-center">
                 <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-4">
                   <MapPin className="text-blue-500" size={20} />
@@ -255,7 +323,10 @@ const App = () => {
                   {trip.status}
                 </span>
                 <button 
-                  onClick={() => setSelectedTrip(trip)}
+                  onClick={() => {
+                    setSelectedTrip(trip);
+                    loadTripData(trip.id);
+                  }}
                   className="text-blue-500 hover:text-blue-700"
                 >
                   <ChevronRight size={16} />
@@ -280,7 +351,6 @@ const App = () => {
           Add Activity
         </button>
       </div>
-      
       {itinerary.map((day) => (
         <div key={day.day} className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
           <div className="flex items-center justify-between mb-4">
@@ -289,7 +359,6 @@ const App = () => {
               Day {day.day} ({day.date})
             </h3>
           </div>
-          
           <div className="space-y-4">
             {day.activities.map((activity) => (
               <div key={activity.id} className="flex items-start p-4 bg-gray-50 rounded-lg border border-gray-200">
@@ -326,7 +395,6 @@ const App = () => {
           <button className="px-3 py-1 border border-gray-300 rounded-lg text-sm">Terrain</button>
         </div>
       </div>
-      
       <div className="relative h-96 bg-gray-100 rounded-lg overflow-hidden">
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center">
@@ -340,12 +408,10 @@ const App = () => {
             </div>
           </div>
         </div>
-        
         {/* Map markers simulation */}
         <div className="absolute top-1/4 left-1/4 w-4 h-4 bg-red-500 rounded-full border-2 border-white shadow-lg"></div>
         <div className="absolute top-1/3 right-1/3 w-4 h-4 bg-blue-500 rounded-full border-2 border-white shadow-lg"></div>
         <div className="absolute bottom-1/4 left-1/2 w-4 h-4 bg-green-500 rounded-full border-2 border-white shadow-lg"></div>
-        
         {/* Route line simulation */}
         <svg className="absolute inset-0 w-full h-full pointer-events-none">
           <path 
@@ -357,7 +423,6 @@ const App = () => {
           />
         </svg>
       </div>
-      
       <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="p-4 bg-gray-50 rounded-lg">
           <h4 className="font-medium mb-2">Rome</h4>
@@ -387,7 +452,6 @@ const App = () => {
           Add Item
         </button>
       </div>
-      
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-3">
           {packingItems.slice(0, 3).map((item) => (
@@ -404,7 +468,6 @@ const App = () => {
             </div>
           ))}
         </div>
-        
         <div className="space-y-3">
           {packingItems.slice(3).map((item) => (
             <div key={item.id} className="flex items-center p-3 bg-gray-50 rounded-lg">
@@ -421,7 +484,6 @@ const App = () => {
           ))}
         </div>
       </div>
-      
       <div className="mt-8 pt-6 border-t border-gray-200">
         <h3 className="font-medium mb-3">Suggested Items:</h3>
         <div className="flex flex-wrap gap-2">
@@ -447,7 +509,6 @@ const App = () => {
           Add Expense
         </button>
       </div>
-      
       <div className="mb-8">
         <div className="flex justify-between mb-2">
           <span className="font-medium">Total Budget</span>
@@ -470,7 +531,6 @@ const App = () => {
           ></div>
         </div>
       </div>
-      
       <div className="space-y-4">
         <h3 className="font-medium">Recent Expenses</h3>
         {expenses.map((expense) => (
@@ -518,7 +578,6 @@ const App = () => {
           Add Person
         </button>
       </div>
-      
       <div className="space-y-4">
         {companions.map((companion) => (
           <div key={companion.id} className="flex items-center p-4 border border-gray-200 rounded-lg">
@@ -554,7 +613,6 @@ const App = () => {
           Upload
         </button>
       </div>
-      
       <div className="space-y-4">
         {documents.map((doc) => (
           <div key={doc.id} className="flex items-center p-4 border border-gray-200 rounded-lg">
@@ -605,7 +663,6 @@ const App = () => {
           </div>
         </div>
       </header>
-
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Sidebar */}
@@ -696,41 +753,41 @@ const App = () => {
               </nav>
             </div>
           </div>
-
           {/* Main Content */}
           <div className="flex-1">
             {/* Trip Selector */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-6">
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between">
-                <div>
-                  <h1 className="text-2xl font-bold">{selectedTrip.name}</h1>
-                  <div className="flex flex-wrap gap-4 mt-2">
-                    <div className="flex items-center">
-                      <Calendar className="text-blue-500 mr-2" size={16} />
-                      <span className="text-gray-600">{selectedTrip.dates}</span>
-                    </div>
-                    <div className="flex items-center">
-                      <MapPin className="text-blue-500 mr-2" size={16} />
-                      <span className="text-gray-600">{selectedTrip.destinations}</span>
+            {selectedTrip && (
+              <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 mb-6">
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+                  <div>
+                    <h1 className="text-2xl font-bold">{selectedTrip.name}</h1>
+                    <div className="flex flex-wrap gap-4 mt-2">
+                      <div className="flex items-center">
+                        <Calendar className="text-blue-500 mr-2" size={16} />
+                        <span className="text-gray-600">{selectedTrip.dates}</span>
+                      </div>
+                      <div className="flex items-center">
+                        <MapPin className="text-blue-500 mr-2" size={16} />
+                        <span className="text-gray-600">{selectedTrip.destinations}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="flex space-x-3 mt-4 md:mt-0">
-                  <button className="flex items-center px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
-                    <Edit size={16} className="mr-1" />
-                    Edit
-                  </button>
-                  <button 
-                    onClick={() => deleteTrip(selectedTrip.id)}
-                    className="flex items-center px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
-                  >
-                    <Trash2 size={16} className="mr-1" />
-                    Delete
-                  </button>
+                  <div className="flex space-x-3 mt-4 md:mt-0">
+                    <button className="flex items-center px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+                      <Edit size={16} className="mr-1" />
+                      Edit
+                    </button>
+                    <button 
+                      onClick={() => deleteTrip(selectedTrip.id)}
+                      className="flex items-center px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+                    >
+                      <Trash2 size={16} className="mr-1" />
+                      Delete
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-
+            )}
             {/* Tab Content */}
             <div className="mb-8">
               {activeTab === 'dashboard' && renderDashboard()}
@@ -745,7 +802,6 @@ const App = () => {
           </div>
         </div>
       </div>
-
       {/* Add Activity Modal */}
       {isModalVisible && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -800,7 +856,6 @@ const App = () => {
           </div>
         </div>
       )}
-
       {/* Add Trip Modal */}
       {isTripModalVisible && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">

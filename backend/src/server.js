@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 const connectDB = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
+const planner = require('./routes/planner');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const path = require('path');
@@ -85,6 +86,7 @@ let isMongoDBConnected = false;
 // Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/planner', planner);
 
 // Fallback auth routes when MongoDB is not available
 app.post('/api/local-auth/signup', async (req, res) => {

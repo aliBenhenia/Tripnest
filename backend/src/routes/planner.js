@@ -2,6 +2,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
+const { protect, restrictTo, rateLimiter } = require('../middleware/authMiddleware');
 
 
 // Trip Schema
@@ -65,6 +66,10 @@ const Expense = mongoose.model('Expense', expenseSchema);
 const Companion = mongoose.model('Companion', companionSchema);
 const Document = mongoose.model('Document', documentSchema);
 const Activity = mongoose.model('Activity', activitySchema);
+
+
+// Middleware to protect routes
+router.use(protect);
 
 // Trip Controllers
 router.get('/trips', async (req, res) => {
