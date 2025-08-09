@@ -1,14 +1,19 @@
 // ```jsx
 "use client";
 import React, { useState, useEffect } from 'react';
-import { Edit3, Save, X, Heart, MapPin, Calendar, Star, Camera, Settings, User, Globe, Award, TrendingUp } from 'lucide-react';
-
+import { Edit3, Save, X, Heart, MapPin, Calendar, Star, Camera, Settings, User, Globe, Award, TrendingUp, AlertCircle } from 'lucide-react';
+import { useAppDispatch } from '@/lib/redux/hooks';
+import { setUserSuccess } from '@/lib/redux/slices/userSlice';
+import axios from 'axios';
+// const API_URL = 'http://localhost:3001';
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
 export default function ProfilePage() {
+  const token = typeof window !== 'undefined' ? localStorage.getItem('TOKEN_KEY') : null;
   const [user, setUser] = useState({
     username: 'ali benhnenia',
     bio: 'Adventure seeker exploring the world one destination at a time. Love hiking, photography, and local cuisine.',
     avatar: 'default-avatar.png',
-    joinDate: 'January 2023',
+    timestamps: 'January 2023',
     totalTrips: 12,
     favoriteDestinations: ['Paris', 'Tokyo', 'New York'],
     achievements: ['First Trip', 'Explorer', 'Photographer'],
@@ -29,13 +34,118 @@ export default function ProfilePage() {
   const [avatarPreview, setAvatarPreview] = useState(null);
   const [serverError, setServerError] = useState(false);
   const [activeTab, setActiveTab] = useState('profile');
-
+  const dispatch = useAppDispatch();
   useEffect(() => {
-    setUsername(user.username);
-    setBio(user.bio);
-  }, [user]);
+    // fetch user profile data
+    if (token) {
+      fetchUserProfile();
+      setUsername(user.username);
+      setBio(user.bio);
+    }
+    else {
+      setServerError(true);
+      console.error("No token found. Please log in.");
+      window.location.href = '/auth/login'; // redirect to login if no token
+    }
+    
+  }, []); 
+  const fetchUserProfile = async () => {
+      try {
+        const res = await fetch(`${API_URL}/api/users/profile`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+  
+        if (!res.ok) throw new Error('Failed to fetch profile');
+  
+        const data = await res.json();
+        const userData = data.data.user;
+        // before set avatar prix with base url server
+        if (userData.avatar) {
+          setAvatarPreview(`${API_URL}${userData.avatar}`);
+        }else {
+          setAvatarPreview(null);
+        }
 
-  const handleAvatarChange = (e) => {
+        // set only some fields to avoid overwriting the entire user object
+        setUser(prev => ({ ...prev, ...userData }));
+
+        // setUser(userData);
+        setUsername(userData.username || '');
+        setBio(userData.bio || '');
+        dispatch(setUserSuccess(userData));
+      } catch (error) {
+        console.error("Error fetching user profile:", error);
+        setServerError(true);
+        // toast.error("Unable to fetch user data. There was an issue fetching your profile data.");
+      }
+    };
+
+
+      const handleUpdateProfile = async (e: React.FormEvent) => {
+        e.preventDefault();
+    
+        if (!token || !user) {
+          // toast.error("Authentication required. You must be logged in to update your profile.");
+          return;
+        }
+    
+        setLoading(true);
+    
+        try {
+          // const isValid = await validateToken();
+          // if (!isValid) throw new Error('Authentication expired. Please log in again.');
+    
+          const formData = new FormData();
+          formData.append('username', username);
+          formData.append('bio', bio);
+          if (avatarPreview) {
+            const response = await fetch(avatarPreview);
+            const blob = await response.blob();
+            formData.append('avatar', blob, 'avatar.png');
+          }
+    
+          const response = await axios.patch(`${API_URL}/api/users/update`, formData, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'multipart/form-data',
+            }
+          });
+    
+          const updatedUser = response.data.data.user;
+          setUser(prev => ({ ...prev, ...updatedUser }));
+          setUsername(updatedUser.username || '');
+          setBio(updatedUser.bio || '');
+          if (updatedUser.avatar) {
+            setAvatarPreview(`${API_URL}${updatedUser.avatar}`);
+          } else {
+            setAvatarPreview(null);
+          }
+          dispatch(setUserSuccess(updatedUser));
+          setEditMode(false);
+
+    
+          // toast.success("Profile updated successfully");
+        } catch (error: any) {
+          console.log("=> ",error);
+          if (error.response && error.response.status === 401) {
+            // toast.error("Authentication expired. Please log in again.");
+            // logout();
+          }
+          else if (error.response && error.response.status === 500) {
+            // toast.error("Server error. Please try again later.");
+          } else if (error.response && error.response.data) {
+            // toast.error(error.response.data.message || "Failed to update profile. Please try again.");
+          } else
+            console.error("Error updating profile:", error);
+            // toast.error(error.response.data.message || "Failed to update profile. Please try again.");
+        } finally {
+          setLoading(false);
+        }
+      };
+    const handleAvatarChange = (e) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       const reader = new FileReader();
@@ -128,7 +238,7 @@ export default function ProfilePage() {
               {activeTab === 'profile' && (
                 <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8">
                   {editMode ? (
-                    <form onSubmit={handleSubmit} className="space-y-6">
+                    <form onSubmit={handleUpdateProfile} className="space-y-6">
                       <div className="flex flex-col items-center mb-6">
                         <div className="relative w-32 h-32 mb-4">
                           <div className="h-32 w-32 rounded-full overflow-hidden border-4 border-blue-100">
@@ -154,7 +264,7 @@ export default function ProfilePage() {
                       <div className="space-y-4">
                         <div>
                           <label htmlFor="username" className="block text-sm font-medium text-gray-700 mb-2">
-                            Username
+                            full Name
                           </label>
                           <input
                             id="username" 
@@ -224,7 +334,7 @@ export default function ProfilePage() {
                           <div className="flex items-center space-x-4 text-sm text-gray-500">
                             <span className="flex items-center space-x-1">
                               <Calendar size={16} />
-                              <span>Joined {user?.joinDate}</span>
+                              <span>Joined {user?.timestamps}</span>
                             </span>
                           </div>
                         </div>
