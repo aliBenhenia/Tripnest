@@ -16,6 +16,32 @@ import {
   Heart,
   Share2
 } from 'lucide-react';
+import axios from 'axios';
+
+// Base URL for API
+const API_BASE_URL = "http://localhost:3001/api";
+
+// Add token from localStorage
+const getAuthToken = () => {
+  return localStorage.getItem('TOKEN_KEY');
+};
+
+// Axios instance with default config
+const api = axios.create({
+  baseURL: API_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  }
+});
+
+// Add auth token to requests
+api.interceptors.request.use((config) => {
+  const token = getAuthToken();
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
 
 const initialStops = [
   {
@@ -106,13 +132,36 @@ const categories = [
 ];
 
 const TripPlanner = () => {
-  const [stops, setStops] = useState(initialStops);
+  const [stops, setStops] = useState([]);
   const [filterCategory, setFilterCategory] = useState('All');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingStop, setEditingStop] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [isAnimating, setIsAnimating] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Fetch all stops from API
+  const fetchStops = async () => {
+    try {
+      setLoading(true);
+      const response = await api.get('/stops');
+      setStops(response.data);
+      setError(null);
+    } catch (err) {
+      console.error('Error fetching stops:', err);
+      setError('Failed to load trip stops');
+      setStops([]); // Show empty state
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Load stops on component mount
+  useEffect(() => {
+    fetchStops();
+  }, []);
 
   const filteredStops = stops.filter(stop => {
     const matchesCategory = selectedCategory === 'All' || stop.category === selectedCategory;
@@ -154,15 +203,20 @@ const TripPlanner = () => {
     setIsModalOpen(true);
   };
 
-  const deleteStop = (id) => {
-    setStops(stops.filter(stop => stop.id !== id));
+  const deleteStop = async (id) => {
+    try {
+      await api.delete(`/${id}`);
+      setStops(stops.filter(stop => stop._id !== id));
+    } catch (err) {
+      console.error('Error deleting stop:', err);
+      setError('Failed to delete stop');
+    }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const stopData = {
-      id: Date.now().toString(),
       name: formData.get('name'),
       description: formData.get('description'),
       images: formData.get('images').split(',').map(url => url.trim()).filter(url => url),
@@ -172,9 +226,28 @@ const TripPlanner = () => {
       location: 'Unknown Location'
     };
     
-    setStops([...stops, stopData]);
-    setIsModalOpen(false);
-    e.target.reset();
+    try {
+      const response = await api.post('/stops', stopData);
+      setStops([...stops, response.data]);
+      setIsModalOpen(false);
+      e.target.reset();
+    } catch (err) {
+      console.error('Error adding stop:', err);
+      setError('Failed to add stop');
+    }
+  };
+
+  const handleUpdate = async (id, updatedData) => {
+    try {
+      const response = await api.put(`/stops/${id}`, updatedData);
+      setStops(stops.map(stop => 
+        stop._id === id ? response.data : stop
+      ));
+      setIsModalOpen(false);
+    } catch (err) {
+      console.error('Error updating stop:', err);
+      setError('Failed to update stop');
+    }
   };
 
   const getCategoryColor = (category) => {
@@ -185,6 +258,34 @@ const TripPlanner = () => {
       default: return 'bg-gray-100 text-gray-800';
     }
   };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center">
+        <div className="bg-white p-6 rounded-lg shadow-lg text-center">
+          <div className="text-red-500 mb-4">
+            <X className="w-16 h-16 mx-auto" />
+          </div>
+          <h2 className="text-xl font-bold text-gray-900 mb-2">Error</h2>
+          <p className="text-gray-600 mb-4">{error}</p>
+          <button
+            onClick={fetchStops}
+            className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition-colors"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
@@ -280,7 +381,7 @@ const TripPlanner = () => {
               <div>
                 <p className="text-sm text-gray-600">Avg Rating</p>
                 <p className="text-2xl font-bold text-gray-900">
-                  {Math.round(stops.reduce((acc, stop) => acc + stop.rating, 0) / stops.length * 10) / 10}
+                  {stops.length > 0 ? Math.round(stops.reduce((acc, stop) => acc + stop.rating, 0) / stops.length * 10) / 10 : 0}
                 </p>
               </div>
               <div className="bg-yellow-100 p-3 rounded-lg">
@@ -319,7 +420,7 @@ const TripPlanner = () => {
           <AnimatePresence>
             {filteredStops.map((stop, index) => (
               <motion.div
-                key={stop.id}
+                key={stop._id}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
@@ -384,7 +485,7 @@ const TripPlanner = () => {
                       <motion.button
                         whileHover={{ scale: 1.1 }}
                         whileTap={{ scale: 0.9 }}
-                        onClick={() => deleteStop(stop.id)}
+                        onClick={() => deleteStop(stop._id)}
                         className="p-2 text-gray-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                       >
                         <Trash2 className="w-4 h-4" />
@@ -443,7 +544,21 @@ const TripPlanner = () => {
                 </button>
               </div>
               
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form onSubmit={(e) => {
+                e.preventDefault();
+                if (editingStop) {
+                  const formData = new FormData(e.target);
+                  const updateData = {
+                    name: formData.get('name'),
+                    description: formData.get('description'),
+                    images: formData.get('images').split(',').map(url => url.trim()).filter(url => url),
+                    category: formData.get('category')
+                  };
+                  handleUpdate(editingStop._id, updateData);
+                } else {
+                  handleSubmit(e);
+                }
+              }} className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">Stop Name</label>
                   <input
