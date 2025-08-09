@@ -17,6 +17,7 @@ dotenv.config({ path: path.join(__dirname, '..', '.env') });
 console.log('Environment variables:');
 console.log(`NODE_ENV: ${process.env.NODE_ENV}`);
 console.log(`PORT from env: ${process.env.PORT}`);
+console.log(`PORT from env: ${process.env.MONGO_URI}`);
 
 // Hardcoded port in case .env is not loaded correctly
 const PORT = 3001;

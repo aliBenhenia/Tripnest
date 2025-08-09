@@ -121,10 +121,11 @@ export default function LoginPage() {
     if (!password) {
       setPasswordError('Password is required');
       isValid = false;
-    } else if (!validatePassword(password)) {
-      setPasswordError('Password must be at least 8 characters and include letters & numbers');
-      isValid = false;
-    }
+    } 
+    // else if (!validatePassword(password)) {
+    //   setPasswordError('Password must be at least 8 characters and include letters & numbers');
+    //   isValid = false;
+    // }
 
     return isValid;
   };

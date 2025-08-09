@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic'
 import { Suspense, useState, useEffect } from 'react'
 import { Header } from "@/components/Header"
-import { SearchBar } from "@/components/SearchBar"
+// import { SearchBar } from "@/components/SearchBar"
 import { SectionHeader } from "@/components/SectionHeader"
 import { useSearch } from "@/hooks/useSearch"
 import { ErrorBoundary } from "@/components/ErrorBoundary"
@@ -14,6 +14,18 @@ import Link from "next/link"
 import { Footer } from "@/components/Footer"
 import { motion } from "framer-motion"
 
+const SearchBar = dynamic(() => import('@/components/SearchBar').then(mod => mod.SearchBar), {
+  loading: () => (
+    <div className="animate-pulse bg-white/95 backdrop-blur-sm p-1.5 sm:p-2 rounded-xl shadow-lg mx-auto w-[70vw]">
+      <div className="h-10 bg-gray-200 rounded w-full"></div>
+      <div className="mt-2 space-y-2">
+        <div className="h-4 bg-gray-200 rounded w-1/3"></div> 
+        <div className="h-3 bg-gray-200 rounded w-1/2"></div>
+        <div className="h-3 bg-gray-200 rounded w-1/4"></div>
+      </div>
+    </div>
+  )
+})
 // Dynamically import components that are not needed immediately
 const CityCard = dynamic(() => import('@/components/CityCard').then(mod => mod.CityCard), {
   loading: () => (
@@ -202,7 +214,7 @@ export default function Home() {
                 transition={{ duration: 0.5, delay: 0.4 }}
                 className="w-full max-w-2xl mx-auto"
               >
-                <div className="bg-white/95 backdrop-blur-sm p-1.5 sm:p-2 rounded-xl shadow-lg mx-auto">
+                <div className="bg-white/95 backdrop-blur-sm p-1.5 sm:p-2 rounded-xl shadow-lg mx-auto ">
                   <SearchBar onSearch={handleSearch} />
                 </div>
               </motion.div>
