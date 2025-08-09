@@ -10,6 +10,7 @@ const tripSchema = new mongoose.Schema({
   name: { type: String, required: true },
   dates: { type: String, required: true },
   destinations: { type: String, required: true },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   status: { 
     type: String, 
     enum: ['planning', 'confirmed', 'in-progress'], 
@@ -23,6 +24,7 @@ const tripSchema = new mongoose.Schema({
 const packingItemSchema = new mongoose.Schema({
   name: { type: String, required: true },
   packed: { type: Boolean, default: false },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   tripId: { type: mongoose.Schema.Types.ObjectId, ref: 'Trip', required: true }
 });
 
@@ -31,6 +33,7 @@ const expenseSchema = new mongoose.Schema({
   category: { type: String, required: true },
   amount: { type: Number, required: true },
   description: { type: String, required: true },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   tripId: { type: mongoose.Schema.Types.ObjectId, ref: 'Trip', required: true }
 });
 
@@ -39,6 +42,7 @@ const companionSchema = new mongoose.Schema({
   name: { type: String, required: true },
   role: { type: String, required: true },
   sharedExpenses: { type: Number, default: 0 },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   tripId: { type: mongoose.Schema.Types.ObjectId, ref: 'Trip', required: true }
 });
 
@@ -47,6 +51,7 @@ const documentSchema = new mongoose.Schema({
   name: { type: String, required: true },
   type: { type: String, required: true },
   date: { type: Date, default: Date.now },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   tripId: { type: mongoose.Schema.Types.ObjectId, ref: 'Trip', required: true }
 });
 
@@ -55,6 +60,7 @@ const activitySchema = new mongoose.Schema({
   time: { type: String, required: true },
   activity: { type: String, required: true },
   notes: { type: String, default: '' },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   day: { type: Number, required: true },
   tripId: { type: mongoose.Schema.Types.ObjectId, ref: 'Trip', required: true }
 });
@@ -74,7 +80,7 @@ router.use(protect);
 // Trip Controllers
 router.get('/trips', async (req, res) => {
   try {
-    const trips = await Trip.find().sort({ createdAt: -1 });
+    const trips = await Trip.find({ userId: req.user.id }).sort({ createdAt: -1 });
     res.json(trips);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -83,7 +89,10 @@ router.get('/trips', async (req, res) => {
 
 router.post('/trips', async (req, res) => {
   try {
-    const trip = new Trip(req.body);
+    const trip = new Trip({
+      ...req.body,
+      userId: req.user.id
+    });
     const savedTrip = await trip.save();
     res.status(201).json(savedTrip);
   } catch (error) {
