@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react';
 import { 
   Calendar,
   MapPin, 
-  Suitcase, 
+  ShoppingBag, 
   DollarSign, 
   FileText, 
   Users, 
@@ -702,7 +702,7 @@ const App = () => {
                     activeTab === 'packing' ? 'bg-blue-50 text-blue-700' : 'text-gray-700 hover:bg-gray-100'
                   }`}
                 >
-                  {/* <Suitcase size={18} className="mr-3" /> */}
+                  <ShoppingBag  size={18} className="mr-3" />
                   Packing
                 </button>
                 <button
