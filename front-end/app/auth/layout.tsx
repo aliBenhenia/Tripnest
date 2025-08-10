@@ -14,11 +14,11 @@ export default function AuthLayout({
   const router = useRouter();
 
   // Redirect if already authenticated
-  useEffect(() => {
-    if (isAuthenticated && !isLoading) {
-      router.push('/');
-    }
-  }, [isAuthenticated, isLoading, router]);
+  // useEffect(() => {
+  //   if (isAuthenticated && !isLoading) {
+  //     // router.push('/');
+  //   }
+  // }, [isAuthenticated, isLoading, router]);
 
   if (isLoading) {
     return (

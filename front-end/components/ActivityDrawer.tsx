@@ -5,6 +5,7 @@ import { Drawer, Modal, Button, Skeleton, message ,notification} from "antd";
 import { HeartOutlined, CalendarOutlined } from "@ant-design/icons";
 import axios from "axios";
 import { motion } from "framer-motion";
+import notify from "@/lib/notify";
 
 interface WikiActivity {
   id: string;
@@ -67,17 +68,53 @@ const ActivityDrawer: React.FC<ActivityDrawerProps> = ({
     }
   }, [open, lat, lon, showWeather]);
 
-  const handleAddToFavorites = () => {
-    notification.open({
-    message: 'Notification Title',
-    description: 'This is the content of the notification.',
-    onClick: () => {
-      console.log('Notification Clicked!');
-    },
-  });
-    message.success(`✅ ${activity.name} added to favorites!`);
-  };
+const handleAddToFavorites = async () => {
+    try {
+      // Get token from localStorage or wherever you store it
+      const token = localStorage.getItem('TOKEN_KEY');
+      
+      if (!token) {
+        notify({
+          type: 'error',
+          message: 'Authentication Error',
+          // description: 'You need to be logged in to add favorites.',
+        });
+        return;
+      }
 
+      // Prepare the data to save
+      const saveData = {
+        activityId: activity.id,
+        name: activity.name,
+        description: activity.description,
+        imageUrl: activity.imageUrl,
+        type: activity.type,
+        latitude: lat,
+        longitude: lon
+      };
+
+      // Send POST request to save endpoint
+      const response = await axios.post('http://localhost:3001/api/saves', saveData, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      notify({
+        type: 'success',
+        message: 'Success adding to favorites',
+      });
+      
+     
+    } catch (error) {
+      console.error('Error saving item:', error);
+     notify({
+        type: 'error',
+        message: 'Error adding to favorites'
+      });
+    }
+  };
   const handlePlanVisit = () => {
      notification.open({
     message: 'Notification Title',

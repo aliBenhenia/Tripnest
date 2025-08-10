@@ -6,6 +6,7 @@ const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const planner = require('./routes/planner');
 const stops = require('./routes/stops');
+const saves = require('./routes/saves');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const path = require('path');
@@ -89,6 +90,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/planner', planner);
 app.use('/api/stops', stops);
+app.use('/api/saves', saves); // Use saves routes
 
 // Fallback auth routes when MongoDB is not available
 app.post('/api/local-auth/signup', async (req, res) => {

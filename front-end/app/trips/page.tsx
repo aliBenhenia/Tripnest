@@ -205,7 +205,7 @@ const TripPlanner = () => {
 
   const deleteStop = async (id) => {
     try {
-      await api.delete(`/${id}`);
+      await api.delete(`/stops/${id}`);
       setStops(stops.filter(stop => stop._id !== id));
     } catch (err) {
       console.error('Error deleting stop:', err);
