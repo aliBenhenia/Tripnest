@@ -34,7 +34,7 @@ import  {toast} from 'react-toastify';
 // Mock API service using axios (since we can't actually use axios in this environment)
 const api = {
   // Base URL from environment variables
-  baseURL:  'http://localhost:3001',
+  baseURL:  process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001',
 
   // Helper function to make requests with /api/planner prefix
   request: async (url, options = {}) => {

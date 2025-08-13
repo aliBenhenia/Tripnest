@@ -6,9 +6,9 @@ import { useAppDispatch } from '@/lib/redux/hooks';
 import { setUserSuccess } from '@/lib/redux/slices/userSlice';
 import axios from 'axios';
 // const API_URL = 'http://localhost:3001';
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 export default function ProfilePage() {
-  const token = typeof window !== 'undefined' ? localStorage.getItem('TOKEN_KEY') : null;
+  const token = typeof window !== 'undefined' ? localStorage.getItem('TOKEN_KEY') : null; 
   const [user, setUser] = useState({
     username: 'ali benhnenia',
     bio: 'Adventure seeker exploring the world one destination at a time. Love hiking, photography, and local cuisine.',
