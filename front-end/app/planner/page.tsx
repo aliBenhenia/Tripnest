@@ -29,7 +29,7 @@ import {
 import  {toast} from 'react-toastify';
 
 // get token from localStorage
-const token = localStorage.getItem('TOKEN_KEY') || '';
+// const token = localStorage.getItem('TOKEN_KEY') || ''; shoulnd be here, 
 
 // Mock API service using axios (since we can't actually use axios in this environment)
 const api = {
@@ -39,6 +39,7 @@ const api = {
   // Helper function to make requests with /api/planner prefix
   request: async (url, options = {}) => {
     // const fullUrl = `/api/planner${url}`;
+    const token = localStorage.getItem('TOKEN_KEY') || ''; // Get token from localStorage
     const fullUrl = `${api.baseURL}/api/planner${url}`; // Use baseURL
     const response = await fetch(fullUrl, {
       ...options,
