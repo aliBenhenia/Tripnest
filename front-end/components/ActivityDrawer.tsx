@@ -94,8 +94,8 @@ const handleAddToFavorites = async () => {
       };
 
       // Send POST request to save endpoint
-      const response = await axios.post('http://localhost:3001/api/saves', saveData, {
-        headers: {
+      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/saves`, saveData, {
+        headers: { 
           'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json'
         }
