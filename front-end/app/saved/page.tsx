@@ -60,10 +60,22 @@ const SavedPage = () => {
     }
   }, [token]);
 
+/*************  ✨ Windsurf Command ⭐  *************/
+/**
+ * Fetches the saved items for the authenticated user.
+ * Utilizes the user's token for authorization to make a GET request 
+ * to the saved items API endpoint. Updates the savedItems state 
+ * with the data received from the server. Handles errors by logging 
+ * them to the console and displaying an error message. 
+ * Sets the loading state to true while the request is in progress 
+ * and false once completed.
+ */
+
+/*******  47aacdb1-edc5-4314-9162-3f88541df116  *******/
   const fetchSavedItems = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:3001/api/saves', {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/saves`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
