@@ -91,7 +91,7 @@ const SavedPage = () => {
 
   const handleDeleteItem = async (itemId) => {
     try {
-      await axios.delete(`http://localhost:3001/api/saves/${itemId}`, {
+      await axios.delete(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/saves/${itemId}`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }
@@ -261,7 +261,10 @@ const SavedPage = () => {
                     </div>
                     
                     <Text type="secondary" className="block mb-3 line-clamp-2">
-                      {item.description}
+                      {item.description.length > 100 
+                        ? `${item.description.slice(0, 100)}...` 
+                        : item.description}
+                        
                     </Text>
                     
                     <div className="flex justify-between items-center mt-4">
