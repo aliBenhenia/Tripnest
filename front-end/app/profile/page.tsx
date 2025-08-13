@@ -13,12 +13,13 @@ export default function ProfilePage() {
     username: 'ali benhnenia',
     bio: 'Adventure seeker exploring the world one destination at a time. Love hiking, photography, and local cuisine.',
     avatar: 'default-avatar.png',
-    timestamps: 'January 2023',
+    createdAt: 'January 2023',
     totalTrips: 12,
     favoriteDestinations: ['Paris', 'Tokyo', 'New York'],
     achievements: ['First Trip', 'Explorer', 'Photographer'],
     followers: 1247,
-    following: 892
+    following: 892,
+
   });
   
   const [savedItems, setSavedItems] = useState([
@@ -334,7 +335,14 @@ export default function ProfilePage() {
                           <div className="flex items-center space-x-4 text-sm text-gray-500">
                             <span className="flex items-center space-x-1">
                               <Calendar size={16} />
-                              <span>Joined {user?.timestamps}</span>
+                              <span>
+                                Joined{ ' '}{new Date(user?.createdAt).toLocaleDateString('en-US', {
+                                  year: 'numeric',
+                                  month: 'long',
+                                  day: 'numeric'
+                                })}
+
+                              </span>
                             </span>
                           </div>
                         </div>
