@@ -12,6 +12,7 @@ import { useAppDispatch } from "@/lib/redux/hooks";
 import {setUserSuccess} from "@/lib/redux/slices/userSlice"
 import axios from "axios";
 import TripnestLogo from "./logo"
+import NotificationButton from "@/components/notification"
 // API URL
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
@@ -180,19 +181,16 @@ export default function BottomNavigation() {
               </button>
 
               {/* Notifications */}
-              <button className="relative p-2.5 text-gray-600 
-                hover:text-gray-900 rounded-full transition-all duration-200 
-                border border-gray-200 hover:border-primary/30 group
-                hover:bg-gradient-to-r hover:from-primary/[0.03] hover:to-primary/[0.05]
-                active:scale-[0.98]"
+              <button className="relative"
               >
-                <Bell className="h-[18px] w-[18px] group-hover:text-primary transition-colors" />
-                <span className="absolute -top-0.5 -right-0.5 h-5 w-5 bg-primary 
+                {/* <Bell className="h-[18px] w-[18px] group-hover:text-primary transition-colors" /> */}
+                <NotificationButton />
+                {/* <span className="absolute -top-0.5 -right-0.5 h-5 w-5 bg-primary 
                   rounded-full text-[11px] font-medium flex items-center justify-center text-white 
                   border-2 border-white shadow-sm scale-100 group-hover:scale-110 
                   transition-transform group-hover:ring-2 ring-primary/20">
                   3
-                </span>
+                </span> */}
               </button>
 
               {/* Saved Items */}
