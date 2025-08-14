@@ -232,8 +232,9 @@ export default function BottomNavigation() {
                   after:opacity-0 hover:after:opacity-100 after:transition-opacity
                   after:duration-500 border-0"
               >
-                <div className="relative flex items-center gap-2">
-                  <span className="relative z-10 text-sm">List Your Property</span>
+                <div className="relative flex items-center gap-2"
+                onClick={() => router.push("/users")}>
+                  <span className="relative z-10 text-sm">leaderboard</span>
                   <svg 
                     className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5" 
                     viewBox="0 0 24 24" 
