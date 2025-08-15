@@ -1,11 +1,12 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { ArrowLeft, ChevronLeft, ChevronRight, Maximize2, MapPin, Star,Volleyball } from "lucide-react"
+import { ArrowLeft, ChevronLeft, ChevronRight, Maximize2, MapPin, Star, Volleyball } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import BottomNavigation from "@/components/bottom-navigation"
 import ActivityDrawer from "@/components/ActivityDrawer"
+
 export const categories = [
   {
     id: 1,
@@ -48,24 +49,24 @@ interface WikiActivity {
   type: string
 }
 
-export default function ClientCityPage({ city }: any) {
+export default function ClientCityPage({ city }: { city: any }) {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [selectedCategory, setSelectedCategory] = useState("all")
   const [cityActivitiesList, setCityActivitiesList] = useState<WikiActivity[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [drawerOpen, setDrawerOpen] = useState(false);
-const [selectedActivity, setSelectedActivity] = useState<WikiActivity | null>(null);
-const openActivityDrawer = (activity: WikiActivity) => {
-  setSelectedActivity(activity);
-  setDrawerOpen(true);
-};
+  const [drawerOpen, setDrawerOpen] = useState(false)
+  const [selectedActivity, setSelectedActivity] = useState<WikiActivity | null>(null)
+  
+  const openActivityDrawer = (activity: WikiActivity) => {
+    setSelectedActivity(activity)
+    setDrawerOpen(true)
+  }
 
-const closeActivityDrawer = () => {
-  setDrawerOpen(false);
-  setSelectedActivity(null);
-};
-
+  const closeActivityDrawer = () => {
+    setDrawerOpen(false)
+    setSelectedActivity(null)
+  }
 
   const handleCategoryClick = (categoryType: string) => {
     setSelectedCategory(categoryType)
@@ -147,10 +148,12 @@ const closeActivityDrawer = () => {
     setCurrentSlide((prev) => (prev === 0 ? 1 : prev - 1))
   }
 
+  // Only render the drawer when we have a selected activity
+  const shouldRenderDrawer = selectedActivity !== null
+
   return (
     <div className="w-full mx-auto bg-white min-h-screen pb-16 md:pb-0 md:max-w-none">
-      {/* Header & slider unchanged */}
-       {/* Header Image Slider */}
+      {/* Header Image Slider */}
       <div className="relative h-[240px] md:h-[400px] lg:h-[500px] w-full">
         <Link href="/" className="absolute top-4 left-4 z-10 bg-white/30 backdrop-blur-sm p-2 rounded-full">
           <ArrowLeft className="h-5 w-5 text-white" />
@@ -164,16 +167,16 @@ const closeActivityDrawer = () => {
             style={{ transform: `translateX(-${currentSlide * 100}%)` }}
           >
             <Image
-              src={city.imageUrl || "/placeholder.svg"}
-              alt={city.name}
+              src={city?.imageUrl || "/placeholder.svg"}
+              alt={city?.name || "City"}
               className="object-cover w-full h-full flex-shrink-0"
               width={1200}
               height={500}
               priority
             />
             <Image
-              src={city.imageUrl2 || city.imageUrl || "/placeholder.svg"}
-              alt={city.name}
+              src={city?.imageUrl2 || city?.imageUrl || "/placeholder.svg"}
+              alt={city?.name || "City"}
               className="object-cover w-full h-full flex-shrink-0"
               width={1200}
               height={500}
@@ -205,11 +208,10 @@ const closeActivityDrawer = () => {
           </div>
         </div>
       </div>
-      {/* Your existing header and slider code here */}
 
       {/* Categories filter */}
       <div className="px-4 mt-4 md:px-8 lg:px-16 md:mt-8 md:max-w-5xl md:mx-auto">
-        <h2 className="text-2xl font-bold md:text-3xl">Explore {city.name}</h2>
+        <h2 className="text-2xl font-bold md:text-3xl">Explore {city?.name || "City"}</h2>
         <div className="relative mt-4">
           <div className="overflow-x-auto flex gap-6 md:justify-start md:gap-16 md:mt-6 pb-2 scrollbar-hide scroll-smooth">
             <div
@@ -224,7 +226,6 @@ const closeActivityDrawer = () => {
                 }`}
               >
                 <Volleyball
-                  // src="/all-icon.png"alt="All"
                   width={40}
                   height={40}
                   className={`md:w-12 md:h-12 transition-all ${
@@ -287,7 +288,7 @@ const closeActivityDrawer = () => {
       <div className="px-4 mt-6 md:px-8 lg:px-16 md:mt-12 md:max-w-5xl md:mx-auto">
         <h2 className="text-2xl font-bold md:text-3xl">
           {selectedCategory === "all"
-            ? `Popular Activities in ${city.name}`
+            ? `Popular Activities in ${city?.name || "City"}`
             : `${categories.find((c) => c.name.toLowerCase() === selectedCategory)?.name} Activities`}
         </h2>
 
@@ -300,7 +301,7 @@ const closeActivityDrawer = () => {
         {!loading && !error && filteredActivities.length === 0 && (
           <div className="text-center py-12">
             <p className="text-gray-500 text-lg">
-              No activities found for this category in {city.name}
+              No activities found for this category in {city?.name || "City"}
             </p>
           </div>
         )}
@@ -312,12 +313,11 @@ const closeActivityDrawer = () => {
               <div className="overflow-x-auto flex gap-3 pb-2 scrollbar-hide scroll-smooth">
                 {filteredActivities.map((activity) => (
                   <div
-                  
                     key={activity.id}
+                    onClick={() => openActivityDrawer(activity)}
                     className="bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-200 flex-shrink-0 w-[280px] scroll-ml-4 cursor-pointer"
                   >
                     <div className="relative h-48">
-                      
                       <Image
                         src={activity.imageUrl || "/placeholder.svg"}
                         alt={activity.name}
@@ -333,7 +333,7 @@ const closeActivityDrawer = () => {
                       <div className="flex items-center justify-between">
                         <div className="flex items-center text-gray-600">
                           <MapPin className="w-4 h-4 mr-1" />
-                          <span className="text-sm">{city.name}</span>
+                          <span className="text-sm">{city?.name || "City"}</span>
                         </div>
                         <div className="flex items-center">
                           <Star className="w-4 h-4 text-yellow-400 fill-current" />
@@ -371,7 +371,7 @@ const closeActivityDrawer = () => {
                     <div className="flex items-center justify-between mt-3">
                       <div className="flex items-center text-gray-600">
                         <MapPin className="w-5 h-5 mr-1" />
-                        <span className="text-sm">{city.name}</span>
+                        <span className="text-sm">{city?.name || "City"}</span>
                       </div>
                       <div className="flex items-center">
                         <Star className="w-5 h-5 text-yellow-400 fill-current" />
@@ -385,15 +385,17 @@ const closeActivityDrawer = () => {
           </>
         )}
       </div>
-      {
-        selectedActivity && ( <ActivityDrawer
-  open={drawerOpen}
-  activity={selectedActivity}
-  onClose={closeActivityDrawer}
-  lat={48.8584}
-  lon={2.2945}
-/>)
-      }
+      
+      {/* Only render the ActivityDrawer when we have a selected activity */}
+      {shouldRenderDrawer && (
+        <ActivityDrawer
+          open={drawerOpen}
+          activity={selectedActivity}
+          onClose={closeActivityDrawer}
+          lat={48.8584}
+          lon={2.2945}
+        />
+      )}
        
       <BottomNavigation />
     </div>

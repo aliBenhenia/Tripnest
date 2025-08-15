@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { Drawer, Modal, Button, Skeleton, message ,notification} from "antd";
+import React, { use, useEffect, useState } from "react";
+import { Modal, Button, Skeleton, message, notification } from "antd";
 import { HeartOutlined, CalendarOutlined } from "@ant-design/icons";
 import axios from "axios";
 import { motion } from "framer-motion";
@@ -15,7 +15,7 @@ interface WikiActivity {
   type: string;
 }
 
-interface ActivityDrawerProps {
+interface ActivityModalProps {
   open: boolean;
   onClose: () => void;
   activity: WikiActivity;
@@ -24,7 +24,7 @@ interface ActivityDrawerProps {
   showWeather?: boolean;
 }
 
-const ActivityDrawer: React.FC<ActivityDrawerProps> = ({
+const ActivityDrawer: React.FC<ActivityModalProps> = ({
   open,
   onClose,
   activity,
@@ -34,7 +34,9 @@ const ActivityDrawer: React.FC<ActivityDrawerProps> = ({
 }) => {
   const [weather, setWeather] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  const [isMobile, setIsMobile] = useState(false);
+  // useEffect(() => {
+  //   alert("ActivityDrawer component loaded");
+  // }, []);
 
   const fetchWeather = async () => {
     try {
@@ -49,15 +51,6 @@ const ActivityDrawer: React.FC<ActivityDrawerProps> = ({
   };
 
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
-
-  useEffect(() => {
     if (open) {
       setLoading(true);
       if (showWeather && lat && lon) {
@@ -68,21 +61,13 @@ const ActivityDrawer: React.FC<ActivityDrawerProps> = ({
     }
   }, [open, lat, lon, showWeather]);
 
-const handleAddToFavorites = async () => {
+  const handleAddToFavorites = async () => {
     try {
-      // Get token from localStorage or wherever you store it
-      const token = localStorage.getItem('TOKEN_KEY');
-      
+      const token = localStorage.getItem("TOKEN_KEY");
       if (!token) {
-        notify({
-          type: 'error',
-          message: 'Authentication Error',
-          // description: 'You need to be logged in to add favorites.',
-        });
+        notify({ type: "error", message: "Authentication Error" });
         return;
       }
-
-      // Prepare the data to save
       const saveData = {
         activityId: activity.id,
         name: activity.name,
@@ -90,39 +75,25 @@ const handleAddToFavorites = async () => {
         imageUrl: activity.imageUrl,
         type: activity.type,
         latitude: lat,
-        longitude: lon
+        longitude: lon,
       };
-
-      // Send POST request to save endpoint
-      const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}/api/saves`, saveData, {
-        headers: { 
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
-      });
-
-      notify({
-        type: 'success',
-        message: 'Success adding to favorites',
-      });
-      
-     
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001"}/api/saves`,
+        saveData,
+        { headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" } }
+      );
+      notify({ type: "success", message: "Added to favorites!" });
     } catch (error) {
-      console.error('Error saving item:', error);
-     notify({
-        type: 'error',
-        message: 'Error adding to favorites'
-      });
+      notify({ type: "error", message: "Error adding to favorites" });
     }
   };
+
   const handlePlanVisit = () => {
-     notification.open({
-    message: 'Notification Title',
-    description: 'This is the content of the notification.',
-    onClick: () => {
-      console.log('Notification Clicked!');
-    },
-  });
+    notification.open({
+      message: "📅 Planning Feature",
+      description: "Feature coming soon!",
+      onClick: () => console.log("Notification Clicked!"),
+    });
     message.info("📅 Planning feature coming soon!");
   };
 
@@ -137,13 +108,13 @@ const handleAddToFavorites = async () => {
         <motion.img
           src={activity.imageUrl}
           alt={activity.name}
-          className="w-full rounded-xl shadow"
+          className="w-full rounded-2xl shadow-lg border border-gray-200"
           initial={{ scale: 0.98 }}
           animate={{ scale: 1 }}
           transition={{ duration: 0.4 }}
         />
       ) : (
-        <div className="w-full h-48 bg-gray-100 flex items-center justify-center text-gray-400 rounded-xl">
+        <div className="w-full h-56 bg-gray-100 flex items-center justify-center text-gray-400 rounded-2xl">
           No image available
         </div>
       )}
@@ -164,10 +135,10 @@ const handleAddToFavorites = async () => {
       )}
 
       {lat && lon && (
-        <div className="overflow-hidden rounded-xl border border-gray-200 shadow">
+        <div className="overflow-hidden rounded-2xl border border-gray-200 shadow">
           <iframe
             className="w-full"
-            height="200"
+            height="220"
             loading="lazy"
             allowFullScreen
             referrerPolicy="no-referrer-when-downgrade"
@@ -201,69 +172,27 @@ const handleAddToFavorites = async () => {
     </motion.div>
   );
 
- return (
-  <>
-    {/* Blur background when drawer/modal is open */}
-    {open && (
-      <div className="fixed inset-0 z-40 backdrop-blur-sm bg-black/30 transition-opacity duration-300"></div>
-    )}
-
-    {/* Desktop Drawer */}
-    {!isMobile && (
-      <div className="relative z-50">
-        <Drawer
-          title={
-            <span className="text-xl font-semibold text-gray-800">
-              {activity.name}
-            </span>
-          }
-          placement="right"
-          width={420}
-          onClose={onClose}
-          open={open}
-          forceRender
-          destroyOnClose={false}
-          styles={{
-            body: {
-              background: "#fff",
-              color: "#000",
-              paddingBottom: 40,
-              overflowY: "auto",
-            },
-          }}
-        >
-          {loading ? <Skeleton active paragraph={{ rows: 5 }} /> : Content}
-        </Drawer>
-      </div>
-    )}
-
-    {/* Mobile Modal */}
-    {isMobile && (
-      <div className="relative z-50">
-        <Modal
-          open={open}
-          onCancel={onClose}
-          footer={null}
-          title={
-            <span className="text-lg font-semibold text-gray-800">
-              {activity.name}
-            </span>
-          }
-          centered
-          width="100%"
-          style={{ top: 0, paddingBottom: 0 }}
-          bodyStyle={{
-            maxHeight: "calc(100vh - 60px)",
-            overflowY: "auto",
-          }}
-        >
-          {loading ? <Skeleton active paragraph={{ rows: 5 }} /> : Content}
-        </Modal>
-      </div>
-    )}
-  </>
-);
-
+  return (
+    <>
+      {open && (
+        <div className="fixed inset-0 z-40 backdrop-blur-sm bg-black/30 transition-opacity duration-300"></div>
+      )}
+      <Modal
+        open={open}
+        onCancel={onClose}
+        footer={null}
+        centered
+        width={700}
+        bodyStyle={{ maxHeight: "80vh", overflowY: "auto", padding: "24px" }}
+        className="rounded-3xl"
+        title={
+          <span className="text-2xl font-bold text-gray-800">{activity.name}</span>
+        }
+      >
+        {loading ? <Skeleton active paragraph={{ rows: 5 }} /> : Content}
+      </Modal>
+    </>
+  );
 };
 
 export default ActivityDrawer;
