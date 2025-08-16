@@ -15,6 +15,7 @@ const apiService = {
           method,
           headers: {
               'Content-Type': 'application/json',
+              'Authorization': `Bearer ${localStorage.getItem('TOKEN_KEY')}`
           }
       };
       
