@@ -34,9 +34,9 @@ const ActivityDrawer: React.FC<ActivityModalProps> = ({
 }) => {
   const [weather, setWeather] = useState<any>(null);
   const [loading, setLoading] = useState(true);
-  // useEffect(() => {
-  //   alert("ActivityDrawer component loaded");
-  // }, []);
+  useEffect(() => {
+    console.log(lat, lon);
+  }, [lat, lon]);
 
   const fetchWeather = async () => {
     try {

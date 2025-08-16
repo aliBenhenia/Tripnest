@@ -57,7 +57,35 @@ export default function ClientCityPage({ city }: { city: any }) {
   const [error, setError] = useState<string | null>(null)
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [selectedActivity, setSelectedActivity] = useState<WikiActivity | null>(null)
-  
+  const [cityPosition, setCityPosition] = useState<{ lat: number; lng: number } | null>(null);
+  useEffect(() => {
+    if (!city?.name) return
+        const getCityCoordinates = async (cityName) => {
+    try {
+      setLoading(true);
+      setError('');
+      
+      // Using OpenStreetMap Nominatim API (free, no key required)
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(cityName)}`
+      );
+      const data = await response.json();
+      if (data.length > 0) {
+        setCityPosition({
+          lat: parseFloat(data[0].lat),
+          lng: parseFloat(data[0].lon),
+        });
+      }
+    } catch (error) {
+      setError("Failed to fetch city coordinates");
+    } finally {
+      setLoading(false);
+    }
+  };
+    getCityCoordinates(city.name);
+
+  }, [city?.name])
+
   const openActivityDrawer = (activity: WikiActivity) => {
     setSelectedActivity(activity)
     setDrawerOpen(true)
@@ -392,8 +420,8 @@ export default function ClientCityPage({ city }: { city: any }) {
           open={drawerOpen}
           activity={selectedActivity}
           onClose={closeActivityDrawer}
-          lat={48.8584}
-          lon={2.2945}
+          lat={cityPosition?.lat}
+          lon={cityPosition?.lng}
         />
       )}
        
