@@ -157,28 +157,20 @@ export function SearchBar({ onSearch }: SearchBarProps) {
               </div>
             ) : searchResults.length > 0 ? (
               searchResults.map(city => (
-                <Link
-                  key={city.id}
-                  href={`/city/${city.name.toLowerCase()}`}
-                  className="flex px-4 py-3 mx-3 my-1 rounded-lg hover:bg-primary/10 transition cursor-pointer"
-                  onClick={() => {
-                    setShowDropdown(false)
-                    setSearchQuery('')
-                  }}
-                >
-                  {/* <div className="h-12 w-12 rounded-xl overflow-hidden shadow-sm border border-gray-200 mr-4 flex-shrink-0">
-                    <img
-                      src={city.image}
-                      alt={city.name}
-                      className="h-full w-full object-cover"
-                      loading="lazy"
-                    />
-                  </div> */}
-                  <div>
-                    <p className="font-semibold text-gray-800 text-left">{city.name}</p>
-                    <p className="text-sm text-gray-500">{city.region}, {city.country}</p>
-                  </div>
-                </Link>
+               <Link
+  key={city.id}
+  href={`/city/${city.name.toLowerCase().replace(/\s+/g, '-')}`}
+  className="flex px-4 py-3 mx-3 my-1 rounded-lg hover:bg-primary/10 transition cursor-pointer"
+  onClick={() => {
+    setShowDropdown(false)
+    setSearchQuery('')
+  }}
+>
+  <div>
+    <p className="font-semibold text-gray-800 text-left">{city.name}</p>
+    <p className="text-sm text-gray-500">{city.region}, {city.country}</p>
+  </div>
+</Link>
               ))
             ) : searchQuery.trim() !== '' ? (
               <div className="px-6 py-10 text-center text-gray-700">

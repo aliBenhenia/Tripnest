@@ -1,3 +1,4 @@
+// ```typescript
 import { moroccanCities } from "@/lib/data";
 import ClientCityPage from "./client-page";
 
@@ -16,8 +17,11 @@ interface City {
 const DEFAULT_IMAGE = "/default-city.jpg";
 
 async function fetchWikiImage(cityName: string): Promise<string> {
+  // Decode the city name properly for Wikipedia API
+  const decodedCityName = decodeURIComponent(cityName);
+  
   const endpoint = `https://en.wikipedia.org/w/api.php?action=query&titles=${encodeURIComponent(
-    cityName
+    decodedCityName
   )}&prop=pageimages&format=json&pithumbsize=800&origin=*`;
 
   try {
@@ -48,8 +52,12 @@ export default async function CityPage({ params }: PageProps) {
     return <ClientCityPage city={city} />;
   }
 
-  const fallbackName = slug.replace(/-/g, " ");
-  // Fetch one Wikipedia image twice as fallback
+  // Convert slug to proper city name (replace hyphens with spaces and decode)
+  const fallbackName = slug
+    .replace(/-/g, " ")
+    .replace(/\b\w/g, (char) => char.toUpperCase()); // Capitalize each word
+  
+  // Fetch Wikipedia image with properly formatted city name
   const imageUrl = (await fetchWikiImage(fallbackName)) || DEFAULT_IMAGE;
 
   const fallbackCity: City = {
@@ -62,3 +70,4 @@ export default async function CityPage({ params }: PageProps) {
 
   return <ClientCityPage city={fallbackCity} />;
 }
+// ```
