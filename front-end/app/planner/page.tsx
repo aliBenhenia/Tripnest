@@ -8,7 +8,7 @@ import Head from 'next/head';
 
 // API Service
 const apiService = {
-  baseUrl: `${process.env.NEXT_PUBLIC_API_URL}/api` || 'http://localhost:3000/api',
+  baseUrl: `${process.env.NEXT_PUBLIC_API_URL}/api/planner` || 'http://localhost:3000/api/planner',
 
   async request(endpoint, method = 'GET', data = null) {
       const options = {
