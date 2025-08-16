@@ -11,6 +11,8 @@ import {
   SearchOutlined,
   FilterOutlined
 } from '@ant-design/icons';
+import { MapPin } from "lucide-react"; // nice map icon
+
 import { 
   Button, 
   Card, 
@@ -268,13 +270,35 @@ const SavedPage = () => {
                     </Text>
                     
                     <div className="flex justify-between items-center mt-4">
-                      <Space>
+                      {/* <Space>
                         {item.latitude && item.longitude && (
                           <span className="text-sm text-gray-500">
                             📍 {item.latitude.toFixed(4)}, {item.longitude.toFixed(4)}
                           </span>
                         )}
-                      </Space>
+                      </Space> */}
+                      <Space>
+  {item.latitude && item.longitude && (
+    <div className="flex items-center gap-2 text-sm text-gray-500">
+      {/* <span>
+        📍 {item.latitude.toFixed(4)}, {item.longitude.toFixed(4)}
+      </span> */}
+      <Button
+        // size=""
+        type="primary"
+ className="bg-blue-600 hover:bg-blue-700"        icon={<MapPin size={16} />}
+        onClick={() =>
+          window.open(
+            `https://www.google.com/maps?q=${item.latitude},${item.longitude}`,
+            "_blank"
+          )
+        }
+      >
+        View Map
+      </Button>
+    </div>
+  )}
+</Space>
                       <Button
                         type="primary"
                         icon={<CalendarOutlined />}
