@@ -1,8 +1,12 @@
-// planner.js
+// server.js
 const express = require('express');
 const mongoose = require('mongoose');
-const router = express.Router();
-const { protect, restrictTo, rateLimiter } = require('../middleware/authMiddleware');
+
+
+
+
+
+
 
 
 // Trip Schema
@@ -10,7 +14,7 @@ const tripSchema = new mongoose.Schema({
   name: { type: String, required: true },
   dates: { type: String, required: true },
   destinations: { type: String, required: true },
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   status: { 
     type: String, 
     enum: ['planning', 'confirmed', 'in-progress'], 
@@ -24,7 +28,7 @@ const tripSchema = new mongoose.Schema({
 const packingItemSchema = new mongoose.Schema({
   name: { type: String, required: true },
   packed: { type: Boolean, default: false },
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   tripId: { type: mongoose.Schema.Types.ObjectId, ref: 'Trip', required: true }
 });
 
@@ -33,7 +37,7 @@ const expenseSchema = new mongoose.Schema({
   category: { type: String, required: true },
   amount: { type: Number, required: true },
   description: { type: String, required: true },
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   tripId: { type: mongoose.Schema.Types.ObjectId, ref: 'Trip', required: true }
 });
 
@@ -42,7 +46,7 @@ const companionSchema = new mongoose.Schema({
   name: { type: String, required: true },
   role: { type: String, required: true },
   sharedExpenses: { type: Number, default: 0 },
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   tripId: { type: mongoose.Schema.Types.ObjectId, ref: 'Trip', required: true }
 });
 
@@ -51,7 +55,7 @@ const documentSchema = new mongoose.Schema({
   name: { type: String, required: true },
   type: { type: String, required: true },
   date: { type: Date, default: Date.now },
-  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   tripId: { type: mongoose.Schema.Types.ObjectId, ref: 'Trip', required: true }
 });
 
@@ -60,12 +64,12 @@ const activitySchema = new mongoose.Schema({
   time: { type: String, required: true },
   activity: { type: String, required: true },
   notes: { type: String, default: '' },
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   day: { type: Number, required: true },
   tripId: { type: mongoose.Schema.Types.ObjectId, ref: 'Trip', required: true }
 });
 
-// Model definitions
+// Models
 const Trip = mongoose.model('Trip', tripSchema);
 const PackingItem = mongoose.model('PackingItem', packingItemSchema);
 const Expense = mongoose.model('Expense', expenseSchema);
@@ -73,14 +77,13 @@ const Companion = mongoose.model('Companion', companionSchema);
 const Document = mongoose.model('Document', documentSchema);
 const Activity = mongoose.model('Activity', activitySchema);
 
+// API Routes
+const router = express.Router();
 
-// Middleware to protect routes
-router.use(protect);
-
-// Trip Controllers
+// Trip Routes
 router.get('/trips', async (req, res) => {
   try {
-    const trips = await Trip.find({ userId: req.user.id }).sort({ createdAt: -1 });
+    const trips = await Trip.find().sort({ createdAt: -1 });
     res.json(trips);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -89,10 +92,7 @@ router.get('/trips', async (req, res) => {
 
 router.post('/trips', async (req, res) => {
   try {
-    const trip = new Trip({
-      ...req.body,
-      userId: req.user.id
-    });
+    const trip = new Trip(req.body);
     const savedTrip = await trip.save();
     res.status(201).json(savedTrip);
   } catch (error) {
@@ -122,13 +122,23 @@ router.delete('/trips/:id', async (req, res) => {
     if (!deletedTrip) {
       return res.status(404).json({ message: 'Trip not found' });
     }
+    
+    // Delete related data
+    await Promise.all([
+      PackingItem.deleteMany({ tripId: req.params.id }),
+      Expense.deleteMany({ tripId: req.params.id }),
+      Companion.deleteMany({ tripId: req.params.id }),
+      Document.deleteMany({ tripId: req.params.id }),
+      Activity.deleteMany({ tripId: req.params.id })
+    ]);
+    
     res.json({ message: 'Trip deleted successfully' });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
 
-// Packing Items Controllers
+// Packing Items Routes
 router.get('/trips/:tripId/packing-items', async (req, res) => {
   try {
     const items = await PackingItem.find({ tripId: req.params.tripId });
@@ -179,7 +189,7 @@ router.delete('/packing-items/:id', async (req, res) => {
   }
 });
 
-// Expenses Controllers
+// Expenses Routes
 router.get('/trips/:tripId/expenses', async (req, res) => {
   try {
     const expenses = await Expense.find({ tripId: req.params.tripId });
@@ -230,7 +240,7 @@ router.delete('/expenses/:id', async (req, res) => {
   }
 });
 
-// Companions Controllers
+// Companions Routes
 router.get('/trips/:tripId/companions', async (req, res) => {
   try {
     const companions = await Companion.find({ tripId: req.params.tripId });
@@ -281,7 +291,7 @@ router.delete('/companions/:id', async (req, res) => {
   }
 });
 
-// Documents Controllers
+// Documents Routes
 router.get('/trips/:tripId/documents', async (req, res) => {
   try {
     const documents = await Document.find({ tripId: req.params.tripId });
@@ -317,7 +327,7 @@ router.delete('/documents/:id', async (req, res) => {
   }
 });
 
-// Activities Controllers
+// Activities Routes
 router.get('/trips/:tripId/activities', async (req, res) => {
   try {
     const activities = await Activity.find({ tripId: req.params.tripId }).sort({ day: 1 });
@@ -367,5 +377,7 @@ router.delete('/activities/:id', async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+
+// export the router
 
 module.exports = router;
