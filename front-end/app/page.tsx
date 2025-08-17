@@ -486,11 +486,13 @@ export default function Home() {
               <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">Ready to Experience Morocco?</h2>
               <p className="text-gray-600 mb-8 max-w-2xl mx-auto">Plan your perfect trip with our expert recommendations and personalized itineraries</p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link href="/planner">
-                  <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3 rounded-full text-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300">
+                {/* <Link href="/planner"> */}
+                  <Button
+                   onClick={()=> window.location.href = '/planner'}
+                   className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3 rounded-full text-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300">
                     Start Planning Your Adventure
                   </Button>
-                </Link>
+                {/* </Link> */}
                 <Button variant="outline" className="border-2 border-blue-600 text-blue-600 hover:bg-blue-50 px-8 py-3 rounded-full text-lg font-medium transition-all duration-300">
                   Contact an Expert
                 </Button>
