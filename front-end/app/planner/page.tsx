@@ -63,6 +63,10 @@ export default function TravelPlanner() {
 
   // Load trips on mount
   useEffect(() => {
+    // check if token exist or not
+    const token = localStorage.getItem('TOKEN_KEY');
+    if (!token)
+        window.location.href = '/auth/login';
       loadTrips();
       const fetchUserProfile = async () => {
             try {
