@@ -83,7 +83,7 @@ export default function LoginPage() {
           setEmailError('Email not registered. Please sign up.');
         }
       } catch {
-        setEmailError('Error checking email availability');
+        // setEmailError('Error checking email availability');
       } finally {
         setEmailChecking(false);
       }

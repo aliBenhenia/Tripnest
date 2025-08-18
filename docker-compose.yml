@@ -61,3 +61,8 @@ networks:
 
 volumes:
   mongodb_data:
+
+# change logo name
+# dashboard for for planner
+# checkin  checkout
+# calnder
