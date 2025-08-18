@@ -1,14 +1,16 @@
+
 'use client'
 
 import dynamic from 'next/dynamic'
 import { Suspense, useState, useEffect } from 'react'
 import { Header } from "@/components/Header"
+// import { SearchBar } from "@/components/SearchBar"
 import { SectionHeader } from "@/components/SectionHeader"
 import { useSearch } from "@/hooks/useSearch"
 import { ErrorBoundary } from "@/components/ErrorBoundary"
 import { PopularPlaces } from "@/components/sections/PopularPlaces"
 import { Button } from "@/components/ui/button"
-import { ChevronLeft, ChevronRight, Compass, TrendingUp, MapPin, Star, Clock, Users } from "lucide-react"
+import { ChevronLeft, ChevronRight, Compass, TrendingUp, MapPin } from "lucide-react"
 import Link from "next/link"
 import { Footer } from "@/components/Footer"
 import { motion } from "framer-motion"
@@ -25,7 +27,7 @@ const SearchBar = dynamic(() => import('@/components/SearchBar').then(mod => mod
     </div>
   )
 })
-
+// Dynamically import components that are not needed immediately
 const CityCard = dynamic(() => import('@/components/CityCard').then(mod => mod.CityCard), {
   loading: () => (
     <div className="animate-pulse rounded-xl overflow-hidden h-[220px] w-[180px]">
@@ -67,30 +69,22 @@ const FEATURED_DESTINATIONS = [
   {
     name: "Marrakech",
     description: "Explore ancient medinas and vibrant souks",
-    image: "https://placehold.co/1200x600/4F46E5/FFFFFF?text=Marrakech",
-    rating: 4.8,
-    reviews: 1247
+    image: "/images/marrakech.jpg"
   },
   {
     name: "Casablanca",
     description: "Experience the coastal charm and modern architecture",
-    image: "https://placehold.co/1200x600/10B981/FFFFFF?text=Casablanca",
-    rating: 4.6,
-    reviews: 892
+    image: "/images/casablanca.jpg"
   },
   {
     name: "Fes",
     description: "Discover the world's oldest medieval medina",
-    image: "https://placehold.co/1200x600/EC4899/FFFFFF?text=Fes",
-    rating: 4.9,
-    reviews: 1523
+    image: "/images/fes.jpg"
   },
   {
     name: "Chefchaouen",
     description: "Experience the blue city and stunning mountain views",
-    image: "https://placehold.co/1200x600/F59E0B/FFFFFF?text=Chefchaouen",
-    rating: 4.7,
-    reviews: 2105
+    image: "/images/chefchaouen.jpg"
   }
 ];
 
@@ -172,11 +166,11 @@ export default function Home() {
   };
 
   return (
-    <div className="w-full mx-auto bg-white min-h-screen md:max-w-none">
+    <div className="w-full mx-auto bg-white min-h-screen md:max-w-none ">
       <ErrorBoundary>
         <Header 
           username="aLi"
-          avatarUrl="https://placehold.co/100x100/6366F1/FFFFFF?text=A"
+          avatarUrl="https://avatars.githubusercontent.com/u/95689141?s=400&u=275826ef98503225cfa203907197ad854e0111a1&v=4"
         />
 
         {/* Hero Section */}
@@ -186,12 +180,12 @@ export default function Home() {
               key={destination.name}
               className={`absolute inset-0 transition-opacity duration-1000 rounded-xl ${index === activeFeaturedIndex ? 'opacity-100' : 'opacity-0'}`}
               style={{
-                backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)), url(${destination.image})`,
+                backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.4)), url(${destination.image})`,
                 backgroundSize: 'cover',
                 backgroundPosition: 'center',
               }}
             >
-              <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/60 rounded-xl"></div>
+              <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/50 rounded-xl"></div>
             </div>
           ))}
           
@@ -204,16 +198,10 @@ export default function Home() {
                 transition={{ duration: 0.5, delay: 0.2 }}
                 className="mb-6 w-full"
               >
-                <div className="flex items-center justify-center gap-2 mb-3">
-                  <Star className="h-5 w-5 text-yellow-400 fill-current" />
-                  <span className="font-medium">{FEATURED_DESTINATIONS[activeFeaturedIndex].rating}</span>
-                  <span className="text-white/80">•</span>
-                  <span className="text-white/80">{FEATURED_DESTINATIONS[activeFeaturedIndex].reviews} reviews</span>
-                </div>
-                <h1 className="text-4xl md:text-6xl font-bold mb-4 drop-shadow-lg">
+                <h1 className="text-4xl md:text-6xl font-bold mb-4 drop-shadow-md">
                   {FEATURED_DESTINATIONS[activeFeaturedIndex].name}
                 </h1>
-                <p className="text-lg md:text-xl mx-auto drop-shadow-md max-w-2xl">
+                <p className="text-lg md:text-xl mx-auto drop-shadow-md">
                   {FEATURED_DESTINATIONS[activeFeaturedIndex].description}
                 </p>
               </motion.div>
@@ -227,7 +215,7 @@ export default function Home() {
                 transition={{ duration: 0.5, delay: 0.4 }}
                 className="w-full max-w-2xl mx-auto"
               >
-                <div className="bg-white/95 backdrop-blur-sm p-1.5 sm:p-2 rounded-xl shadow-xl mx-auto">
+                <div className="bg-white/95 backdrop-blur-sm p-1.5 sm:p-2 rounded-xl shadow-lg mx-auto ">
                   <SearchBar onSearch={handleSearch} />
                 </div>
               </motion.div>
@@ -241,12 +229,10 @@ export default function Home() {
                 transition={{ duration: 0.5, delay: 0.6 }}
                 className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-8 justify-center w-full max-w-md mx-auto"
               >
-                <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium rounded-full px-4 sm:px-6 py-6 text-base sm:text-lg w-full shadow-lg hover:shadow-xl transition-all duration-300">
-                  <Compass className="mr-2 h-5 w-5" />
+                <Button className="bg-white text-black hover:bg-white/90 font-medium rounded-full px-4 sm:px-6 py-6 text-base sm:text-lg w-full">
                   Explore Cities (9)
                 </Button>
-                <Button variant="outline" className="border-white border-2 text-black rounded-full px-4 sm:px-6 py-6 text-base sm:text-lg w-full transition-all duration-300 hover:bg-white/10 hover:text-white">
-                  <TrendingUp className="mr-2 h-5 w-5" />
+                <Button variant="outline" className="border-white border-2 text-black rounded-full px-4 sm:px-6 py-6 text-base sm:text-lg w-full transition-colors">
                   View Experiences
                 </Button>
               </motion.div>
@@ -270,36 +256,9 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Stats Section */}
-        <div className="py-8 md:py-12 px-4 md:px-8 lg:px-16">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8 max-w-6xl mx-auto">
-            {[
-              { icon: MapPin, label: "Destinations", value: "50+" },
-              { icon: Users, label: "Travelers", value: "10K+" },
-              { icon: Star, label: "Reviews", value: "5K+" },
-              { icon: Clock, label: "Years", value: "10+" }
-            ].map((stat, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                className="bg-white rounded-xl p-4 md:p-6 shadow-lg border border-gray-100 text-center hover:shadow-xl transition-shadow duration-300"
-              >
-                <div className="flex justify-center mb-3">
-                  <div className="bg-gradient-to-r from-blue-500 to-purple-500 p-3 rounded-full">
-                    <stat.icon className="h-6 w-6 text-white" />
-                  </div>
-                </div>
-                <p className="text-2xl md:text-3xl font-bold text-gray-900">{stat.value}</p>
-                <p className="text-gray-600 mt-1">{stat.label}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
 
         {/* Popular Places */}
-        <div className="py-12 md:py-16">
+        <div className="py-12 md:py-16 py-12 md:py-16">
           <div className="px-4 md:px-8 lg:px-16 flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-8">
             <div>
               <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">
@@ -318,7 +277,7 @@ export default function Home() {
                 <Button
                   variant="outline"
                   size="icon"
-                  className="rounded-full transition-all duration-200 hover:bg-primary/5 hover:border-primary/30 shadow-sm"
+                  className="rounded-full transition-all duration-200 hover:bg-primary/5 hover:border-primary/30"
                   onClick={() => {
                     const container = document.getElementById('places-container')
                     if (container) {
@@ -331,7 +290,7 @@ export default function Home() {
                 <Button
                   variant="outline"
                   size="icon"
-                  className="rounded-full transition-all duration-200 hover:bg-primary/5 hover:border-primary/30 shadow-sm"
+                  className="rounded-full transition-all duration-200 hover:bg-primary/5 hover:border-primary/30"
                   onClick={() => {
                     const container = document.getElementById('places-container')
                     if (container) {
@@ -371,106 +330,108 @@ export default function Home() {
         </div>
 
         {/* Popular Experiences */}
-        <div className="px-4 sm:px-6 md:px-10 lg:px-16 w-full max-w-[1600px] mx-auto">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-6">
-            {/* Heading and Subtext */}
-            <div>
-              <div className="flex items-center gap-2">
-                <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">
-                  Popular Experiences
-                </h2>
-                {!isLoading && experiences.length > 0 && (
-                  <span className="text-base text-gray-500">
-                    ({experiences.length})
-                  </span>
-                )}
-              </div>
-              <p className="mt-1 text-sm sm:text-base text-gray-600">
-                Discover unique activities with local experts
-              </p>
-            </div>
+        {/* Popular Experiences */}
+<div className="px-4 sm:px-6 md:px-10 lg:px-16 w-full max-w-[1600px] mx-auto">
+  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-6">
+    {/* Heading and Subtext */}
+    <div>
+      <div className="flex items-center gap-2">
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">
+          Popular Experiences
+        </h2>
+        {!isLoading && experiences.length > 0 && (
+          <span className="text-base text-gray-500">
+            ({experiences.length})
+          </span>
+        )}
+      </div>
+      <p className="mt-1 text-sm sm:text-base text-gray-600">
+        Discover unique activities with local experts
+      </p>
+    </div>
 
-            {/* Controls */}
-            <div className="flex items-center gap-2">
-              {/* Scroll Arrows (hidden on small screens) */}
-              <div className="hidden md:flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="rounded-full transition hover:bg-primary/5 hover:border-primary/30 shadow-sm"
-                  onClick={() => {
-                    const container = document.getElementById('experiences-container')
-                    if (container) container.scrollBy({ left: -400, behavior: 'smooth' })
-                  }}
-                >
-                  <ChevronLeft className="h-5 w-5" />
-                </Button>
-                <Button
-                  variant="outline"
-                  size="icon"
-                  className="rounded-full transition hover:bg-primary/5 hover:border-primary/30 shadow-sm"
-                  onClick={() => {
-                    const container = document.getElementById('experiences-container')
-                    if (container) container.scrollBy({ left: 400, behavior: 'smooth' })
-                  }}
-                >
-                  <ChevronRight className="h-5 w-5" />
-                </Button>
-              </div>
+    {/* Controls */}
+    <div className="flex items-center gap-2">
+      {/* Scroll Arrows (hidden on small screens) */}
+      <div className="hidden md:flex items-center gap-2">
+        <Button
+          variant="outline"
+          size="icon"
+          className="rounded-full transition hover:bg-primary/5 hover:border-primary/30"
+          onClick={() => {
+            const container = document.getElementById('experiences-container')
+            if (container) container.scrollBy({ left: -400, behavior: 'smooth' })
+          }}
+        >
+          <ChevronLeft className="h-5 w-5" />
+        </Button>
+        <Button
+          variant="outline"
+          size="icon"
+          className="rounded-full transition hover:bg-primary/5 hover:border-primary/30"
+          onClick={() => {
+            const container = document.getElementById('experiences-container')
+            if (container) container.scrollBy({ left: 400, behavior: 'smooth' })
+          }}
+        >
+          <ChevronRight className="h-5 w-5" />
+        </Button>
+      </div>
 
-              {/* View All */}
-              <Link href="/experiences">
-                <Button
-                  variant="ghost"
-                  className="text-sm sm:text-base text-gray-600 hover:text-gray-900 font-medium"
-                >
-                  View all experiences
-                </Button>
-              </Link>
+      {/* View All */}
+      <Link href="/experiences">
+        <Button
+          variant="ghost"
+          className="text-sm sm:text-base text-gray-600 hover:text-gray-900 font-medium"
+        >
+          View all experiences
+        </Button>
+      </Link>
+    </div>
+  </div>
+
+  {/* Content */}
+  <Suspense
+    fallback={
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
+        {[1, 2, 3, 4].map((i) => (
+          <div key={i} className="animate-pulse">
+            <div className="rounded-xl bg-gray-200 h-[180px] md:h-[200px] w-full" />
+            <div className="mt-3 space-y-2">
+              <div className="h-4 bg-gray-200 rounded w-1/4" />
+              <div className="h-4 bg-gray-200 rounded w-3/4" />
+              <div className="h-4 bg-gray-200 rounded w-1/2" />
             </div>
           </div>
+        ))}
+      </div>
+    }
+  >
+    <div className="relative mt-6">
+      <div
+        id="experiences-container"
+        className="overflow-x-auto flex gap-4 snap-x scroll-smooth scrollbar-hide pr-2 sm:pr-4 md:pr-8 lg:pr-16"
+      >
+        {experiences.map((experience, index) => (
+          <ClientOnly key={experience.id}>
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.05, duration: 0.3 }}
+              className="min-w-[280px] sm:min-w-[300px] md:min-w-[320px] snap-start flex-shrink-0"
+            >
+              <ExperienceCard
+                {...experience}
+                className="hover:z-10"
+              />
+            </motion.div>
+          </ClientOnly>
+        ))}
+      </div>
+    </div>
+  </Suspense>
+</div>
 
-          {/* Content */}
-          <Suspense
-            fallback={
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
-                {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="animate-pulse">
-                    <div className="rounded-xl bg-gray-200 h-[180px] md:h-[200px] w-full" />
-                    <div className="mt-3 space-y-2">
-                      <div className="h-4 bg-gray-200 rounded w-1/4" />
-                      <div className="h-4 bg-gray-200 rounded w-3/4" />
-                      <div className="h-4 bg-gray-200 rounded w-1/2" />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            }
-          >
-            <div className="relative mt-6">
-              <div
-                id="experiences-container"
-                className="overflow-x-auto flex gap-4 snap-x scroll-smooth scrollbar-hide pr-2 sm:pr-4 md:pr-8 lg:pr-16"
-              >
-                {experiences.map((experience, index) => (
-                  <ClientOnly key={experience.id}>
-                    <motion.div
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.05, duration: 0.3 }}
-                      className="min-w-[280px] sm:min-w-[300px] md:min-w-[320px] snap-start flex-shrink-0"
-                    >
-                      <ExperienceCard
-                        {...experience}
-                        className="hover:z-10 hover:shadow-2xl transition-all duration-300"
-                      />
-                    </motion.div>
-                  </ClientOnly>
-                ))}
-              </div>
-            </div>
-          </Suspense>
-        </div>
 
         {/* CTA Section */}
         <div className="py-16 px-4 md:px-8 lg:px-16">
@@ -481,21 +442,15 @@ export default function Home() {
               viewport={{ once: true }}
               variants={fadeInVariants}
               transition={{ duration: 0.5 }}
-              className="max-w-5xl mx-auto bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-8 md:p-12 text-center border border-gray-200 shadow-xl"
+              className="max-w-5xl mx-auto bg-primary/10 rounded-2xl p-8 md:p-12 text-center"
             >
               <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">Ready to Experience Morocco?</h2>
               <p className="text-gray-600 mb-8 max-w-2xl mx-auto">Plan your perfect trip with our expert recommendations and personalized itineraries</p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                {/* <Link href="/planner"> */}
-                  <Button
-                   onClick={()=> window.location.href = '/planner'}
-                   className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-3 rounded-full text-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300">
-                    Start Planning Your Adventure
-                  </Button>
-                {/* </Link> */}
-                <Button variant="outline" className="border-2 border-blue-600 text-blue-600 hover:bg-blue-50 px-8 py-3 rounded-full text-lg font-medium transition-all duration-300">
-                  Contact an Expert
-                </Button>
+                <Link href="/planner">
+                <Button className="bg-primary hover:bg-primary/90 text-white px-6 py-2">Start Planning</Button>
+                </Link>
+                <Button variant="outline" className="border-primary text-primary hover:bg-primary/5">Contact an Expert</Button>
               </div>
             </motion.div>
           </ClientOnly>
