@@ -1,4 +1,3 @@
-// server.js
 const express = require('express');
 const mongoose = require('mongoose');
 const { protect } = require('../middleware/authMiddleware');
@@ -6,7 +5,8 @@ const { protect } = require('../middleware/authMiddleware');
 // Trip Schema
 const tripSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  dates: { type: String, required: true },
+  checkIn: { type: Date, required: true },
+  checkOut: { type: Date, required: true },
   destinations: { type: String, required: true },
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   status: { 

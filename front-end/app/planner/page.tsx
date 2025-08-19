@@ -1,8 +1,7 @@
-// ```jsx
 "use client";
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Search, Calendar, MapPin, Users, Wallet, FileText, CheckCircle, Bell, User, Edit, Trash2, Eye, Route } from 'lucide-react';
+import { Plus, Search, Calendar, MapPin, Users, Wallet, FileText, CheckCircle, Bell, User, Edit, Trash2, Eye, Route,Clock } from 'lucide-react';
 
 // API Service (unchanged)
 const apiService = {
@@ -77,13 +76,10 @@ export default function TravelPlanner() {
                   'Content-Type': 'application/json'
                 }
               });
-        
               if (!res.ok) throw new Error('Failed to fetch profile');
-        
               const data = await res.json();
               const userData = data.data.user;
             setAvatarPreview(`${process.env.NEXT_PUBLIC_API_URL}${userData.avatar}`);
-
             } catch (error) {
               console.error("Error fetching user profile:", error);
               // toast.error("Unable to fetch user data. There was an issue fetching your profile data.");
@@ -197,7 +193,6 @@ export default function TravelPlanner() {
               </div>
           </div>
       </header>
-      
       {/* Navigation */}
       <nav className="bg-white/70 backdrop-blur-md border-b border-gray-200 sticky top-16 z-30">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -235,7 +230,6 @@ export default function TravelPlanner() {
               </div>
           </div>
       </nav>
-      
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8">
           <AnimatePresence mode="wait">
@@ -258,7 +252,6 @@ export default function TravelPlanner() {
                 </motion.div>
             )}
           </AnimatePresence>
-          
           <AnimatePresence mode="wait">
             {activeTab === 'dashboard' && (
               <motion.div
@@ -304,19 +297,19 @@ const Dashboard = ({ trips, onSelectTrip, onCreateTrip, onUpdateTrip, onDeleteTr
   const [editingTrip, setEditingTrip] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
-  
+
   const filteredTrips = trips.filter(trip => {
       const matchesSearch = trip.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
                           trip.destinations.toLowerCase().includes(searchTerm.toLowerCase());
       const matchesStatus = statusFilter === 'all' || trip.status === statusFilter;
       return matchesSearch && matchesStatus;
   });
-  
+
   const handleEditTrip = (trip) => {
       setEditingTrip(trip);
       setShowModal(true);
   };
-  
+
   const handleSaveTrip = async (tripData) => {
       if (editingTrip) {
           await onUpdateTrip(editingTrip._id, tripData);
@@ -326,7 +319,7 @@ const Dashboard = ({ trips, onSelectTrip, onCreateTrip, onUpdateTrip, onDeleteTr
       setShowModal(false);
       setEditingTrip(null);
   };
-  
+
   return (
       <div className="space-y-8">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between">
@@ -361,7 +354,6 @@ const Dashboard = ({ trips, onSelectTrip, onCreateTrip, onUpdateTrip, onDeleteTr
                   New Trip
               </motion.button>
           </div>
-          
           {/* Stats */}
           <motion.div 
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
@@ -394,7 +386,6 @@ const Dashboard = ({ trips, onSelectTrip, onCreateTrip, onUpdateTrip, onDeleteTr
                 color="bg-purple-100" 
               />
           </motion.div>
-          
           {/* Filters */}
           <motion.div 
             className="flex flex-col md:flex-row gap-4"
@@ -425,7 +416,6 @@ const Dashboard = ({ trips, onSelectTrip, onCreateTrip, onUpdateTrip, onDeleteTr
                   <option value="in-progress">In Progress</option>
               </select>
           </motion.div>
-          
           {/* Trips List */}
           <motion.div 
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
@@ -463,7 +453,9 @@ const Dashboard = ({ trips, onSelectTrip, onCreateTrip, onUpdateTrip, onDeleteTr
                             </div>
                             <div className="mt-4 flex items-center text-gray-500">
                                 <Calendar className="mr-2" size={16} />
-                                {trip.dates}
+                                {trip.checkIn && trip.checkOut 
+                                  ? `${new Date(trip.checkIn).toLocaleDateString()} - ${new Date(trip.checkOut).toLocaleDateString()}`
+                                  : trip.dates || 'Dates not set'}
                             </div>
                             <div className="mt-6 flex justify-between">
                                 <motion.button
@@ -497,7 +489,6 @@ const Dashboard = ({ trips, onSelectTrip, onCreateTrip, onUpdateTrip, onDeleteTr
                 ))}
               </AnimatePresence>
           </motion.div>
-          
           {filteredTrips.length === 0 && (
               <motion.div 
                 className="text-center py-16"
@@ -510,7 +501,6 @@ const Dashboard = ({ trips, onSelectTrip, onCreateTrip, onUpdateTrip, onDeleteTr
                   <p className="text-gray-500">Create your first trip to get started</p>
               </motion.div>
           )}
-          
           {/* Trip Modal */}
           <AnimatePresence>
             {(showModal || editingTrip) && (
@@ -550,23 +540,30 @@ const StatCard = ({ icon, title, value, color }) => (
 const TripModal = ({ trip, onSave, onClose }) => {
   const [formData, setFormData] = useState({
       name: trip?.name || '',
-      dates: trip?.dates || '',
+      checkIn: trip?.checkIn ? new Date(trip.checkIn).toISOString().split('T')[0] : '',
+      checkOut: trip?.checkOut ? new Date(trip.checkOut).toISOString().split('T')[0] : '',
       destinations: trip?.destinations || '',
       status: trip?.status || 'planning'
   });
-  
+
   const handleChange = (e) => {
       setFormData({
           ...formData,
           [e.target.name]: e.target.value
       });
   };
-  
+
   const handleSubmit = (e) => {
       e.preventDefault();
-      onSave(formData);
+      // Format dates properly
+      const tripData = {
+          ...formData,
+          checkIn: formData.checkIn ? new Date(formData.checkIn).toISOString() : null,
+          checkOut: formData.checkOut ? new Date(formData.checkOut).toISOString() : null
+      };
+      onSave(tripData);
   };
-  
+
   return (
       <motion.div 
         className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
@@ -609,13 +606,23 @@ const TripModal = ({ trip, onSave, onClose }) => {
                           />
                       </div>
                       <div>
-                          <label className="block text-sm font-medium text-gray-700 mb-2">Dates</label>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">Check-in Date</label>
                           <input
-                              type="text"
-                              name="dates"
-                              value={formData.dates}
+                              type="date"
+                              name="checkIn"
+                              value={formData.checkIn}
                               onChange={handleChange}
-                              placeholder="e.g., 2023-06-15 to 2023-06-25"
+                              className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                              required
+                          />
+                      </div>
+                      <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2">Check-out Date</label>
+                          <input
+                              type="date"
+                              name="checkOut"
+                              value={formData.checkOut}
+                              onChange={handleChange}
                               className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
                               required
                           />
@@ -680,7 +687,7 @@ const TripDetails = ({ trip, onUpdateTrip, onBack }) => {
   const [activities, setActivities] = useState([]);
   const [activeSection, setActiveSection] = useState('packing');
   const [loading, setLoading] = useState(false);
-  
+
   // Load all trip data
   useEffect(() => {
       const loadData = async () => {
@@ -706,7 +713,7 @@ const TripDetails = ({ trip, onUpdateTrip, onBack }) => {
       };
       loadData();
   }, [trip._id]);
-  
+
   // Packing Items CRUD
   const handleCreatePackingItem = async (itemData) => {
       try {
@@ -716,7 +723,7 @@ const TripDetails = ({ trip, onUpdateTrip, onBack }) => {
           console.error('Failed to create packing item:', err);
       }
   };
-  
+
   const handleUpdatePackingItem = async (id, itemData) => {
       try {
           const updatedItem = await apiService.updatePackingItem(id, itemData);
@@ -725,7 +732,7 @@ const TripDetails = ({ trip, onUpdateTrip, onBack }) => {
           console.error('Failed to update packing item:', err);
       }
   };
-  
+
   const handleDeletePackingItem = async (id) => {
       try {
           await apiService.deletePackingItem(id);
@@ -734,7 +741,7 @@ const TripDetails = ({ trip, onUpdateTrip, onBack }) => {
           console.error('Failed to delete packing item:', err);
       }
   };
-  
+
   // Expenses CRUD
   const handleCreateExpense = async (expenseData) => {
       try {
@@ -744,7 +751,7 @@ const TripDetails = ({ trip, onUpdateTrip, onBack }) => {
           console.error('Failed to create expense:', err);
       }
   };
-  
+
   const handleUpdateExpense = async (id, expenseData) => {
       try {
           const updatedExpense = await apiService.updateExpense(id, expenseData);
@@ -753,7 +760,7 @@ const TripDetails = ({ trip, onUpdateTrip, onBack }) => {
           console.error('Failed to update expense:', err);
       }
   };
-  
+
   const handleDeleteExpense = async (id) => {
       try {
           await apiService.deleteExpense(id);
@@ -762,7 +769,7 @@ const TripDetails = ({ trip, onUpdateTrip, onBack }) => {
           console.error('Failed to delete expense:', err);
       }
   };
-  
+
   // Companions CRUD
   const handleCreateCompanion = async (companionData) => {
       try {
@@ -772,7 +779,7 @@ const TripDetails = ({ trip, onUpdateTrip, onBack }) => {
           console.error('Failed to create companion:', err);
       }
   };
-  
+
   const handleUpdateCompanion = async (id, companionData) => {
       try {
           const updatedCompanion = await apiService.updateCompanion(id, companionData);
@@ -781,7 +788,7 @@ const TripDetails = ({ trip, onUpdateTrip, onBack }) => {
           console.error('Failed to update companion:', err);
       }
   };
-  
+
   const handleDeleteCompanion = async (id) => {
       try {
           await apiService.deleteCompanion(id);
@@ -790,7 +797,7 @@ const TripDetails = ({ trip, onUpdateTrip, onBack }) => {
           console.error('Failed to delete companion:', err);
       }
   };
-  
+
   // Documents CRUD
   const handleCreateDocument = async (documentData) => {
       try {
@@ -800,7 +807,7 @@ const TripDetails = ({ trip, onUpdateTrip, onBack }) => {
           console.error('Failed to create document:', err);
       }
   };
-  
+
   const handleDeleteDocument = async (id) => {
       try {
           await apiService.deleteDocument(id);
@@ -809,7 +816,7 @@ const TripDetails = ({ trip, onUpdateTrip, onBack }) => {
           console.error('Failed to delete document:', err);
       }
   };
-  
+
   // Activities CRUD
   const handleCreateActivity = async (activityData) => {
       try {
@@ -819,7 +826,7 @@ const TripDetails = ({ trip, onUpdateTrip, onBack }) => {
           console.error('Failed to create activity:', err);
       }
   };
-  
+
   const handleUpdateActivity = async (id, activityData) => {
       try {
           const updatedActivity = await apiService.updateActivity(id, activityData);
@@ -828,7 +835,7 @@ const TripDetails = ({ trip, onUpdateTrip, onBack }) => {
           console.error('Failed to update activity:', err);
       }
   };
-  
+
   const handleDeleteActivity = async (id) => {
       try {
           await apiService.deleteActivity(id);
@@ -837,7 +844,7 @@ const TripDetails = ({ trip, onUpdateTrip, onBack }) => {
           console.error('Failed to delete activity:', err);
       }
   };
-  
+
   if (loading) {
       return (
           <div className="flex justify-center items-center h-96">
@@ -849,7 +856,7 @@ const TripDetails = ({ trip, onUpdateTrip, onBack }) => {
           </div>
       );
   }
-  
+
   return (
       <div className="space-y-8">
           <div>
@@ -875,7 +882,11 @@ const TripDetails = ({ trip, onUpdateTrip, onBack }) => {
                       <div className="flex flex-wrap items-center mt-4 text-gray-600 gap-4">
                           <div className="flex items-center">
                               <Calendar className="mr-2" size={18} />
-                              <span>{trip.dates}</span>
+                              <span>
+                                {trip.checkIn && trip.checkOut 
+                                  ? `${new Date(trip.checkIn).toLocaleDateString()} - ${new Date(trip.checkOut).toLocaleDateString()}`
+                                  : 'Dates not set'}
+                              </span>
                           </div>
                           <span className="hidden md:block">•</span>
                           <div className="flex items-center">
@@ -897,7 +908,6 @@ const TripDetails = ({ trip, onUpdateTrip, onBack }) => {
                   </motion.span>
               </div>
           </div>
-          
           {/* Navigation Tabs */}
           <div className="border-b border-gray-200">
               <nav className="-mb-px flex flex-wrap gap-4">
@@ -924,7 +934,6 @@ const TripDetails = ({ trip, onUpdateTrip, onBack }) => {
                   ))}
               </nav>
           </div>
-          
           {/* Section Content */}
           <motion.div 
             className="bg-white rounded-2xl shadow-lg p-6"
@@ -1022,7 +1031,7 @@ const PackingSection = ({ items, onCreate, onUpdate, onDelete }) => {
   const [showForm, setShowForm] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
   const [formData, setFormData] = useState({ name: '', packed: false });
-  
+
   const handleSave = async () => {
       if (editingItem) {
           await onUpdate(editingItem._id, formData);
@@ -1031,28 +1040,27 @@ const PackingSection = ({ items, onCreate, onUpdate, onDelete }) => {
       }
       resetForm();
   };
-  
+
   const handleEdit = (item) => {
       setEditingItem(item);
       setFormData({ name: item.name, packed: item.packed });
       setShowForm(true);
   };
-  
+
   const resetForm = () => {
       setFormData({ name: '', packed: false });
       setEditingItem(null);
       setShowForm(false);
   };
-  
+
   const togglePacked = async (item) => {
       await onUpdate(item._id, { ...item, packed: !item.packed });
   };
-  
+
   return (
       <div>
           <div className="flex justify-between items-center mb-8">
               <h3 className="text-2xl font-bold text-gray-900 flex items-center">
-                
                 Packing List
               </h3>
               <motion.button
@@ -1065,7 +1073,6 @@ const PackingSection = ({ items, onCreate, onUpdate, onDelete }) => {
                   Add Item
               </motion.button>
           </div>
-          
           {showForm && (
               <motion.div 
                 className="mb-8 p-6 border border-gray-200 rounded-2xl bg-gray-50"
@@ -1111,7 +1118,6 @@ const PackingSection = ({ items, onCreate, onUpdate, onDelete }) => {
                   </div>
               </motion.div>
           )}
-          
           <div className="space-y-4">
               <AnimatePresence>
                 {items.map((item) => (
@@ -1161,14 +1167,12 @@ const PackingSection = ({ items, onCreate, onUpdate, onDelete }) => {
                 ))}
               </AnimatePresence>
           </div>
-          
           {items.length === 0 && (
               <motion.div 
                 className="text-center py-12 text-gray-500"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
               >
-                  
                   <p className="text-xl">No packing items yet</p>
               </motion.div>
           )}
@@ -1181,7 +1185,7 @@ const ExpensesSection = ({ expenses, onCreate, onUpdate, onDelete }) => {
   const [showForm, setShowForm] = useState(false);
   const [editingExpense, setEditingExpense] = useState(null);
   const [formData, setFormData] = useState({ category: '', amount: '', description: '' });
-  
+
   const handleSave = async () => {
       const expenseData = {
           ...formData,
@@ -1194,7 +1198,7 @@ const ExpensesSection = ({ expenses, onCreate, onUpdate, onDelete }) => {
       }
       resetForm();
   };
-  
+
   const handleEdit = (expense) => {
       setEditingExpense(expense);
       setFormData({
@@ -1204,15 +1208,15 @@ const ExpensesSection = ({ expenses, onCreate, onUpdate, onDelete }) => {
       });
       setShowForm(true);
   };
-  
+
   const resetForm = () => {
       setFormData({ category: '', amount: '', description: '' });
       setEditingExpense(null);
       setShowForm(false);
   };
-  
+
   const totalExpenses = expenses.reduce((sum, expense) => sum + expense.amount, 0);
-  
+
   return (
       <div>
           <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
@@ -1233,7 +1237,6 @@ const ExpensesSection = ({ expenses, onCreate, onUpdate, onDelete }) => {
                   Add Expense
               </motion.button>
           </div>
-          
           {showForm && (
               <motion.div 
                 className="mb-8 p-6 border border-gray-200 rounded-2xl bg-gray-50"
@@ -1285,7 +1288,6 @@ const ExpensesSection = ({ expenses, onCreate, onUpdate, onDelete }) => {
                   </div>
               </motion.div>
           )}
-          
           <div className="space-y-4">
               <AnimatePresence>
                 {expenses.map((expense) => (
@@ -1327,7 +1329,6 @@ const ExpensesSection = ({ expenses, onCreate, onUpdate, onDelete }) => {
                 ))}
               </AnimatePresence>
           </div>
-          
           {expenses.length === 0 && (
               <motion.div 
                 className="text-center py-12 text-gray-500"
@@ -1347,7 +1348,7 @@ const CompanionsSection = ({ companions, onCreate, onUpdate, onDelete }) => {
   const [showForm, setShowForm] = useState(false);
   const [editingCompanion, setEditingCompanion] = useState(null);
   const [formData, setFormData] = useState({ name: '', role: '', sharedExpenses: '' });
-  
+
   const handleSave = async () => {
       const companionData = {
           ...formData,
@@ -1360,7 +1361,7 @@ const CompanionsSection = ({ companions, onCreate, onUpdate, onDelete }) => {
       }
       resetForm();
   };
-  
+
   const handleEdit = (companion) => {
       setEditingCompanion(companion);
       setFormData({
@@ -1370,13 +1371,13 @@ const CompanionsSection = ({ companions, onCreate, onUpdate, onDelete }) => {
       });
       setShowForm(true);
   };
-  
+
   const resetForm = () => {
       setFormData({ name: '', role: '', sharedExpenses: '' });
       setEditingCompanion(null);
       setShowForm(false);
   };
-  
+
   return (
       <div>
           <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
@@ -1394,7 +1395,6 @@ const CompanionsSection = ({ companions, onCreate, onUpdate, onDelete }) => {
                   Add Companion
               </motion.button>
           </div>
-          
           {showForm && (
               <motion.div 
                 className="mb-8 p-6 border border-gray-200 rounded-2xl bg-gray-50"
@@ -1446,7 +1446,6 @@ const CompanionsSection = ({ companions, onCreate, onUpdate, onDelete }) => {
                   </div>
               </motion.div>
           )}
-          
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <AnimatePresence>
                 {companions.map((companion) => (
@@ -1488,7 +1487,6 @@ const CompanionsSection = ({ companions, onCreate, onUpdate, onDelete }) => {
                 ))}
               </AnimatePresence>
           </div>
-          
           {companions.length === 0 && (
               <motion.div 
                 className="text-center py-12 text-gray-500"
@@ -1507,17 +1505,17 @@ const CompanionsSection = ({ companions, onCreate, onUpdate, onDelete }) => {
 const DocumentsSection = ({ documents, onCreate, onDelete }) => {
   const [showForm, setShowForm] = useState(false);
   const [formData, setFormData] = useState({ name: '', type: '' });
-  
+
   const handleSave = async () => {
       await onCreate({ ...formData, date: new Date().toISOString() });
       resetForm();
   };
-  
+
   const resetForm = () => {
       setFormData({ name: '', type: '' });
       setShowForm(false);
   };
-  
+
   return (
       <div>
           <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
@@ -1535,7 +1533,6 @@ const DocumentsSection = ({ documents, onCreate, onDelete }) => {
                   Add Document
               </motion.button>
           </div>
-          
           {showForm && (
               <motion.div 
                 className="mb-8 p-6 border border-gray-200 rounded-2xl bg-gray-50"
@@ -1579,7 +1576,6 @@ const DocumentsSection = ({ documents, onCreate, onDelete }) => {
                   </div>
               </motion.div>
           )}
-          
           <div className="space-y-4">
               <AnimatePresence>
                 {documents.map((doc) => (
@@ -1611,7 +1607,6 @@ const DocumentsSection = ({ documents, onCreate, onDelete }) => {
                 ))}
               </AnimatePresence>
           </div>
-          
           {documents.length === 0 && (
               <motion.div 
                 className="text-center py-12 text-gray-500"
@@ -1631,7 +1626,7 @@ const ActivitiesSection = ({ activities, onCreate, onUpdate, onDelete }) => {
   const [showForm, setShowForm] = useState(false);
   const [editingActivity, setEditingActivity] = useState(null);
   const [formData, setFormData] = useState({ time: '', activity: '', notes: '', day: '' });
-  
+
   const handleSave = async () => {
       const activityData = {
           ...formData,
@@ -1644,7 +1639,7 @@ const ActivitiesSection = ({ activities, onCreate, onUpdate, onDelete }) => {
       }
       resetForm();
   };
-  
+
   const handleEdit = (activity) => {
       setEditingActivity(activity);
       setFormData({
@@ -1655,13 +1650,13 @@ const ActivitiesSection = ({ activities, onCreate, onUpdate, onDelete }) => {
       });
       setShowForm(true);
   };
-  
+
   const resetForm = () => {
       setFormData({ time: '', activity: '', notes: '', day: '' });
       setEditingActivity(null);
       setShowForm(false);
   };
-  
+
   // Group activities by day
   const groupedActivities = activities.reduce((groups, activity) => {
       const day = activity.day;
@@ -1671,7 +1666,7 @@ const ActivitiesSection = ({ activities, onCreate, onUpdate, onDelete }) => {
       groups[day].push(activity);
       return groups;
   }, {});
-  
+
   return (
       <div>
           <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
@@ -1689,7 +1684,6 @@ const ActivitiesSection = ({ activities, onCreate, onUpdate, onDelete }) => {
                   Add Activity
               </motion.button>
           </div>
-          
           {showForm && (
               <motion.div 
                 className="mb-8 p-6 border border-gray-200 rounded-2xl bg-gray-50"
@@ -1704,6 +1698,7 @@ const ActivitiesSection = ({ activities, onCreate, onUpdate, onDelete }) => {
                           className="px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                           value={formData.time}
                           onChange={(e) => setFormData({...formData, time: e.target.value})}
+                        //   icon={<Clock size={20} className="text-gray-500" />}
                       />
                       <input
                           type="text"
@@ -1747,7 +1742,6 @@ const ActivitiesSection = ({ activities, onCreate, onUpdate, onDelete }) => {
                   </div>
               </motion.div>
           )}
-          
           <div className="space-y-10">
               {Object.keys(groupedActivities).sort((a, b) => a - b).map((day) => (
                   <motion.div 
@@ -1769,6 +1763,7 @@ const ActivitiesSection = ({ activities, onCreate, onUpdate, onDelete }) => {
                                     <div className="flex flex-col md:flex-row md:justify-between md:items-start">
                                         <div className="flex items-start">
                                             <div className="w-20 h-20 bg-gradient-to-r from-blue-100 to-purple-100 rounded-2xl flex items-center justify-center mr-6">
+                                                <Clock size={20} className="text-gray-500" />
                                                 <span className="font-bold text-blue-800 text-lg">{activity.time}</span>
                                             </div>
                                             <div>
@@ -1804,7 +1799,6 @@ const ActivitiesSection = ({ activities, onCreate, onUpdate, onDelete }) => {
                   </motion.div>
               ))}
           </div>
-          
           {activities.length === 0 && (
               <motion.div 
                 className="text-center py-12 text-gray-500"
@@ -1818,4 +1812,3 @@ const ActivitiesSection = ({ activities, onCreate, onUpdate, onDelete }) => {
       </div>
   );
 };
-// ```
