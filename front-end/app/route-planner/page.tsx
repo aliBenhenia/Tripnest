@@ -2,7 +2,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Button, Input, Card, Typography, Spin, Alert, List, Tag } from 'antd';
+import { Button, Input, Card, Typography, Spin, Alert, List, Tag, Collapse, Statistic, Divider } from 'antd';
 import { 
   MapPin, 
   Plus, 
@@ -13,12 +13,18 @@ import {
   Car,
   Train,
   Plane,
-  Loader
+  Loader,
+  Fuel,
+  Euro,
+  Wrench,
+  Coffee,
+  Zap
 } from 'lucide-react';
 
 const { Title, Text } = Typography;
+const { Panel } = Collapse;
 
-// Separate component for the map to handle client-side logic cleanly and avoid SSR issues
+// Separate component for the map
 const RouteMap = ({ route }) => {
   const mapContainerRef = useRef(null);
   const mapInstanceRef = useRef(null);
@@ -26,13 +32,11 @@ const RouteMap = ({ route }) => {
   const polylinesRef = useRef([]);
 
   useEffect(() => {
-    // Ensure this only runs on the client
     if (typeof window === 'undefined' || !route || !route.places || route.places.length === 0) {
       return;
     }
 
     const initOrRefreshMap = async () => {
-      // Dynamically import Leaflet only on the client
       let L;
       try {
         L = (await import('leaflet')).default;
@@ -41,7 +45,6 @@ const RouteMap = ({ route }) => {
         return;
       }
 
-      // Fix Leaflet marker icons
       if (!L.Icon.Default.prototype._getIconUrl) {
         delete L.Icon.Default.prototype._getIconUrl;
         L.Icon.Default.mergeOptions({
@@ -51,17 +54,12 @@ const RouteMap = ({ route }) => {
         });
       }
 
-      // Initialize map if not already done
       if (!mapInstanceRef.current) {
-        if (!mapContainerRef.current) {
-          console.error("Map container not found");
-          return;
-        }
+        if (!mapContainerRef.current) return;
         
         const firstPlace = route.places[0];
         const map = L.map(mapContainerRef.current).setView([firstPlace.lat, firstPlace.lng], 8);
         
-        // Use CartoDB Voyager tiles (no API key required, looks nice)
         L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
           attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
           maxZoom: 19
@@ -72,59 +70,38 @@ const RouteMap = ({ route }) => {
 
       const map = mapInstanceRef.current;
 
-      // Clear previous layers
       try {
-        markersRef.current.forEach(marker => {
-          if (map.hasLayer(marker)) {
-            map.removeLayer(marker);
-          }
-        });
-        polylinesRef.current.forEach(polyline => {
-          if (map.hasLayer(polyline)) {
-            map.removeLayer(polyline);
-          }
-        });
-      } catch (e) {
-        console.warn("Error clearing previous layers:", e);
-      }
+        markersRef.current.forEach(marker => map.hasLayer(marker) && map.removeLayer(marker));
+        polylinesRef.current.forEach(polyline => map.hasLayer(polyline) && map.removeLayer(polyline));
+      } catch (e) { console.warn("Error clearing layers:", e); }
       
       markersRef.current = [];
       polylinesRef.current = [];
 
-      // Add markers for each place
       route.places.forEach((place, index) => {
         try {
           const marker = L.marker([place.lat, place.lng])
             .addTo(map)
             .bindPopup(`<b>Stop ${index + 1}:</b><br/>${place.displayName || place.name}`);
-          
           markersRef.current.push(marker);
-        } catch (e) {
-          console.error("Error adding marker:", e);
-        }
+        } catch (e) { console.error("Error adding marker:", e); }
       });
 
-      // Draw route lines between consecutive points with nice styling
       route.legs.forEach((leg) => {
         if (leg.routeCoordinates && leg.routeCoordinates.length > 0) {
           try {
             const polyline = L.polyline(leg.routeCoordinates, { 
-              color: '#8B5CF6', // Purple color
+              color: '#8B5CF6',
               weight: 6,
               opacity: 0.9,
               lineCap: 'round',
-              lineJoin: 'round',
-              dashArray: '10, 10' // Dashed line for visual interest
+              lineJoin: 'round'
             }).addTo(map);
-            
             polylinesRef.current.push(polyline);
-          } catch (e) {
-            console.error("Error creating polyline:", e);
-          }
+          } catch (e) { console.error("Error creating polyline:", e); }
         }
       });
 
-      // Fit map to bounds
       try {
         if (markersRef.current.length > 0) {
           const group = new L.featureGroup(markersRef.current);
@@ -132,32 +109,20 @@ const RouteMap = ({ route }) => {
         }
       } catch (e) {
         console.error("Error fitting bounds:", e);
-        // Fallback: set view to first point
         if (route.places.length > 0) {
           map.setView([route.places[0].lat, route.places[0].lng], 8);
         }
       }
     };
 
-    // Use a small timeout to ensure DOM is ready
-    const timer = setTimeout(() => {
-      initOrRefreshMap();
-    }, 100);
+    const timer = setTimeout(initOrRefreshMap, 100);
+    return () => clearTimeout(timer);
+  }, [route]);
 
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [route]); // Re-run when route changes
-
-  // Cleanup on unmount
   useEffect(() => {
     return () => {
       if (mapInstanceRef.current) {
-        try {
-          mapInstanceRef.current.remove();
-        } catch (e) {
-          console.warn("Error removing map:", e);
-        }
+        try { mapInstanceRef.current.remove(); } catch (e) { console.warn("Error removing map:", e); }
         mapInstanceRef.current = null;
       }
     };
@@ -172,19 +137,7 @@ const RouteMap = ({ route }) => {
   );
 };
 
-// Dynamically import the map component to prevent SSR issues
-const MapWithNoSSR = dynamic(
-  () => Promise.resolve(RouteMap),
-  { 
-    ssr: false, 
-    loading: () => (
-      <div className="h-full w-full flex items-center justify-center bg-gray-100 rounded-xl">
-        <Loader className="animate-spin text-blue-500 w-8 h-8" />
-      </div>
-    )
-  }
-);
-
+const MapWithNoSSR = dynamic(() => Promise.resolve(RouteMap), { ssr: false, loading: () => <div className="h-full w-full flex items-center justify-center bg-gray-100 rounded-xl"><Loader className="animate-spin text-blue-500 w-8 h-8" /></div> });
 import dynamic from 'next/dynamic';
 import { useRef } from 'react';
 
@@ -194,12 +147,11 @@ export default function MultiDayRoutePlanner() {
   const [route, setRoute] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [vehicleType, setVehicleType] = useState('car'); // car, motorcycle, van
+  const [fuelPrice, setFuelPrice] = useState(1.5); // € per liter
 
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+  useEffect(() => { setIsClient(true); }, []);
 
-  // Hydration safety check
   if (!isClient) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
@@ -219,21 +171,16 @@ export default function MultiDayRoutePlanner() {
   };
 
   const updateDestination = (id, value) => {
-    setDestinations(destinations.map(dest => 
-      dest.id === id ? { ...dest, name: value } : dest
-    ));
+    setDestinations(destinations.map(dest => dest.id === id ? { ...dest, name: value } : dest));
   };
 
-  // Fetch real route data using OSRM
+  // Enhanced route calculation with fuel and time estimates
   const fetchRouteBetweenPoints = async (from, to) => {
     try {
-      // OSRM public demo server (rate-limited, no API key)
-      const url = `https://router.project-osrm.org/route/v1/driving/${from.lng},${from.lat};${to.lng},${to.lat}?overview=full&geometries=geojson`;
+      const url = `https://router.project-osrm.org/route/v1/driving/${from.lng},${from.lat};${to.lng},${to.lat}?overview=full&geometries=geojson&steps=true`;
       const response = await fetch(url);
       
-      if (!response.ok) {
-        throw new Error(`OSRM API error: ${response.status}`);
-      }
+      if (!response.ok) throw new Error(`OSRM API error: ${response.status}`);
       
       const data = await response.json();
       
@@ -241,32 +188,61 @@ export default function MultiDayRoutePlanner() {
         throw new Error('No route found');
       }
       
-      // Extract coordinates from the route geometry
-      const routeCoordinates = data.routes[0].geometry.coordinates.map(coord => [coord[1], coord[0]]);
-      const distance = data.routes[0].distance / 1000; // Convert to km
-      const duration = data.routes[0].duration / 3600; // Convert to hours
+      const route = data.routes[0];
+      const distanceKm = route.distance / 1000;
+      const durationHours = route.duration / 3600;
+      
+      // Extract coordinates
+      const coordinates = route.geometry.coordinates.map(coord => [coord[1], coord[0]]);
+      
+      // Calculate fuel consumption (simplified)
+      let fuelConsumptionPer100Km;
+      switch(vehicleType) {
+        case 'motorcycle': fuelConsumptionPer100Km = 4; break; // 4L/100km
+        case 'van': fuelConsumptionPer100Km = 10; break; // 10L/100km
+        default: fuelConsumptionPer100Km = 7; // 7L/100km for car
+      }
+      
+      const fuelNeededLiters = (distanceKm / 100) * fuelConsumptionPer100Km;
+      const fuelCost = fuelNeededLiters * fuelPrice;
+      
+      // Estimate rest stops (15 min every 2 hours)
+      const restStops = Math.floor(durationHours / 2);
+      const restTimeHours = restStops * 0.25; // 15 minutes each
+      
+      // Estimate refueling stops (every 400km)
+      const refuelStops = Math.floor(distanceKm / 400);
+      const refuelTimeHours = refuelStops * 0.17; // 10 minutes each
+      
+      const totalTimeWithStops = durationHours + restTimeHours + refuelTimeHours;
       
       return {
-        coordinates: routeCoordinates,
-        distance: Math.round(distance),
-        duration: duration
+        coordinates,
+        distance: Math.round(distanceKm),
+        duration: durationHours,
+        fuelNeeded: fuelNeededLiters,
+        fuelCost: fuelCost,
+        restStops,
+        refuelStops,
+        totalTimeWithStops
       };
     } catch (error) {
       console.error('Routing error:', error);
-      // Fallback to straight line if routing fails
       return {
         coordinates: [[from.lat, from.lng], [to.lat, to.lng]],
-        distance: Math.sqrt(
-          Math.pow(to.lat - from.lat, 2) + Math.pow(to.lng - from.lng, 2)
-        ) * 111,
-        duration: 0
+        distance: Math.sqrt(Math.pow(to.lat - from.lat, 2) + Math.pow(to.lng - from.lng, 2)) * 111,
+        duration: 0,
+        fuelNeeded: 0,
+        fuelCost: 0,
+        restStops: 0,
+        refuelStops: 0,
+        totalTimeWithStops: 0
       };
     }
   };
 
   const calculateRoute = async () => {
     const validDestinations = destinations.filter(d => d.name.trim() !== '');
-    
     if (validDestinations.length < 2) {
       setError('Please enter at least two destinations.');
       return;
@@ -277,15 +253,13 @@ export default function MultiDayRoutePlanner() {
     setRoute(null);
 
     try {
-      // 1. Geocode all destinations using Nominatim (no API key)
+      // Geocode destinations
       const geocodedPlaces = [];
       for (const dest of validDestinations) {
-        // Respect Nominatim usage policy with a delay
         await new Promise(resolve => setTimeout(resolve, 1000));
-        
         const geoResponse = await fetch(
           `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(dest.name)}&format=json&limit=1`,
-          { headers: { 'User-Agent': 'RoutePlanner/1.0 (educational project)' } }
+          { headers: { 'User-Agent': 'RoutePlanner/1.0' } }
         );
         
         if (!geoResponse.ok) throw new Error(`Failed to geocode ${dest.name}`);
@@ -304,13 +278,18 @@ export default function MultiDayRoutePlanner() {
         }
       }
 
-      // 2. Calculate routes between consecutive points using OSRM (no API key)
+      // Calculate routes with enhanced data
       const legs = [];
+      let totalDistance = 0;
+      let totalFuelCost = 0;
+      let totalTravelTime = 0;
+      let totalRestStops = 0;
+      let totalRefuelStops = 0;
+
       for (let i = 0; i < geocodedPlaces.length - 1; i++) {
         const from = geocodedPlaces[i];
         const to = geocodedPlaces[i + 1];
         
-        // Get real route from OSRM
         const routeData = await fetchRouteBetweenPoints(
           { lat: from.lat, lng: from.lng },
           { lat: to.lat, lng: to.lng }
@@ -321,11 +300,22 @@ export default function MultiDayRoutePlanner() {
           to: to.name,
           distance: routeData.distance,
           travelTime: `${Math.floor(routeData.duration)}h ${Math.round((routeData.duration % 1) * 60)}m`,
+          totalTimeWithStops: routeData.totalTimeWithStops,
+          fuelNeeded: routeData.fuelNeeded,
+          fuelCost: routeData.fuelCost,
+          restStops: routeData.restStops,
+          refuelStops: routeData.refuelStops,
           routeCoordinates: routeData.coordinates
         });
+        
+        totalDistance += routeData.distance;
+        totalFuelCost += routeData.fuelCost;
+        totalTravelTime += routeData.totalTimeWithStops;
+        totalRestStops += routeData.restStops;
+        totalRefuelStops += routeData.refuelStops;
       }
 
-      // 3. Create day plan
+      // Create day plan
       const days = geocodedPlaces.map((place, index) => ({
         day: index + 1,
         destination: place.displayName,
@@ -337,7 +327,15 @@ export default function MultiDayRoutePlanner() {
       setRoute({
         places: geocodedPlaces,
         legs,
-        days
+        days,
+        summary: {
+          totalDistance,
+          totalFuelCost,
+          totalTravelTime,
+          totalRestStops,
+          totalRefuelStops,
+          vehicleType
+        }
       });
 
     } catch (err) {
@@ -348,14 +346,55 @@ export default function MultiDayRoutePlanner() {
     }
   };
 
+  // Problem-solving suggestions
+  const getSuggestions = () => {
+    if (!route) return [];
+    
+    const suggestions = [];
+    const summary = route.summary;
+    
+    if (summary.totalTravelTime > 12) {
+      suggestions.push({
+        icon: <Coffee className="w-5 h-5 text-blue-500" />,
+        title: "Plan Rest Stops",
+        description: "Your trip is long. Schedule regular breaks to avoid fatigue."
+      });
+    }
+    
+    if (summary.totalFuelCost > 100) {
+      suggestions.push({
+        icon: <Fuel className="w-5 h-5 text-green-500" />,
+        title: "Fuel Cost Alert",
+        description: `Estimated fuel cost is €${summary.totalFuelCost.toFixed(2)}. Consider fuel-efficient routes.`
+      });
+    }
+    
+    if (summary.totalRefuelStops > 2) {
+      suggestions.push({
+        icon: <Zap className="w-5 h-5 text-yellow-500" />,
+        title: "Refueling Strategy",
+        description: "Plan your refueling stops in advance to save time."
+      });
+    }
+    
+    // Always add a general tip
+    suggestions.push({
+      icon: <Wrench className="w-5 h-5 text-purple-500" />,
+      title: "Vehicle Check",
+      description: "Ensure your vehicle is serviced before this long trip."
+    });
+    
+    return suggestions;
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4 md:p-8">
       <div className="max-w-6xl mx-auto">
         <Title level={1} className="text-center mb-2 text-3xl md:text-4xl bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-          🗺️ Multi-Day Route Planner
+          🗺️ Smart Multi-Day Route Planner
         </Title>
         <Text className="text-center block mb-8 text-gray-600 text-base md:text-lg">
-          Plan your trip across multiple cities with optimized routes
+          Plan trips with fuel costs, travel time, and smart suggestions
         </Text>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -375,7 +414,7 @@ export default function MultiDayRoutePlanner() {
                 </Button>
               </div>
 
-              <div className="space-y-4">
+              <div className="space-y-4 mb-4">
                 {destinations.map((dest, index) => (
                   <div key={dest.id} className="flex gap-2">
                     <Input
@@ -397,15 +436,43 @@ export default function MultiDayRoutePlanner() {
                 ))}
               </div>
 
+              <Divider orientation="left" className="my-4">Trip Preferences</Divider>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Vehicle Type</label>
+                  <select
+                    value={vehicleType}
+                    onChange={(e) => setVehicleType(e.target.value)}
+                    className="w-full p-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="car">Car (7L/100km)</option>
+                    <option value="motorcycle">Motorcycle (4L/100km)</option>
+                    <option value="van">Van (10L/100km)</option>
+                  </select>
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Fuel Price (€/L)</label>
+                  <Input
+                    type="number"
+                    step="0.01"
+                    value={fuelPrice}
+                    onChange={(e) => setFuelPrice(parseFloat(e.target.value) || 1.5)}
+                    prefix={<Fuel className="w-4 h-4 text-gray-400" />}
+                  />
+                </div>
+              </div>
+
               <Button
                 type="primary"
                 size="large"
                 onClick={calculateRoute}
                 loading={loading}
                 disabled={loading}
-                className="w-full mt-6 h-12 bg-gradient-to-r from-blue-500 to-purple-600 border-0 rounded-lg text-base font-semibold hover:from-blue-600 hover:to-purple-700"
+                className="w-full mt-2 h-12 bg-gradient-to-r from-blue-500 to-purple-600 border-0 rounded-lg text-base font-semibold hover:from-blue-600 hover:to-purple-700"
               >
-                {loading ? 'Calculating Route...' : 'Plan My Route'}
+                {loading ? 'Calculating Smart Route...' : 'Plan My Smart Route'}
               </Button>
             </Card>
 
@@ -419,41 +486,70 @@ export default function MultiDayRoutePlanner() {
               />
             )}
 
-            {/* Route Details */}
+            {/* Route Summary Stats */}
+            {route && !loading && (
+              <Card className="shadow-xl bg-white rounded-2xl border-0 mb-6">
+                <Title level={3} className="flex items-center gap-2 text-gray-800 mb-4">
+                  <Car className="w-5 h-5" /> Trip Summary
+                </Title>
+                
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  <Statistic
+                    title="Total Distance"
+                    value={route.summary.totalDistance}
+                    suffix="km"
+                    prefix={<Route className="w-4 h-4" />}
+                  />
+                  <Statistic
+                    title="Fuel Cost"
+                    value={route.summary.totalFuelCost.toFixed(2)}
+                    suffix="€"
+                    prefix={<Fuel className="w-4 h-4" />}
+                  />
+                  <Statistic
+                    title="Travel Time"
+                    value={`${Math.floor(route.summary.totalTravelTime)}h ${Math.round((route.summary.totalTravelTime % 1) * 60)}m`}
+                    prefix={<Clock className="w-4 h-4" />}
+                  />
+                  <Statistic
+                    title="Rest Stops"
+                    value={route.summary.totalRestStops}
+                    prefix={<Coffee className="w-4 h-4" />}
+                  />
+                  <Statistic
+                    title="Refuel Stops"
+                    value={route.summary.totalRefuelStops}
+                    prefix={<Zap className="w-4 h-4" />}
+                  />
+                  <Statistic
+                    title="Vehicle"
+                    value={vehicleType.charAt(0).toUpperCase() + vehicleType.slice(1)}
+                    prefix={<Car className="w-4 h-4" />}
+                  />
+                </div>
+              </Card>
+            )}
+
+            {/* Smart Suggestions */}
             {route && !loading && (
               <Card className="shadow-xl bg-white rounded-2xl border-0">
                 <Title level={3} className="flex items-center gap-2 text-gray-800 mb-4">
-                  <Clock className="w-5 h-5" /> Route Summary
+                  <Wrench className="w-5 h-5" /> Smart Suggestions
                 </Title>
                 
-                <List
-                  itemLayout="horizontal"
-                  dataSource={route.legs}
-                  renderItem={(leg) => (
-                    <List.Item className="py-3 px-2 hover:bg-gray-50 rounded-lg">
-                      <List.Item.Meta
-                        avatar={
-                          <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-400 to-purple-500 flex items-center justify-center text-white font-bold">
-                            <Car className="w-5 h-5" />
-                          </div>
-                        }
-                        title={
-                          <div className="flex items-center gap-2">
-                            <span className="font-semibold">{leg.from} → {leg.to}</span>
-                            <Tag color="blue">{leg.distance} km</Tag>
-                          </div>
-                        }
-                        description={
-                          <div className="flex items-center gap-4 mt-1">
-                            <span className="text-sm text-gray-600 flex items-center gap-1">
-                              <Clock className="w-4 h-4" /> {leg.travelTime}
-                            </span>
-                          </div>
-                        }
-                      />
-                    </List.Item>
-                  )}
-                />
+                <div className="space-y-3">
+                  {getSuggestions().map((suggestion, index) => (
+                    <div key={index} className="flex items-start gap-3 p-3 bg-blue-50 rounded-lg">
+                      <div className="mt-0.5">
+                        {suggestion.icon}
+                      </div>
+                      <div>
+                        <h4 className="font-semibold text-gray-800">{suggestion.title}</h4>
+                        <p className="text-sm text-gray-600">{suggestion.description}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </Card>
             )}
           </div>
@@ -470,7 +566,7 @@ export default function MultiDayRoutePlanner() {
                   <div className="absolute inset-0 flex items-center justify-center bg-gray-100 bg-opacity-70 z-10">
                     <div className="text-center">
                       <Spin indicator={<Loader className="animate-spin h-8 w-8 text-blue-500" />} />
-                      <p className="mt-2 text-gray-600">Calculating your route...</p>
+                      <p className="mt-2 text-gray-600">Calculating your smart route...</p>
                     </div>
                   </div>
                 ) : route ? (
@@ -479,11 +575,59 @@ export default function MultiDayRoutePlanner() {
                   <div className="h-full flex items-center justify-center text-gray-500">
                     <div className="text-center">
                       <MapPin className="w-12 h-12 mx-auto mb-4 text-gray-400" />
-                      <p>Enter your destinations and click "Plan My Route"</p>
+                      <p>Enter your destinations and click "Plan My Smart Route"</p>
                     </div>
                   </div>
                 )}
               </div>
+
+              {/* Route Details */}
+              {route && !loading && (
+                <div className="mb-6">
+                  <Title level={3} className="flex items-center gap-2 text-gray-800 mb-4">
+                    <Route className="w-5 h-5" /> Route Details
+                  </Title>
+                  
+                  <Collapse ghost>
+                    {route.legs.map((leg, index) => (
+                      <Panel 
+                        header={
+                          <div className="flex items-center justify-between">
+                            <span className="font-medium">{leg.from} → {leg.to}</span>
+                            <Tag color="blue">{leg.distance} km</Tag>
+                          </div>
+                        } 
+                        key={index}
+                        extra={
+                          <div className="flex items-center gap-2 text-sm text-gray-500">
+                            <Clock className="w-4 h-4" />
+                            <span>{leg.travelTime}</span>
+                          </div>
+                        }
+                      >
+                        <div className="grid grid-cols-2 gap-2 pl-6">
+                          <div className="flex items-center gap-2">
+                            <Fuel className="w-4 h-4 text-green-500" />
+                            <span>Fuel: {leg.fuelNeeded.toFixed(1)}L (€{leg.fuelCost.toFixed(2)})</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Coffee className="w-4 h-4 text-amber-600" />
+                            <span>Rest Stops: {leg.restStops}</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Zap className="w-4 h-4 text-blue-500" />
+                            <span>Refuel Stops: {leg.refuelStops}</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Clock className="w-4 h-4 text-purple-500" />
+                            <span>Total Time: {Math.floor(leg.totalTimeWithStops)}h {Math.round((leg.totalTimeWithStops % 1) * 60)}m</span>
+                          </div>
+                        </div>
+                      </Panel>
+                    ))}
+                  </Collapse>
+                </div>
+              )}
 
               {/* Day-by-Day Plan */}
               {route && !loading && (
