@@ -43,6 +43,13 @@ export default function TripPlannerButton() {
       desc: 'Plan trips with weather insights',
       path: '/weather-planner',
     },
+    {
+      key: 'currency-converter',
+      icon: <Sparkles size={18} className="text-orange-500" />,
+      title: 'Currency Converter',
+      desc: 'Convert currencies easily',
+      path: '/currency-converter',
+    }
   ];
 
   const content = (
