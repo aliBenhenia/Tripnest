@@ -63,6 +63,13 @@ export default function TripPlannerButton() {
       title: "Phrasebook",
       desc: "Save and manage your phrases",
       path: "/phrasebook",
+    },
+    {
+      key :"Medication Checker",
+      icon: <BookOpen size={18} className="text-indigo-500" />,
+      title: "Medication Checker",
+      desc: "Check your medications",
+      path: "/medication-checker",
     }
   ];
 
