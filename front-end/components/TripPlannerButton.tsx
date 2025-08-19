@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Tooltip, Button, Popover } from 'antd';
-import { Map, Sparkles , Route} from 'lucide-react';
+import { Map, Sparkles, Route, CloudSun } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 
@@ -10,51 +10,59 @@ export default function TripPlannerButton() {
   const [open, setOpen] = useState(false);
   const router = useRouter();
 
-  const handleOpenChange = (newOpen) => {
+  const handleOpenChange = (newOpen: boolean) => {
     setOpen(newOpen);
   };
 
+  const options = [
+    {
+      key: 'planner',
+      icon: <Map size={18} className="text-blue-500" />,
+      title: 'Normal Planner',
+      desc: 'Create your custom itinerary',
+      path: '/planner',
+    },
+    {
+      key: 'ai-generator',
+      icon: <Sparkles size={18} className="text-purple-500" />,
+      title: 'AI Generator',
+      desc: 'Smart trip suggestions',
+      path: '/generatour',
+    },
+    {
+      key: 'route-planner',
+      icon: <Route size={18} className="text-green-500" />,
+      title: 'Route Planner',
+      desc: 'Route planning made easy',
+      path: '/route-planner',
+    },
+    {
+      key: 'weather-planner',
+      icon: <CloudSun size={18} className="text-yellow-500" />,
+      title: 'Weather Planner',
+      desc: 'Plan trips with weather insights',
+      path: '/weather-planner',
+    },
+  ];
+
   const content = (
     <div className="flex flex-col gap-2 p-2">
-      <Button
-        onClick={() => {
-          setOpen(false);
-          router.push('/planner');
-        }}
-        className="flex items-center gap-2 h-auto py-3 px-4 rounded-lg transition-all hover:bg-gray-50"
-      >
-        <Map size={18} className="text-blue-500" />
-        <div className="text-left">
-          <div className="font-medium text-gray-800">Normal Planner</div>
-          <div className="text-xs text-gray-500">Create your custom itinerary</div>
-        </div>
-      </Button>
-      <Button
-        onClick={() => {
-          setOpen(false);
-          router.push('/generatour');
-        }}
-        className="flex items-center gap-2 h-auto py-3 px-4 rounded-lg transition-all hover:bg-gray-50"
-      >
-        <Sparkles size={18} className="text-purple-500" />
-        <div className="text-left">
-          <div className="font-medium text-gray-800">AI Generator</div>
-          <div className="text-xs text-gray-500">Smart trip suggestions</div>
-        </div>
-      </Button>
-      <Button
-        onClick={() => {
-          setOpen(false);
-          router.push('/route-planner');
-        }}
-        className="flex items-center gap-2 h-auto py-3 px-4 rounded-lg transition-all hover:bg-gray-50"
-      >
-        <Route size={18} className="text-purple-500" />
-        <div className="text-left">
-          <div className="font-medium text-gray-800">Route Planner</div>
-          <div className="text-xs text-gray-500">route planning made easy</div>
-        </div>
-      </Button>
+      {options.map((opt) => (
+        <Button
+          key={opt.key}
+          onClick={() => {
+            setOpen(false);
+            router.push(opt.path);
+          }}
+          className="flex items-center gap-2 h-auto py-3 px-4 rounded-lg transition-all hover:bg-gray-50"
+        >
+          {opt.icon}
+          <div className="text-left">
+            <div className="font-medium text-gray-800">{opt.title}</div>
+            <div className="text-xs text-gray-500">{opt.desc}</div>
+          </div>
+        </Button>
+      ))}
     </div>
   );
 
@@ -76,7 +84,7 @@ export default function TripPlannerButton() {
           padding: 0,
         }}
       >
-        <Tooltip  placement="top" mouseEnterDelay={0.2}>
+        <Tooltip title="Trip Planner" placement="top" mouseEnterDelay={0.2}>
           <motion.div
             className="relative"
             animate={{
