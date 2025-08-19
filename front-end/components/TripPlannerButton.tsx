@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Tooltip, Button, Popover } from 'antd';
-import { Map, Sparkles, Route, CloudSun } from 'lucide-react';
+import { Map, Sparkles, Route, CloudSun,Phone,BookOpen } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 
@@ -49,6 +49,20 @@ export default function TripPlannerButton() {
       title: 'Currency Converter',
       desc: 'Convert currencies easily',
       path: '/currency-converter',
+    },
+    {
+      key: "emergency",
+      icon: <Phone size={18} className="text-red-500" />,
+      title: "Emergency Contacts",
+      desc: "Access emergency numbers and health info",
+      path: "/emergency",
+    },
+    {
+      key : "phrasebook",
+      icon: <BookOpen size={18} className="text-indigo-500" />,
+      title: "Phrasebook",
+      desc: "Save and manage your phrases",
+      path: "/phrasebook",
     }
   ];
 
