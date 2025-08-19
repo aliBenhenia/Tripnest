@@ -361,6 +361,6 @@ const ChevronRight = ({ size = 16 }) => (
     stroke="currentColor" 
     strokeWidth="2"
   >
-    <polyline points="9 18 15 12 9 6"></polyline>
+    <polyline points="9 18 15 12 9 6"></polyline> 
   </svg>
 );
