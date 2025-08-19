@@ -1,4 +1,3 @@
-// ```jsx
 "use client";
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -10,7 +9,7 @@ import {
   Star, 
   MapPin, 
   Calendar,
-  ChevronDown,
+  Clock,
   X,
   Search,
   Heart,
@@ -43,87 +42,6 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-const initialStops = [
-  {
-    id: '1',
-    name: 'Paris - Eiffel Tower',
-    description: 'Visit the iconic Eiffel Tower and enjoy breathtaking views of the city.',
-    images: [
-      'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80',
-      'https://images.unsplash.com/photo-1511739001486-6bfe10ce785f?auto=format&fit=crop&w=600&q=80',
-    ],
-    category: 'Sightseeing',
-    rating: 4.8,
-    duration: '3 hours',
-    location: 'Paris, France'
-  },
-  {
-    id: '2',
-    name: 'Rome - Colosseum',
-    description: 'Explore the ancient Roman Colosseum and learn about its fascinating history.',
-    images: [
-      'https://cf.bstatic.com/xdata/images/hotel/square240/194578459.webp?k=6fc8fdb2450ce3aac7049a9e6c1170bbce06e722163bd65fa84084eeb52eda4f&o=',
-      'https://cf.bstatic.com/xdata/images/hotel/square240/194578459.webp?k=6fc8fdb2450ce3aac7049a9e6c1170bbce06e722163bd65fa84084eeb52eda4f&o=',
-    ],
-    category: 'Historical',
-    rating: 4.9,
-    duration: '4 hours',
-    location: 'Rome, Italy'
-  },
-  {
-    id: '3',
-    name: 'Venice - Gondola Ride',
-    description: 'Enjoy a romantic gondola ride through the enchanting canals of Venice.',
-    images: [
-      'https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=600&q=80',
-      'https://images.unsplash.com/photo-1526483360654-2284d43a72ef?auto=format&fit=crop&w=600&q=80',
-    ],
-    category: 'Relaxation',
-    rating: 4.7,
-    duration: '2 hours',
-    location: 'Venice, Italy'
-  },
-  {
-    id: '4',
-    name: 'Tokyo - Shibuya Crossing',
-    description: 'Experience the bustling energy of the world\'s busiest pedestrian crossing.',
-    images: [
-      'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=600&q=80',
-      'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=600&q=80',
-    ],
-    category: 'Sightseeing',
-    rating: 4.6,
-    duration: '2 hours',
-    location: 'Tokyo, Japan'
-  },
-  {
-    id: '5',
-    name: 'New York - Statue of Liberty',
-    description: 'Visit the iconic Statue of Liberty and take a ferry tour around Manhattan.',
-    images: [
-      'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80',
-      'https://images.unsplash.com/photo-1511739001486-6bfe10ce785f?auto=format&fit=crop&w=600&q=80',
-    ],
-    category: 'Historical',
-    rating: 4.5,
-    duration: '3 hours',
-    location: 'New York, USA'
-  },
-  {
-    id: '6',
-    name: 'Bali - Uluwatu Temple',
-    description: 'Watch stunning sunsets at this cliffside temple overlooking the Indian Ocean.',
-    images: [
-      'https://images.unsplash.com/photo-1500534623283-312aade485b7?auto=format&fit=crop&w=600&q=80',
-      'https://images.unsplash.com/photo-1526483360654-2284d43a72ef?auto=format&fit=crop&w=600&q=80',
-    ],
-    category: 'Relaxation',
-    rating: 4.9,
-    duration: '2.5 hours',
-    location: 'Bali, Indonesia'
-  }
-];
-
 const categories = [
   { id: 'All', name: 'All Stops', icon: '🌍' },
   { id: 'Sightseeing', name: 'Sightseeing', icon: '🏛️' },
@@ -133,12 +51,10 @@ const categories = [
 
 const TripPlanner = () => {
   const [stops, setStops] = useState([]);
-  const [filterCategory, setFilterCategory] = useState('All');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingStop, setEditingStop] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
-  const [isAnimating, setIsAnimating] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -166,13 +82,13 @@ const TripPlanner = () => {
   const filteredStops = stops.filter(stop => {
     const matchesCategory = selectedCategory === 'All' || stop.category === selectedCategory;
     const matchesSearch = stop.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         stop.description.toLowerCase().includes(searchTerm.toLowerCase());
+                         stop.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         stop.location.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesCategory && matchesSearch;
   });
 
   const handleDragStart = (e, stop) => {
     e.dataTransfer.setData('stopId', stop.id);
-    setIsAnimating(true);
   };
 
   const handleDragOver = (e) => {
@@ -190,7 +106,6 @@ const TripPlanner = () => {
       newStops.splice(targetIndex, 0, movedItem);
       setStops(newStops);
     }
-    setIsAnimating(false);
   };
 
   const openNewStopModal = () => {
@@ -221,9 +136,10 @@ const TripPlanner = () => {
       description: formData.get('description'),
       images: formData.get('images').split(',').map(url => url.trim()).filter(url => url),
       category: formData.get('category'),
-      rating: 4.5,
-      duration: '2 hours',
-      location: 'Unknown Location'
+      location: formData.get('location'),
+      startDate: formData.get('startDate'),
+      duration: formData.get('duration'),
+      rating: parseFloat(formData.get('rating')) || 4.5
     };
     
     try {
@@ -257,6 +173,23 @@ const TripPlanner = () => {
       case 'Relaxation': return 'bg-green-100 text-green-800';
       default: return 'bg-gray-100 text-gray-800';
     }
+  };
+
+  const formatDate = (dateString) => {
+    if (!dateString) return 'No date set';
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'short', 
+      day: 'numeric' 
+    });
+  };
+
+  const calculateTotalHours = () => {
+    return stops.reduce((total, stop) => {
+      const hours = parseFloat(stop.duration) || 0;
+      return total + hours;
+    }, 0).toFixed(1);
   };
 
   if (loading) {
@@ -381,7 +314,7 @@ const TripPlanner = () => {
               <div>
                 <p className="text-sm text-gray-600">Avg Rating</p>
                 <p className="text-2xl font-bold text-gray-900">
-                  {stops.length > 0 ? Math.round(stops.reduce((acc, stop) => acc + stop.rating, 0) / stops.length * 10) / 10 : 0}
+                  {stops.length > 0 ? (stops.reduce((acc, stop) => acc + stop.rating, 0) / stops.length).toFixed(1) : 0}
                 </p>
               </div>
               <div className="bg-yellow-100 p-3 rounded-lg">
@@ -405,11 +338,11 @@ const TripPlanner = () => {
           <div className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600">Duration</p>
-                <p className="text-2xl font-bold text-gray-900">15h</p>
+                <p className="text-sm text-gray-600">Total Duration</p>
+                <p className="text-2xl font-bold text-gray-900">{calculateTotalHours()}h</p>
               </div>
               <div className="bg-green-100 p-3 rounded-lg">
-                <Calendar className="w-6 h-6 text-green-600" />
+                <Clock className="w-6 h-6 text-green-600" />
               </div>
             </div>
           </div>
@@ -434,9 +367,12 @@ const TripPlanner = () => {
                 <div className="relative">
                   <div className="h-48 overflow-hidden">
                     <img
-                      src={stop.images[0]}
+                      src={stop.images[0] || 'https://placehold.co/600x400?text=No+Image'}
                       alt={stop.name}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      onError={(e) => {
+                        e.target.src = 'https://placehold.co/600x400?text=Image+Error';
+                      }}
                     />
                   </div>
                   
@@ -454,8 +390,8 @@ const TripPlanner = () => {
                           <span className="text-white text-sm font-medium">{stop.rating}</span>
                         </div>
                         <div className="flex items-center gap-1 text-white text-sm">
-                          <Calendar className="w-4 h-4" />
-                          <span>{stop.duration}</span>
+                          <Clock className="w-4 h-4" />
+                          <span>{stop.duration}h</span>
                         </div>
                       </div>
                     </div>
@@ -464,14 +400,19 @@ const TripPlanner = () => {
                 
                 <div className="p-5">
                   <h3 className="font-bold text-lg text-gray-900 mb-2">{stop.name}</h3>
-                  <p className="text-gray-600 text-sm mb-4 line-clamp-2">{stop.description}</p>
+                  <p className="text-gray-600 text-sm mb-3 line-clamp-2">{stop.description}</p>
+                  
+                  <div className="flex items-center gap-2 text-gray-500 text-sm mb-2">
+                    <Calendar className="w-4 h-4" />
+                    <span>{formatDate(stop.startDate)}</span>
+                  </div>
+                  
+                  <div className="flex items-center gap-2 text-gray-500 text-sm mb-3">
+                    <MapPin className="w-4 h-4" />
+                    <span>{stop.location}</span>
+                  </div>
                   
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2 text-gray-500 text-sm">
-                      <MapPin className="w-4 h-4" />
-                      <span>{stop.location}</span>
-                    </div>
-                    
                     <div className="flex gap-2">
                       <motion.button
                         whileHover={{ scale: 1.1 }}
@@ -552,7 +493,11 @@ const TripPlanner = () => {
                     name: formData.get('name'),
                     description: formData.get('description'),
                     images: formData.get('images').split(',').map(url => url.trim()).filter(url => url),
-                    category: formData.get('category')
+                    category: formData.get('category'),
+                    location: formData.get('location'),
+                    startDate: formData.get('startDate'),
+                    duration: formData.get('duration'),
+                    rating: parseFloat(formData.get('rating'))
                   };
                   handleUpdate(editingStop._id, updateData);
                 } else {
@@ -577,6 +522,55 @@ const TripPlanner = () => {
                     defaultValue={editingStop?.description || ''}
                     required
                     rows={3}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Location</label>
+                  <input
+                    type="text"
+                    name="location"
+                    defaultValue={editingStop?.location || ''}
+                    required
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Start Date</label>
+                  <input
+                    type="date"
+                    name="startDate"
+                    defaultValue={editingStop?.startDate ? new Date(editingStop.startDate).toISOString().split('T')[0] : ''}
+                    required
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Duration (hours)</label>
+                  <input
+                    type="number"
+                    name="duration"
+                    step="0.5"
+                    min="0.5"
+                    defaultValue={editingStop?.duration || '2'}
+                    required
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                  />
+                </div>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Rating</label>
+                  <input
+                    type="number"
+                    name="rating"
+                    step="0.1"
+                    min="0"
+                    max="5"
+                    defaultValue={editingStop?.rating || '4.5'}
+                    required
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                   />
                 </div>

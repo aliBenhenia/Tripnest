@@ -10,9 +10,10 @@ const tripStopSchema = new mongoose.Schema({
   description: { type: String, required: true },
   images: [{ type: String }],
   category: { type: String, enum: ['Sightseeing', 'Historical', 'Relaxation'], required: true },
-  rating: { type: Number, default: 4.5 },
-  duration: { type: String, default: '2 hours' },
-  location: { type: String, default: 'Unknown Location' }
+  rating: { type: Number, default: 4.5, min: 0, max: 5 },
+  duration: { type: Number, required: true, min: 0.5 }, // in hours
+  location: { type: String, required: true },
+  startDate: { type: Date, required: true }
 }, { timestamps: true });
 
 const TripStop = mongoose.model('TripStop', tripStopSchema);
@@ -54,8 +55,9 @@ const tripController = {
         images: req.body.images || [],
         category: req.body.category,
         rating: req.body.rating || 4.5,
-        duration: req.body.duration || '2 hours',
-        location: req.body.location || 'Unknown Location'
+        duration: req.body.duration,
+        location: req.body.location,
+        startDate: req.body.startDate
       });
 
       const newStop = await stop.save();
@@ -77,6 +79,7 @@ const tripController = {
       stop.rating = req.body.rating ?? stop.rating;
       stop.duration = req.body.duration ?? stop.duration;
       stop.location = req.body.location ?? stop.location;
+      stop.startDate = req.body.startDate ?? stop.startDate;
 
       const updatedStop = await stop.save();
       res.json(updatedStop);
