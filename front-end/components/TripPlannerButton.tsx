@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Tooltip, Button, Popover } from 'antd';
-import { Map, Sparkles } from 'lucide-react';
+import { Map, Sparkles , Route} from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { motion } from 'framer-motion';
 
@@ -40,6 +40,19 @@ export default function TripPlannerButton() {
         <div className="text-left">
           <div className="font-medium text-gray-800">AI Generator</div>
           <div className="text-xs text-gray-500">Smart trip suggestions</div>
+        </div>
+      </Button>
+      <Button
+        onClick={() => {
+          setOpen(false);
+          router.push('/route-planner');
+        }}
+        className="flex items-center gap-2 h-auto py-3 px-4 rounded-lg transition-all hover:bg-gray-50"
+      >
+        <Route size={18} className="text-purple-500" />
+        <div className="text-left">
+          <div className="font-medium text-gray-800">Route Planner</div>
+          <div className="text-xs text-gray-500">route planning made easy</div>
         </div>
       </Button>
     </div>
