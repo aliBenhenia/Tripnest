@@ -33,9 +33,9 @@ export default function LoginPage() {
   const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
-    if (isAuthenticated) {
-      router.push(returnUrl);
-    }
+    // if (isAuthenticated) {
+    //   router.push(returnUrl);
+    // }
   }, [isAuthenticated, router, returnUrl]);
 
   useEffect(() => {
