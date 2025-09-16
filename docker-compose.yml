@@ -20,14 +20,7 @@ services:
   backend:
     build: ./backend
     container_name: backend
-    environment:
-      # - MONGO_URI=mongodb://mongodb:27017/travila
-      - MONGO_URI=mongodb+srv://alibenhenia1:3TkEK63GFAfL8ZZf@cluster0.l3xb1ca.mongodb.net/mydatabase?retryWrites=true&w=majority&appName=Cluster0
-      - PORT=3001
-      - NODE_ENV=development
-      - JWT_EXPIRES_IN=30d
-      - JWT_SECRET=ILm0yG0tXtyjR1729dVJ5dBVUVN+FHm0dNC8ErHyW6TntpDo5r1azrRP53pdKCkvhnQFDRIfW5CMWUyUV/p6w==
-      - JWT_REFRESH_SECRET=CHXxGQwdjyjVI28bYO/m2vQv4YLAZBG693IW/4DWOZmNSbndL9Rv/JKhBm06HqWKJigTHuf6VbxJcvIW8e9ToQ==
+    # environment:
     ports:
       - "3001:3001"  # Your backend API will be on port 3001
     depends_on:
@@ -42,9 +35,6 @@ services:
   frontend:
     build: ./front-end
     container_name: frontend
-    environment:
-      # - NEXT_PUBLIC_API_URL=http://localhost:3001  # Change the port to 3001 to match the backend
-      - NEXT_PUBLIC_API_URL=https://3001-alibenhenia-tripnest-ga84z36lwpk.ws-eu120.gitpod.io # Change the port to 3001 to match the backend
     ports:
       - "3000:3000"  # Your frontend will be on port 3000
     depends_on:
@@ -61,8 +51,3 @@ networks:
 
 volumes:
   mongodb_data:
-
-# change logo name
-# dashboard for for planner
-# checkin  checkout
-# calnder
