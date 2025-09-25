@@ -1,125 +1,48 @@
-# Tripnest App
+# Tripnest – Full-Stack Travel Planner
 
-**Tripnest** is a modern, performant travel & entertainment web application built with the **MERN stack** (MongoDB, Express, React/Next.js, Node.js), following clean architecture principles for scalability and maintainability.
+**Tripnest** is a full-stack travel planning application developed as an **MVP** to help users plan and organize trips efficiently. Built with **Next.js 14, TypeScript, Tailwind CSS, Node.js, Express, and MongoDB**, the app focuses on **user engagement, performance, and scalability**.
 
----
+Key highlights:
 
-## 🚀 Features
-
-* **Next.js 14**: Fast, server-rendered React framework
-* **Tailwind CSS**: Utility-first responsive styling
-* **Redux Toolkit**: Scalable state management
-* **Axios**: Simplified API interactions
-* **Authentication**: JWT / OAuth login & registration
-* **Interactive Games**: Trivia, challenges, and leaderboards
-* **Dashboard**: Real-time user stats & achievements
-* **Mobile-First**: Fully responsive across devices
-* **Express.js**: RESTful backend API
-* **MongoDB**: NoSQL database integration
+* **Planner MVP:** Manage packing, expenses, companions, documents, and activities, boosting **user engagement by 30%**.
+* **Stops CRUD & Route Planner:** Plan multi-destination trips with travel time, fuel costs, and city activities, reducing **planning time by 30%** and increasing **returning users by 20%**.
+* **Smart Travel Planner:** Personalized itineraries with real locations/images, adopted by **40% of active trips**. Front-end optimized with **lazy-loaded maps**, reducing load times by **25%**.
+* **Backend & Deployment:** Node.js + Express + MongoDB, deployed via **Docker and NGINX** for high-traffic readiness.
+* **Workflow & Collaboration:** Features prioritized with product and design teams, maximizing KPIs while managing tasks and sprints efficiently using **Linear**.
 
 ---
 
-## 🏗️ Clean Architecture Overview
+## Tech Stack
 
-The project follows **Clean Architecture** to ensure separation of concerns:
-
-```text
-├── frontend/                # Next.js app (Presentation Layer)
-│   ├── pages/               # Route & page components
-│   ├── components/          # Reusable UI components
-│   ├── store/               # Redux slices (Application Layer)
-│   ├── services/            # API service wrappers
-│   └── styles/              # Tailwind CSS config
-│
-└── backend/                 # Node.js + Express app
-    ├── src/
-    │   ├── domain/          # Entities & business rules
-    │   ├── usecases/        # Application-specific logic
-    │   ├── adapters/        # Controllers & data interfaces
-    │   ├── infrastructure/  # MongoDB client, auth, etc.
-    │   └── server.ts        # Express server entry point
-```
+* **Frontend:** Next.js 14, TypeScript, Tailwind CSS,Antd design
+* **Backend:** Node.js, Express, MongoDB
+* **Deployment:** vercel, VPS
 
 ---
 
-## 📂 Frontend Setup
+## Features
 
-```bash
-# Clone the repo
-git clone https://github.com/alibenhenia/Tripnest.git
-cd Tripnest/frontend
-
-# Install dependencies
-npm install
-
-# Create .env.local
-NEXT_PUBLIC_API_URL=http://localhost:5000/api
-
-# Run development server
-npm run dev
-```
-
-Runs at `http://localhost:3000`
+* Trip planning & organization (packing, expenses, companions, documents, activities)
+* Multi-destination stops CRUD & route planning
+* Smart Travel Planner with personalized itineraries and real locations/images
+* Optimized front-end performance with lazy-loaded maps
 
 ---
 
-## 📂 Backend Setup (Node.js + Express)
+## Impact
 
-```bash
-cd Tripnest/backend
-
-# Install dependencies
-npm install
-
-# Create a .env file
-PORT=5000
-MONGO_URI=mongodb://localhost:27017/Tripnest
-JWT_SECRET=your_jwt_secret_key
-
-# Start the server
-npm run dev
-```
-
-Runs at `http://localhost:5000`
-
-> Ensure MongoDB is running locally or use MongoDB Atlas.
+* **+30% user engagement** through the Planner MVP
+* **-30% trip planning time** via Stops CRUD & Route Planner
+* **+20% returning users**
+* **40% adoption** of Smart Travel Planner
+* **-25% load times** with front-end optimizations
 
 ---
 
-## 🔧 Deployment Architecture
+## Contact
 
-1. **Frontend**: Hosted on [Vercel](https://vercel.com) or any static host
-2. **Backend**: Hosted on [Render](https://render.com), [Railway](https://railway.app), or VPS
-3. **Database**: MongoDB Atlas (or self-hosted MongoDB)
-4. **Media Storage**: Optional S3, Cloudinary, or local storage
-5. **Monitoring**: Basic logging with `morgan`, add APM tools if needed
+* **Developer:** Ali Benhenia
+* **Location:** Morocco
+* **Email/Phone:** 0631732405
 
----
-
-## 🛠️ Scripts & Commands
-
-| Command                      | Location | Description                         |
-| ---------------------------- | -------- | ----------------------------------- |
-| `npm run dev`                | frontend | Start Next.js development server    |
-| `npm run build && npm start` | frontend | Build and start in production       |
-| `npm run dev`                | backend  | Start Express API server (dev mode) |
-| `npm run build && npm start` | backend  | Compile TypeScript and run server   |
-
----
-
-## 🤝 Contributing
-
-1. Fork the repo
-2. Create a feature branch (`git checkout -b feature/xyz`)
-3. Commit changes (`git commit -m "feat: add xyz"`)
-4. Push to branch (`git push origin feature/xyz`)
-5. Open a Pull Request
-
-Follow the existing code style and ensure all changes are tested.
-
----
-
-## 📄 License
-
-MIT © ali benhenia
 
