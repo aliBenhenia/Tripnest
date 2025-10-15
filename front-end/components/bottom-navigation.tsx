@@ -61,8 +61,8 @@ export default function BottomNavigation() {
       icon: Home,
     },
     {
-      name: "Explore",
-      href: "/explore",
+      name: "generatour",
+      href: "/generatour",
       icon: Map,
     },
     {

@@ -21,6 +21,8 @@ import {
   Utensils,
   Loader
 } from 'lucide-react';
+import { Image as AntdImage } from 'antd';
+
 
 const { Title, Text } = Typography;
 const { Option } = Select;
@@ -474,6 +476,9 @@ export default function TravelPlanner() {
         return { ...prev, [key]: newIndex };
     });
   };
+
+   const [previewVisible, setPreviewVisible] = useState(false);
+  const imageKey = `${activityIndex}-${currentImageIndex}`;
   // --- End Image Slider Logic ---
 
 
@@ -817,54 +822,68 @@ export default function TravelPlanner() {
                           <div key={activityIndex} className="flex flex-col md:flex-row gap-6 p-6 rounded-xl hover:bg-gray-50 transition-all border border-gray-100 shadow-sm">
                             {/* Image Slider Section */}
                             <div className="md:w-1/3">
-                              <div className="relative group rounded-lg overflow-hidden">
-                                {isLoading && (
-                                  <ImageSkeleton className="w-full h-48" />
-                                )}
-                                <img
-                                  src={currentImage}
-                                  alt={`${activity.activity} - Image ${currentImageIndex + 1}`}
-                                  className={`w-full h-48 object-cover transition-opacity ${isLoading ? 'hidden' : 'block'}`}
-                                  onLoad={() => handleImageLoad(imageKey)}
-                                  onError={() => handleImageError(imageKey)}
-                                  style={{ display: isLoading ? 'none' : 'block' }}
-                                />
-                                
-                                {/* Slider Controls */}
-                                {activity.images && activity.images.length > 1 && (
-                                  <>
-                                    <button
-                                      onClick={(e) => { e.stopPropagation(); prevImage(activityIndex); }}
-                                      className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-1 rounded-full hover:bg-opacity-75 transition-all"
-                                      aria-label="Previous image"
-                                    >
-                                      <ChevronLeftIcon className="w-5 h-5" />
-                                    </button>
-                                    <button
-                                      onClick={(e) => { e.stopPropagation(); nextImage(activityIndex); }}
-                                      className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-1 rounded-full hover:bg-opacity-75 transition-all"
-                                      aria-label="Next image"
-                                    >
-                                      <ChevronRightIcon className="w-5 h-5" />
-                                    </button>
-                                    <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-1">
-                                      {activity.images.map((_, idx) => (
-                                        <div
-                                          key={idx}
-                                          className={`w-2 h-2 rounded-full ${
-                                            idx === currentImageIndex ? 'bg-white' : 'bg-white bg-opacity-50'
-                                          }`}
-                                        ></div>
-                                      ))}
-                                    </div>
-                                  </>
-                                )}
-                                
-                                <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all rounded-lg flex items-center justify-center">
-                                  <ImageIcon className="text-white w-8 h-8 opacity-0 group-hover:opacity-100 transition-opacity" />
-                                </div>
-                              </div>
-                            </div>
+      <div className="relative group rounded-lg overflow-hidden">
+        {isLoading && <ImageSkeleton className="w-full h-48" />}
+
+        {/* Main Image */}
+        <AntdImage
+          src={currentImage}
+          alt={`${activity.activity} - Image ${currentImageIndex + 1}`}
+          className={`w-full h-48 object-cover cursor-pointer transition-opacity ${isLoading ? "hidden" : "block"}`}
+          onLoad={() => handleImageLoad(imageKey)}
+          onError={() => handleImageError(imageKey)}
+          style={{ display: isLoading ? "none" : "block" }}
+          preview={{
+            visible: previewVisible,
+            onVisibleChange: (visible) => setPreviewVisible(visible),
+          }}
+          onClick={() => setPreviewVisible(true)} // 👈 ensures modal opens on click
+        />
+
+        {/* Slider Controls */}
+        {activity.images && activity.images.length > 1 && (
+          <>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                prevImage(activityIndex);
+              }}
+              className="absolute left-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-1 rounded-full hover:bg-opacity-75 transition-all"
+              aria-label="Previous image"
+            >
+              <ChevronLeftIcon className="w-5 h-5" />
+            </button>
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                nextImage(activityIndex);
+              }}
+              className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-1 rounded-full hover:bg-opacity-75 transition-all"
+              aria-label="Next image"
+            >
+              <ChevronRightIcon className="w-5 h-5" />
+            </button>
+
+            {/* Dots Indicator */}
+            <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-1">
+              {activity.images.map((_, idx) => (
+                <div
+                  key={idx}
+                  className={`w-2 h-2 rounded-full ${
+                    idx === currentImageIndex ? "bg-white" : "bg-white bg-opacity-50"
+                  }`}
+                ></div>
+              ))}
+            </div>
+          </>
+        )}
+
+        {/* Hover overlay */}
+        <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all rounded-lg flex items-center justify-center pointer-events-none">
+          <ImageIcon className="text-white w-8 h-8 opacity-0 group-hover:opacity-100 transition-opacity" />
+        </div>
+      </div>
+    </div>
                             
                             {/* Activity Details Section */}
                             <div className="md:w-2/3">
@@ -942,7 +961,7 @@ export default function TravelPlanner() {
                               {isLoading && (
                                 <ImageSkeleton className="w-16 h-16" />
                               )}
-                              <img
+                              <AntdImage
                                 src={placeImage}
                                 alt={place.name}
                                 className={`w-16 h-16 object-cover rounded-lg ${isLoading ? 'hidden' : 'block'}`}
