@@ -51,9 +51,9 @@ const PageSkeleton = () => (
       
       {/* Navigation tabs skeleton */}
       <div className="flex space-x-2 mb-8">
-        <Skeleton.Button active size="large" className="w-24" />
+        {/* <Skeleton.Button active size="large" className="w-24" />
         <Skeleton.Button active size="large" className="w-32" />
-        <Skeleton.Button active size="large" className="w-28" />
+        <Skeleton.Button active size="large" className="w-28" /> */}
       </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">

@@ -1,4 +1,3 @@
-// ```jsx
 "use client";
 import React, { useState, useMemo, useEffect } from "react";
 import { 
@@ -9,9 +8,12 @@ import {
   Heart, 
   Calendar, 
   Users, 
-  Camera, 
   Filter,
   Globe,
+  Navigation,
+  Settings,
+  Menu,
+  X,
   ChevronRight,
   ExternalLink,
   Map,
@@ -35,319 +37,111 @@ import {
   BookOpen,
   Music,
   Camera as CameraIcon,
-  Navigation,
   Target,
-  TrendingUp,
-  Settings,
-  Menu,
-  X,
-  ChevronLeft,
-  ChevronRight as ChevronRightIcon
+  TrendingUp
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const DEFAULT_IMAGE =
   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/320px-No_image_available.svg.png";
 
-// Mock data for initial state
-const mockCities = [
-  {
-    id: 1,
-    title: "Casablanca",
-    description: "Economic capital and largest city of Morocco.",
-    lat: 33.5731,
-    lon: -7.5898,
-    rating: 4.6,
-    image: "https://images.unsplash.com/photo-1516483638261-f4dbaf036963?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
-    country: "Morocco",
-    population: "3.5M",
-    climate: "Mediterranean",
-    attractions: ["Kasbah of the Udayas", "American Legation Museum", "Corniche"],
-    currency: "MAD",
-    timezone: "GMT+0",
-    language: "Arabic/French",
-    weather: "Sunny",
-    bestTime: "Spring/Fall",
-    visaRequired: true,
-    safety: "High",
-    costOfLiving: "Medium",
-    featured: true
-  },
-  {
-    id: 2,
-    title: "Marrakech",
-    description: "Famous for its medina and vibrant souks.",
-    lat: 31.6295,
-    lon: -7.9811,
-    rating: 4.8,
-    image: "https://images.unsplash.com/photo-1516483638261-f4dbaf036963?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
-    country: "Morocco",
-    population: "1.3M",
-    climate: "Desert",
-    attractions: ["Jemaa el-Fnaa", "Bahia Palace", "Menara Gardens"],
-    currency: "MAD",
-    timezone: "GMT+0",
-    language: "Arabic/French",
-    weather: "Warm",
-    bestTime: "Spring/Fall",
-    visaRequired: true,
-    safety: "High",
-    costOfLiving: "Low",
-    featured: true
-  },
-  {
-    id: 3,
-    title: "Fes",
-    description: "Ancient city known for its walled medina.",
-    lat: 34.0331,
-    lon: -5.0003,
-    rating: 4.7,
-    image: "https://images.unsplash.com/photo-1516483638261-f4dbaf036963?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
-    country: "Morocco",
-    population: "1.1M",
-    climate: "Continental",
-    attractions: ["UNESCO World Heritage Site", "Al-Qarawiyyin University", "Fes el-Bali"],
-    currency: "MAD",
-    timezone: "GMT+0",
-    language: "Arabic/French",
-    weather: "Temperate",
-    bestTime: "Spring/Fall",
-    visaRequired: true,
-    safety: "High",
-    costOfLiving: "Low",
-    featured: true
-  },
-  {
-    id: 4,
-    title: "Rabat",
-    description: "Capital city of Morocco with historic landmarks.",
-    lat: 34.0209,
-    lon: -6.8416,
-    rating: 4.5,
-    image: "https://images.unsplash.com/photo-1516483638261-f4dbaf036963?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
-    country: "Morocco",
-    population: "600K",
-    climate: "Mediterranean",
-    attractions: ["Royal Palace", "Hassan Tower", "Chouari Museum"],
-    currency: "MAD",
-    timezone: "GMT+0",
-    language: "Arabic/French",
-    weather: "Mild",
-    bestTime: "Spring/Fall",
-    visaRequired: true,
-    safety: "High",
-    costOfLiving: "Medium",
-    featured: false
-  },
-  {
-    id: 5,
-    title: "Tangier",
-    description: "Port city on the Strait of Gibraltar.",
-    lat: 35.7595,
-    lon: -5.8339,
-    rating: 4.4,
-    image: "https://images.unsplash.com/photo-1516483638261-f4dbaf036963?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
-    country: "Morocco",
-    population: "500K",
-    climate: "Mediterranean",
-    attractions: ["Tangier Kasbah", "Caves of Hercules", "Grand Socco"],
-    currency: "MAD",
-    timezone: "GMT+0",
-    language: "Arabic/French",
-    weather: "Mild",
-    bestTime: "Spring/Fall",
-    visaRequired: true,
-    safety: "Medium",
-    costOfLiving: "Low",
-    featured: false
-  },
-  {
-    id: 6,
-    title: "Agadir",
-    description: "Popular seaside resort with beaches.",
-    lat: 30.4278,
-    lon: -9.5981,
-    rating: 4.3,
-    image: "https://images.unsplash.com/photo-1516483638261-f4dbaf036963?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
-    country: "Morocco",
-    population: "500K",
-    climate: "Mediterranean",
-    attractions: ["Agadir Beach", "Tifnit Gardens", "Sidi Ifni"],
-    currency: "MAD",
-    timezone: "GMT+0",
-    language: "Arabic/French",
-    weather: "Warm",
-    bestTime: "Winter/Spring",
-    visaRequired: true,
-    safety: "High",
-    costOfLiving: "Low",
-    featured: false
-  },
-  {
-    id: 7,
-    title: "Tokyo",
-    description: "Capital of Japan, famous for its modernity and tradition.",
-    lat: 35.6762,
-    lon: 139.6503,
-    rating: 4.9,
-    image: "https://images.unsplash.com/photo-1542831371-29b0f74f9713?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
-    country: "Japan",
-    population: "13.9M",
-    climate: "Humid subtropical",
-    attractions: ["Shibuya Crossing", "Senso-ji Temple", "Mount Fuji"],
-    currency: "JPY",
-    timezone: "GMT+9",
-    language: "Japanese",
-    weather: "Temperate",
-    bestTime: "Spring/Fall",
-    visaRequired: true,
-    safety: "Very High",
-    costOfLiving: "High",
-    featured: true
-  },
-  {
-    id: 8,
-    title: "Bangkok",
-    description: "Capital of Thailand, known for vibrant street life and temples.",
-    lat: 13.7563,
-    lon: 100.5018,
-    rating: 4.7,
-    image: "https://images.unsplash.com/photo-1516483638261-f4dbaf036963?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
-    country: "Thailand",
-    population: "8.3M",
-    climate: "Tropical",
-    attractions: ["Grand Palace", "Wat Pho", "Chatuchak Weekend Market"],
-    currency: "THB",
-    timezone: "GMT+7",
-    language: "Thai",
-    weather: "Hot",
-    bestTime: "Winter",
-    visaRequired: false,
-    safety: "Medium",
-    costOfLiving: "Low",
-    featured: true
-  },
-  {
-    id: 9,
-    title: "Seoul",
-    description: "Capital of South Korea, blend of technology and tradition.",
-    lat: 37.5665,
-    lon: 126.978,
-    rating: 4.8,
-    image: "https://images.unsplash.com/photo-1516483638261-f4dbaf036963?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
-    country: "South Korea",
-    population: "9.7M",
-    climate: "Humid continental",
-    attractions: ["Gyeongbokgung Palace", "N Seoul Tower", "Myeongdong"],
-    currency: "KRW",
-    timezone: "GMT+9",
-    language: "Korean",
-    weather: "Temperate",
-    bestTime: "Spring/Fall",
-    visaRequired: true,
-    safety: "Very High",
-    costOfLiving: "Medium",
-    featured: true
-  },
-  {
-    id: 10,
-    title: "Paris",
-    description: "Capital of France, known as the city of light and love.",
-    lat: 48.8566,
-    lon: 2.3522,
-    rating: 4.9,
-    image: "https://images.unsplash.com/photo-1516483638261-f4dbaf036963?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
-    country: "France",
-    population: "2.2M",
-    climate: "Oceanic",
-    attractions: ["Eiffel Tower", "Louvre Museum", "Notre-Dame Cathedral"],
-    currency: "EUR",
-    timezone: "GMT+1",
-    language: "French",
-    weather: "Mild",
-    bestTime: "Spring/Fall",
-    visaRequired: false,
-    safety: "High",
-    costOfLiving: "High",
-    featured: true
-  },
-  {
-    id: 11,
-    title: "London",
-    description: "Capital of UK, famous for history, culture and landmarks.",
-    lat: 51.5074,
-    lon: -0.1278,
-    rating: 4.8,
-    image: "https://images.unsplash.com/photo-1516483638261-f4dbaf036963?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
-    country: "United Kingdom",
-    population: "9.5M",
-    climate: "Oceanic",
-    attractions: ["Big Ben", "Tower of London", "Buckingham Palace"],
-    currency: "GBP",
-    timezone: "GMT+0",
-    language: "English",
-    weather: "Mild",
-    bestTime: "Spring/Fall",
-    visaRequired: false,
-    safety: "High",
-    costOfLiving: "High",
-    featured: true
-  },
-  {
-    id: 12,
-    title: "Rome",
-    description: "Capital of Italy, rich in ancient history and art.",
-    lat: 41.9028,
-    lon: 12.4964,
-    rating: 4.7,
-    image: "https://images.unsplash.com/photo-1516483638261-f4dbaf036963?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=800&q=80",
-    country: "Italy",
-    population: "2.8M",
-    climate: "Mediterranean",
-    attractions: ["Colosseum", "Vatican City", "Roman Forum"],
-    currency: "EUR",
-    timezone: "GMT+1",
-    language: "Italian",
-    weather: "Warm",
-    bestTime: "Spring/Fall",
-    visaRequired: false,
-    safety: "High",
-    costOfLiving: "Medium",
-    featured: true
-  },
-];
+// Define a default city object to prevent errors when activeCity is undefined
+const DEFAULT_CITY = {
+  id: 0,
+  title: "Loading...",
+  description: "Loading city information...",
+  lat: 0,
+  lon: 0,
+  rating: 0,
+  image: DEFAULT_IMAGE,
+  country: "N/A",
+  population: "N/A",
+  climate: "N/A",
+  attractions: [],
+  currency: "N/A",
+  timezone: "N/A",
+  language: "N/A",
+  weather: "N/A",
+  bestTime: "N/A",
+  visaRequired: false,
+  safety: "N/A",
+  costOfLiving: "N/A",
+  featured: false
+};
 
 export default function ExplorePage() {
-  const [activeCityId, setActiveCityId] = useState(mockCities[0].id);
+  const [activeCityId, setActiveCityId] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterRegion, setFilterRegion] = useState("all");
   const [filterFeatured, setFilterFeatured] = useState(false);
   const [favorites, setFavorites] = useState([]);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [mapLoaded, setMapLoaded] = useState(false);
-  const [activeTab, setActiveTab] = useState('cities');
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [cities, setCities] = useState(mockCities);
+  const [cities, setCities] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  // Simulate API call to fetch cities
+  // Fetch cities data from REST Countries API
   useEffect(() => {
-    const fetchCities = async () => {
+    const fetchRealData = async () => {
       setLoading(true);
-      // Simulate network delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // In a real app, you would fetch from an API like:
-      // const response = await fetch('https://restcountries.com/v3.1/all');
-      // const data = await response.json();
-      // Process data to create cities array
-      
-      // For demo purposes, we'll just use mock data but simulate fetching
-      setCities(mockCities);
-      setLoading(false);
+      setError(null);
+      try {
+        // Fetch countries data
+        const countriesResponse = await fetch("https://restcountries.com/v3.1/all?fields=name,currencies,languages,timezones,flags,population,latlng,continents");
+        if (!countriesResponse.ok) throw new Error("Failed to fetch countries");
+        const countriesData = await countriesResponse.json();
+
+        // Get 12 countries randomly
+        const shuffledCountries = [...countriesData].sort(() => 0.5 - Math.random());
+        const selectedCountries = shuffledCountries.slice(0, 12);
+
+        // Create mock cities with real country data
+        const citiesData = selectedCountries.map((country, index) => {
+          const countryName = country.name.common;
+          const currencies = Object.values(country.currencies || {}).map(c => c.name)[0] || "N/A";
+          const languages = Object.values(country.languages || {})[0] || "N/A";
+          const timezones = country.timezones?.[0] || "N/A";
+          const population = country.population ? (country.population / 1000000).toFixed(1) + "M" : "N/A";
+          const lat = country.latlng?.[0] || 0; // Default to 0 if not available
+          const lon = country.latlng?.[1] || 0;
+
+          return {
+            id: index + 1,
+            title: countryName,
+            description: `Capital of ${countryName}`,
+            lat: lat,
+            lon: lon,
+            rating: 4.0 + Math.random() * 0.9,
+            image: country.flags?.png || `https://source.unsplash.com/800x600/?${countryName.replace(/\s+/g, '+')},city`,
+            country: countryName,
+            population: population,
+            climate: "Varies",
+            attractions: ["Local Attractions"],
+            currency: currencies,
+            timezone: timezones,
+            language: languages,
+            weather: "Local Weather",
+            bestTime: "Anytime",
+            visaRequired: true,
+            safety: "Medium",
+            costOfLiving: "Varies",
+            featured: Math.random() > 0.5
+          };
+        });
+
+        setCities(citiesData);
+        if (citiesData.length > 0) setActiveCityId(citiesData[0].id);
+      } catch (err) {
+        console.error("Error fetching data: ", err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    fetchCities();
+    fetchRealData();
   }, []);
 
   // Filter cities by search term and region
@@ -366,9 +160,9 @@ export default function ExplorePage() {
     return result;
   }, [searchTerm, filterRegion, filterFeatured, cities]);
 
-  // Find selected city details
+  // Find selected city details, default to DEFAULT_CITY if not found
   const activeCity = useMemo(() => {
-    return cities.find((city) => city.id === activeCityId) || cities[0];
+    return cities.find((city) => city.id === activeCityId) || DEFAULT_CITY;
   }, [activeCityId, cities]);
 
   // Get unique countries for filtering
@@ -384,6 +178,7 @@ export default function ExplorePage() {
 
   // Toggle favorite
   const toggleFavorite = (cityId) => {
+    if (cityId === 0) return; // Prevent toggling for default city
     setFavorites(prev => 
       prev.includes(cityId) 
         ? prev.filter(id => id !== cityId) 
@@ -393,9 +188,8 @@ export default function ExplorePage() {
 
   // Add to trip
   const addToTrip = (cityId) => {
-    // In a real app, this would add the city to a trip
+    if (cityId === 0) return; // Prevent adding default city
     console.log(`Added ${cities.find(c => c.id === cityId)?.title} to trip`);
-    // Show success notification
   };
 
   // Handle map load
@@ -406,7 +200,7 @@ export default function ExplorePage() {
     return () => clearTimeout(timer);
   }, []);
 
-  // Auto-rotate city images
+  // Auto-rotate city images (though not used in this version)
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImageIndex(prev => (prev + 1) % 3);
@@ -443,14 +237,16 @@ export default function ExplorePage() {
                 size={16} 
               />
             ) : (
-              <Heart 
-                className="text-gray-400 hover:text-red-500 cursor-pointer" 
-                size={16} 
+              // Changed from button to span to avoid nested buttons
+              <span 
+                className="text-gray-400 hover:text-red-500 cursor-pointer"
                 onClick={(e) => {
-                  e.stopPropagation();
+                  e.stopPropagation(); // Stop event bubbling to parent card
                   toggleFavorite(city.id);
                 }}
-              />
+              >
+                <Heart size={16} />
+              </span>
             )}
           </div>
         </div>
@@ -459,7 +255,7 @@ export default function ExplorePage() {
             <h3 className="font-bold text-gray-900 truncate">{city.title}</h3>
             <div className="flex items-center">
               <span className="text-yellow-500 mr-1">★</span>
-              <span className="font-medium">{city.rating}</span>
+              <span className="font-medium">{city.rating.toFixed(1)}</span>
             </div>
           </div>
           <p className="text-sm text-gray-600 truncate">{city.description}</p>
@@ -662,6 +458,10 @@ export default function ExplorePage() {
                       <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto mb-3"></div>
                       <p className="text-gray-600">Loading cities...</p>
                     </div>
+                  ) : error ? (
+                    <div className="text-center py-8">
+                      <p className="text-red-500">Error: {error}</p>
+                    </div>
                   ) : filteredCities.length === 0 ? (
                     <div className="text-center py-8">
                       <MapPin className="mx-auto text-gray-400 mb-2" size={48} />
@@ -716,17 +516,18 @@ export default function ExplorePage() {
                         className="w-full h-48 object-cover rounded-lg shadow-md"
                         loading="lazy"
                       />
+                      {/* Fixed nested button issue here */}
                       <div className="absolute top-3 right-3 flex space-x-2">
-                        <button
-                          onClick={() => toggleFavorite(activeCity.id)}
+                        <span
                           className={`p-2 rounded-full ${
                             favorites.includes(activeCity.id)
                               ? 'bg-red-100 text-red-500'
-                              : 'bg-white text-gray-500 hover:bg-gray-100'
+                              : 'bg-white text-gray-500 hover:bg-gray-100 cursor-pointer'
                           }`}
+                          onClick={() => toggleFavorite(activeCity.id)}
                         >
                           <Heart size={18} className={favorites.includes(activeCity.id) ? 'fill-current' : ''} />
-                        </button>
+                        </span>
                         <button
                           onClick={() => window.open(`https://www.google.com/maps?q=${activeCity.lat},${activeCity.lon}`, '_blank')}
                           className="p-2 bg-white text-gray-500 rounded-full hover:bg-gray-100"
@@ -761,7 +562,7 @@ export default function ExplorePage() {
                       </div>
                       <div className="flex items-center bg-yellow-50 px-3 py-1 rounded-full">
                         <Star className="text-yellow-400 fill-current mr-1" size={16} />
-                        <span className="font-bold">{activeCity.rating}</span>
+                        <span className="font-bold">{activeCity.rating.toFixed(1)}</span>
                       </div>
                     </div>
                     <p className="mt-3 text-gray-700">{activeCity.description}</p>
