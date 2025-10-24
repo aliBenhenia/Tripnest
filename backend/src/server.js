@@ -12,7 +12,7 @@ const bcrypt = require('bcryptjs');
 const path = require('path');
 const multer = require('multer');
 const fs = require('fs');
-
+import errHandler from './middleware/errHandler';
 // Load environment variables from .env file
 dotenv.config({ path: path.join(__dirname, '..', '.env') });
 
@@ -31,6 +31,8 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
+app,use(errHandler)
+
 
 // Set up multer storage configuration
 const storage = multer.diskStorage({
@@ -84,6 +86,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/planner', planner);
 app.use('/api/stops', stops);
 app.use('/api/saves', saves); // Use saves routes
+
 
 // MongoDB connection check (async)
 const startServer = async () => {
