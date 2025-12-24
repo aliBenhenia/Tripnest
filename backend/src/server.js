@@ -7,100 +7,177 @@ const userRoutes = require('./routes/userRoutes');
 const planner = require('./routes/planner');
 const stops = require('./routes/stops');
 const saves = require('./routes/saves');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
 const path = require('path');
 const multer = require('multer');
 const fs = require('fs');
-import errHandler from './middleware/errHandler';
-// Load environment variables from .env file
+const errHandler = require('./middleware/errHandler');
+
+// Load env
 dotenv.config({ path: path.join(__dirname, '..', '.env') });
 
-
-// Hardcoded port in case .env is not loaded correctly
 const PORT = 3001;
-console.log(`Using port: ${PORT}`);
-
 const app = express();
 
+console.log(`Using port: ${PORT}`);
+
+
+// ==============================
+// 🔥 SIMPLE IN-MEMORY CACHE
+// ==============================
+const memoryCache = new Map();
+
+const getCache = (key) => {
+  const data = memoryCache.get(key);
+  if (!data) return null;
+
+  if (data.expire < Date.now()) {
+    memoryCache.delete(key);
+    return null;
+  }
+  return data.value;
+};
+
+const setCache = (key, value, ttl = 300000) => {
+  memoryCache.set(key, {
+    value,
+    expire: Date.now() + ttl
+  });
+};
+
+const clearCacheByPrefix = (prefix) => {
+  for (const key of memoryCache.keys()) {
+    if (key.startsWith(prefix)) {
+      memoryCache.delete(key);
+    }
+  }
+};
+
+
+// ==============================
 // Middleware
+// ==============================
 app.use(cors({
-  // Allow requests from any origin
   origin: '*',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }));
+
 app.use(express.json());
-app,use(errHandler)
+
+// HTTP cache headers for GET requests
+app.use((req, res, next) => {
+  if (req.method === 'GET') {
+    res.set('Cache-Control', 'public, max-age=300');
+  }
+  next();
+});
+
+app.use(errHandler);
 
 
-// Set up multer storage configuration
+// ==============================
+// Multer config
+// ==============================
 const storage = multer.diskStorage({
-  /**
-   * Specify the destination directory for uploaded files.
-   * @param {express.Request} req - The Express request object.
-   * @param {multer.File} file - The multer file object.
-   * @param {function(Error, string)} cb - The callback function.
-   * @returns {void}
-   */
-  destination: function (req, file, cb) {
+  destination(req, file, cb) {
     const uploadDir = path.join(__dirname, '..', 'uploads');
-    // Create directory if it doesn't exist
     if (!fs.existsSync(uploadDir)) {
       fs.mkdirSync(uploadDir, { recursive: true });
     }
     cb(null, uploadDir);
   },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    const ext = path.extname(file.originalname);
-    cb(null, 'avatar-' + uniqueSuffix + ext);
+  filename(req, file, cb) {
+    const unique = Date.now() + '-' + Math.round(Math.random() * 1e9);
+    cb(null, `avatar-${unique}${path.extname(file.originalname)}`);
   }
 });
-
-// File filter for images
-const fileFilter = (req, file, cb) => {
-  if (file.mimetype.startsWith('image')) {
-    cb(null, true);
-  } else {
-    cb(new Error('Not an image! Please upload only images.'), false);
-  }
-};
 
 const upload = multer({
-  storage: storage,
-  fileFilter: fileFilter,
-  limits: { fileSize: 5 * 1024 * 1024 } // 5MB limit
-});
-
-// Serve static files from the uploads directory
-app.use('/uploads', express.static(path.join(__dirname, 'routes', 'uploads')));
-app.get('/test', (req, res) => {
-  res.sendFile(path.join(__dirname, 'routes', 'uploads', 'aya.png'));
+  storage,
+  limits: { fileSize: 5 * 1024 * 1024 },
+  fileFilter(req, file, cb) {
+    if (file.mimetype.startsWith('image')) cb(null, true);
+    else cb(new Error('Only images allowed'), false);
+  }
 });
 
 
+// ==============================
+// Static files
+// ==============================
+app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
+
+
+// ==============================
+// 🔥 Cached Routes Wrapper
+// ==============================
+const cacheMiddleware = (keyBuilder, ttl) => {
+  return (req, res, next) => {
+    const key = keyBuilder(req);
+    const cached = getCache(key);
+
+    if (cached) {
+      return res.json(cached);
+    }
+
+    const originalJson = res.json.bind(res);
+    res.json = (body) => {
+      setCache(key, body, ttl);
+      return originalJson(body);
+    };
+
+    next();
+  };
+};
+
+
+// ==============================
 // Routes
+// ==============================
 app.use('/api/auth', authRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/planner', planner);
-app.use('/api/stops', stops);
-app.use('/api/saves', saves); // Use saves routes
+
+// Cache user profile GET
+app.use(
+  '/api/users',
+  cacheMiddleware(req => `users:${req.originalUrl}`, 300000),
+  userRoutes
+);
+
+// Cache planner GET
+app.use(
+  '/api/planner',
+  cacheMiddleware(req => `planner:${req.originalUrl}`, 300000),
+  planner
+);
+
+// Cache stops (very static)
+app.use(
+  '/api/stops',
+  cacheMiddleware(() => 'stops:all', 600000),
+  stops
+);
+
+// Cache saved trips
+app.use(
+  '/api/saves',
+  cacheMiddleware(req => `saves:${req.originalUrl}`, 300000),
+  saves
+);
 
 
-// MongoDB connection check (async)
+// ==============================
+// MongoDB Connection
+// ==============================
 const startServer = async () => {
   try {
     await connectDB();
-    isMongoDBConnected = true;
     console.log('MongoDB connected');
   } catch (err) {
-    isMongoDBConnected = false;
-    console.log('MongoDB connection failed, switching to in-memory mode');
+    console.log('MongoDB connection failed');
   }
 
   app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+    console.log(`Server running at http://localhost:${PORT}`);
   });
 };
 

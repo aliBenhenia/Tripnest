@@ -15,9 +15,9 @@ exports.updateProfile = catchAsync(async (req, res) => {
   });
 
   // Handle file (optional)
-  if (req.file) {
+  if (req.file) { 
     updateData.avatar = `/uploads/${req.file.filename}`; // or save filename if stored on disk
-    // You can also do something like `req.file.originalname`, `mimetype`, etc.
+    // You can also do something like `req.file.originalname`, `mimetype`, etc.cdn
   }
   try {
     const user = await userService.updateUser(req.user.id, updateData);
