@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
+
 const mongo_url = process.env.MONGO_URI;
-// const mongo_url = 'mongodb://localhost:27017';
+
 const connectDB = async () => {
   try {
     const conn = await mongoose.connect(mongo_url);
@@ -8,9 +9,8 @@ const connectDB = async () => {
     return conn;
   } catch (error) {
     console.error(`MongoDB Connection Error: ${error.message}`);
-    // Throw error instead of exiting process, so server.js can handle it
     throw error;
   }
 };
 
-module.exports = connectDB; 
+module.exports = connectDB;

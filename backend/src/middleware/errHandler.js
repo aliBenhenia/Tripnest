@@ -1,8 +1,10 @@
+// src/middleware/errHandler.js
 
-
-const errHandler = (err,req,res,next)=>{
-    // log errs..
-    res.status(500).json({error : "internal err"});
+function errHandler(err, req, res, next) {
+  const statusCode = err.statusCode || 500;
+  res.status(statusCode).json({
+    message: err.message || 'Internal Server Error'
+  });
 }
 
-export default errHandler;
+module.exports = errHandler; // <-- CommonJS export

@@ -1,0 +1,46 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs/
+*.log
+pids/
+*.pid
+*.seed
+*.pid.lock
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Build output
+dist/
+build/
+.next/
+out/
+
+# Docker
+docker-compose.override.yml
+**/Dockerfile*
+**/docker-compose*.yml
+**/docker-compose.override.yml
+**/docker-compose.local.yml
+
+# MongoDB data volume (optional, prevents local DB files from being committed)
+mongodb_data/
+
+# IDE / Editor files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln

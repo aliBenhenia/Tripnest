@@ -1,14 +1,13 @@
-version: '3.8'
+version: "3.8"
 
 services:
-  # MongoDB service
   mongodb:
-    image: mongo:latest
+    image: mongo:6
     container_name: mongodb
     environment:
-      - MONGO_INITDB_ROOT_USERNAME=admin
-      - MONGO_INITDB_ROOT_PASSWORD=adminpassword
-      - MONGO_INITDB_DATABASE=travila
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
     volumes:
       - mongodb_data:/data/db
     ports:
@@ -16,13 +15,18 @@ services:
     networks:
       - app_network
 
-  # Backend (Node.js / Express) service
   backend:
     build: ./backend
     container_name: backend
-    # environment:
     ports:
-      - "3001:3001"  # Your backend API will be on port 3001
+      - "3001:3001"
+    environment:
+      PORT: 3001
+      NODE_ENV: ${NODE_ENV}
+      MONGO_URI: ${MONGO_URI}
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRES_IN: ${JWT_EXPIRES_IN}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
     depends_on:
       - mongodb
     volumes:
@@ -31,17 +35,18 @@ services:
     networks:
       - app_network
 
-  # Frontend (React app) service
   frontend:
     build: ./front-end
     container_name: frontend
     ports:
-      - "3000:3000"  # Your frontend will be on port 3000
+      - "3000:3000"
+    environment:
+      NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL}
     depends_on:
       - backend
     volumes:
       - ./front-end:/app
-      - /app/node_modules  # This ensures node_modules stays inside the container
+      - /app/node_modules
     networks:
       - app_network
 
