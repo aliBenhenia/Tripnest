@@ -11,6 +11,7 @@ const path = require('path');
 const multer = require('multer');
 const fs = require('fs');
 const errHandler = require('./middleware/errHandler');
+const redis = require('redis'); // ADDED
 
 // Load env
 dotenv.config({ path: path.join(__dirname, '..', '.env') });
@@ -20,38 +21,52 @@ const app = express();
 
 console.log(`Using port: ${PORT}`);
 
-
 // ==============================
-// 🔥 SIMPLE IN-MEMORY CACHE
+// 🔥 REDIS CACHE (REPLACED Map)
 // ==============================
-const memoryCache = new Map();
+const redisClient = redis.createClient({
+  url: process.env.REDIS_URL || 'redis://localhost:6379'
+});
 
-const getCache = (key) => {
-  const data = memoryCache.get(key);
-  if (!data) return null;
+redisClient.on('error', (err) => {
+  console.error('Redis error:', err);
+});
 
-  if (data.expire < Date.now()) {
-    memoryCache.delete(key);
+// Connect Redis
+(async () => {
+  await redisClient.connect();
+  console.log('Redis connected');
+})();
+
+// Updated cache functions
+const getCache = async (key) => {
+  try {
+    const data = await redisClient.get(key);
+    return data ? JSON.parse(data) : null;
+  } catch (err) {
+    console.error('Redis get error:', err);
     return null;
   }
-  return data.value;
 };
 
-const setCache = (key, value, ttl = 300000) => {
-  memoryCache.set(key, {
-    value,
-    expire: Date.now() + ttl
-  });
-};
-
-const clearCacheByPrefix = (prefix) => {
-  for (const key of memoryCache.keys()) {
-    if (key.startsWith(prefix)) {
-      memoryCache.delete(key);
-    }
+const setCache = async (key, value, ttl = 300) => { // ttl in seconds now
+  try {
+    await redisClient.setEx(key, ttl, JSON.stringify(value));
+  } catch (err) {
+    console.error('Redis set error:', err);
   }
 };
 
+const clearCacheByPrefix = async (prefix) => {
+  try {
+    const keys = await redisClient.keys(`${prefix}*`);
+    if (keys.length > 0) {
+      await redisClient.del(keys);
+    }
+  } catch (err) {
+    console.error('Redis delete error:', err);
+  }
+};
 
 // ==============================
 // Middleware
@@ -73,7 +88,6 @@ app.use((req, res, next) => {
 });
 
 app.use(errHandler);
-
 
 // ==============================
 // Multer config
@@ -101,20 +115,18 @@ const upload = multer({
   }
 });
 
-
 // ==============================
 // Static files
 // ==============================
 app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
-
 // ==============================
-// 🔥 Cached Routes Wrapper
+// 🔥 UPDATED Cache Middleware
 // ==============================
-const cacheMiddleware = (keyBuilder, ttl) => {
-  return (req, res, next) => {
+const cacheMiddleware = (keyBuilder, ttlSeconds = 300) => {
+  return async (req, res, next) => {
     const key = keyBuilder(req);
-    const cached = getCache(key);
+    const cached = await getCache(key);
 
     if (cached) {
       return res.json(cached);
@@ -122,14 +134,13 @@ const cacheMiddleware = (keyBuilder, ttl) => {
 
     const originalJson = res.json.bind(res);
     res.json = (body) => {
-      setCache(key, body, ttl);
+      setCache(key, body, ttlSeconds);
       return originalJson(body);
     };
 
     next();
   };
 };
-
 
 // ==============================
 // Routes
@@ -139,31 +150,30 @@ app.use('/api/auth', authRoutes);
 // Cache user profile GET
 app.use(
   '/api/users',
-  cacheMiddleware(req => `users:${req.originalUrl}`, 300000),
+  cacheMiddleware(req => `users:${req.user?.id || 'public'}:${req.originalUrl}`, 300),
   userRoutes
 );
 
 // Cache planner GET
 app.use(
   '/api/planner',
-  cacheMiddleware(req => `planner:${req.originalUrl}`, 300000),
+  cacheMiddleware(req => `planner:${req.user?.id || 'public'}:${req.originalUrl}`, 300),
   planner
 );
 
-// Cache stops (very static)
+// Cache stops
 app.use(
   '/api/stops',
-  cacheMiddleware(() => 'stops:all', 600000),
+  cacheMiddleware(() => 'stops:all', 600),
   stops
 );
 
 // Cache saved trips
 app.use(
   '/api/saves',
-  cacheMiddleware(req => `saves:${req.originalUrl}`, 300000),
+  cacheMiddleware(req => `saves:${req.user?.id}:${req.originalUrl}`, 300),
   saves
 );
-
 
 // ==============================
 // MongoDB Connection
@@ -182,3 +192,9 @@ const startServer = async () => {
 };
 
 startServer();
+
+// Graceful shutdown
+process.on('SIGTERM', async () => {
+  await redisClient.quit();
+  process.exit(0);
+});

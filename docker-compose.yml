@@ -1,6 +1,18 @@
 version: "3.8"
 
 services:
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    networks:
+      - app_network
+
   mongodb:
     image: mongo:6
     container_name: mongodb
@@ -24,11 +36,13 @@ services:
       PORT: 3001
       NODE_ENV: ${NODE_ENV}
       MONGO_URI: ${MONGO_URI}
+      REDIS_URL: redis://redis:6379  # Changed from localhost to service name
       JWT_SECRET: ${JWT_SECRET}
       JWT_EXPIRES_IN: ${JWT_EXPIRES_IN}
       JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET}
     depends_on:
       - mongodb
+      - redis  # Added Redis dependency
     volumes:
       - ./backend:/app
       - /app/node_modules
@@ -56,3 +70,4 @@ networks:
 
 volumes:
   mongodb_data:
+  redis_data:  # Added Redis volume
