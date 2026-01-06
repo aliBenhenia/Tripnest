@@ -8,7 +8,8 @@
     "clean": "rimraf .next && rimraf out",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "fix-vulnerability": "npm install next@latest react@latest react-dom@latest --save-exact && npm install"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
@@ -56,13 +57,13 @@
     "leaflet": "^1.9.4",
     "lodash.debounce": "^4.0.8",
     "lucide-react": "^0.454.0",
-    "next": "15.1.0",
+    "next": "15.1.6", // FIXED: Updated to latest secure version
     "next-themes": "^0.4.4",
     "ol": "^10.6.1",
-    "react": "^18.3.1",
+    "react": "^19.0.0", // Updated to React 19 (compatible with Next 15)
     "react-beautiful-dnd": "^13.1.1",
     "react-day-picker": "latest",
-    "react-dom": "^18.3.1",
+    "react-dom": "^19.0.0", // Updated to React 19
     "react-hook-form": "^7.54.1",
     "react-hot-toast": "^2.5.2",
     "react-redux": "^9.2.0",
@@ -79,10 +80,18 @@
   },
   "devDependencies": {
     "@types/node": "^22",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
+    "@types/react": "^19", // Updated to match React 19
+    "@types/react-dom": "^19", // Updated to match React 19
+    "eslint": "^8", // Added ESLint (required for Next 15)
+    "eslint-config-next": "15.1.6", // Added: Must match Next.js version
     "postcss": "^8",
     "tailwindcss": "^3.4.17",
     "typescript": "^5"
+  },
+  "overrides": {
+    "next": "15.1.6"
+  },
+  "resolutions": {
+    "next": "15.1.6"
   }
 }
