@@ -181,14 +181,7 @@ export default function TravelPlanner() {
                       {/* <Bell className="text-gray-600" size={20} /> */}
                   </motion.button>
                   <div className="flex items-center">
-                      <div className="w-10 h-10 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center text-white">
-                          {/* <User size={20} /> */}
-                          <img src={avatarPreview} alt="User Avatar" className="w-10 h-10 rounded-full" />
-                          <div className="absolute inset-0 rounded-full border-2 border-blue-500 animate-pulse" />
-                      </div>
-                      <span className="ml-3 text-gray-700 font-medium hidden md:inline">
-                        {userData?.username || 'User'}
-                      </span>
+                      
                   </div>
               </div>
           </div>
