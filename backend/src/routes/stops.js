@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const express = require('express');
 const router = express.Router();
-const { protect } = require('../middleware/authMiddleware');
+const { clearCacheByPrefix } = require('../utils/cache');
 
 // Trip Stop Schema
 const tripStopSchema = new mongoose.Schema({
@@ -18,8 +18,25 @@ const tripStopSchema = new mongoose.Schema({
 
 const TripStop = mongoose.model('TripStop', tripStopSchema);
 
-// Middleware: only authenticated users
-router.use(protect);
+// Invalidate the user's stops cache on any successful write
+router.use((req, res, next) => {
+  if (req.method !== 'GET' && req.user?.id) {
+    res.on('finish', () => {
+      if (res.statusCode < 400) {
+        clearCacheByPrefix(`stops:${req.user.id}:`);
+      }
+    });
+  }
+  next();
+});
+
+// Validate path params are valid MongoDB ObjectIds before hitting controllers
+router.param('id', (req, res, next, value) => {
+  if (!mongoose.Types.ObjectId.isValid(value)) {
+    return res.status(400).json({ message: `Invalid id: ${value}` });
+  }
+  next();
+});
 
 // Controller
 const tripController = {

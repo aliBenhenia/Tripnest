@@ -20,7 +20,7 @@ interface AuthState {
 
 // Local storage keys
 const TOKEN_KEY = 'TOKEN_KEY';
-const USER_KEY = '';
+const USER_KEY = 'USER_KEY';
 
 // API URL
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';

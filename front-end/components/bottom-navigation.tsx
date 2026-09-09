@@ -2,7 +2,8 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Home, Map, Compass, Heart, User, Bell, Menu, Globe, ChevronDown, LogOut, LogIn, UserPlus } from "lucide-react"
+import { Home, Compass, Heart, User, Menu, Globe, ChevronDown, LogOut, LogIn, Plane } from "lucide-react"
+import toast from "react-hot-toast"
 import { Button } from "@/components/ui/button"
 import useAuthRedux from "@/hooks/useAuthRedux"
 import { useState, useEffect } from "react"
@@ -59,11 +60,6 @@ export default function BottomNavigation() {
       name: "Home",
       href: "/",
       icon: Home,
-    },
-    {
-      name: "generatour",
-      href: "/generatour",
-      icon: Map,
     },
     {
       name: "Trips",
@@ -169,7 +165,8 @@ export default function BottomNavigation() {
             {/* Right section with actions */}
             <div className="flex items-center gap-3">
               {/* Language Selector */}
-              <button className="flex items-center gap-1.5 px-3.5 py-2 text-sm text-gray-600 
+              <button onClick={() => toast("Translations coming soon")}
+                className="flex items-center gap-1.5 px-3.5 py-2 text-sm text-gray-600 
                 hover:text-gray-900 rounded-full transition-all duration-200 
                 border border-gray-200 hover:border-primary/30 group
                 hover:bg-gradient-to-r hover:from-primary/[0.03] hover:to-primary/[0.05]
@@ -231,8 +228,9 @@ export default function BottomNavigation() {
                   after:duration-500 border-0"
               >
                 <div className="relative flex items-center gap-2"
-                onClick={() => router.push("/users")}>
-                  <span className="relative z-10 text-sm">leaderboard</span>
+                onClick={() => router.push("/planner")}>
+                  <Plane className="w-4 h-4" />
+                  <span className="relative z-10 text-sm">Plan a Trip</span>
                   <svg 
                     className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5" 
                     viewBox="0 0 24 24" 

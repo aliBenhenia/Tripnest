@@ -2,18 +2,22 @@
 'use client'
 
 import dynamic from 'next/dynamic'
-import { Suspense, useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Header } from "@/components/Header"
 // import { SearchBar } from "@/components/SearchBar"
-import { SectionHeader } from "@/components/SectionHeader"
 import { useSearch } from "@/hooks/useSearch"
 import { ErrorBoundary } from "@/components/ErrorBoundary"
 import { PopularPlaces } from "@/components/sections/PopularPlaces"
 import { Button } from "@/components/ui/button"
-import { ChevronLeft, ChevronRight, Compass, TrendingUp, MapPin } from "lucide-react"
+import { ChevronLeft, ChevronRight } from "lucide-react"
 import Link from "next/link"
 import { Footer } from "@/components/Footer"
 import { motion } from "framer-motion"
+import useAuthRedux from "@/hooks/useAuthRedux"
+import { useRouter } from "next/navigation"
+import toast from "react-hot-toast"
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
 const SearchBar = dynamic(() => import('@/components/SearchBar').then(mod => mod.SearchBar), {
   loading: () => (
@@ -27,32 +31,6 @@ const SearchBar = dynamic(() => import('@/components/SearchBar').then(mod => mod
     </div>
   )
 })
-// Dynamically import components that are not needed immediately
-const CityCard = dynamic(() => import('@/components/CityCard').then(mod => mod.CityCard), {
-  loading: () => (
-    <div className="animate-pulse rounded-xl overflow-hidden h-[220px] w-[180px]">
-      <div className="bg-gray-200 h-[75%]"></div>
-      <div className="p-3 space-y-2">
-        <div className="h-4 bg-gray-200 rounded w-2/3"></div>
-        <div className="h-3 bg-gray-200 rounded w-1/2"></div>
-      </div>
-    </div>
-  )
-})
-
-const ExperienceCard = dynamic(() => import('@/components/ExperienceCard').then(mod => mod.ExperienceCard), {
-  loading: () => (
-    <div className="animate-pulse rounded-xl overflow-hidden h-[200px] w-[280px] flex-shrink-0">
-      <div className="bg-gray-200 h-[65%]"></div>
-      <div className="p-3 space-y-2">
-        <div className="h-4 bg-gray-200 rounded w-2/3"></div>
-        <div className="h-3 bg-gray-200 rounded w-3/4"></div>
-        <div className="h-3 bg-gray-200 rounded w-1/2"></div>
-      </div>
-    </div>
-  )
-})
-
 // Generate stable ratings based on city name
 const getStableRating = (name: string) => {
   let hash = 0;
@@ -104,7 +82,9 @@ const ClientOnly = ({ children }: { children: React.ReactNode }) => {
 };
 
 export default function Home() {
-  const { searchQuery, isLoading, handleSearch, cities, experiences } = useSearch();
+  const { isLoading, handleSearch, cities } = useSearch();
+  const { user: authUser } = useAuthRedux();
+  const router = useRouter();
   const [activeFeaturedIndex, setActiveFeaturedIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
   const [imagesPreloaded, setImagesPreloaded] = useState(false);
@@ -169,8 +149,10 @@ export default function Home() {
     <div className="w-full mx-auto bg-white min-h-screen md:max-w-none ">
       <ErrorBoundary>
         <Header 
-          username="aLi"
-          avatarUrl="https://avatars.githubusercontent.com/u/95689141?s=400&u=275826ef98503225cfa203907197ad854e0111a1&v=4"
+          username={authUser?.name || 'Traveler'}
+          avatarUrl={authUser?.avatar && authUser?.avatar !== 'default-avatar.png'
+            ? `${API_URL}${authUser.avatar}`
+            : undefined}
         />
 
         {/* Hero Section */}
@@ -229,10 +211,10 @@ export default function Home() {
                 transition={{ duration: 0.5, delay: 0.6 }}
                 className="flex flex-col sm:flex-row gap-3 sm:gap-4 mt-8 justify-center w-full max-w-md mx-auto"
               >
-                <Button className="bg-white text-black hover:bg-white/90 font-medium rounded-full px-4 sm:px-6 py-6 text-base sm:text-lg w-full">
-                  Explore Cities (9)
+                <Button onClick={() => router.push('/explore')} className="bg-white text-black hover:bg-white/90 font-medium rounded-full px-4 sm:px-6 py-6 text-base sm:text-lg w-full">
+                  Explore Cities
                 </Button>
-                <Button variant="outline" className="border-white border-2 text-black rounded-full px-4 sm:px-6 py-6 text-base sm:text-lg w-full transition-colors">
+                <Button onClick={() => router.push('/explore')} variant="outline" className="border-white border-2 text-black rounded-full px-4 sm:px-6 py-6 text-base sm:text-lg w-full transition-colors">
                   View Experiences
                 </Button>
               </motion.div>
@@ -301,7 +283,7 @@ export default function Home() {
                   <ChevronRight className="h-5 w-5" />
                 </Button>
               </div>
-              <Link href="/cities">
+              <Link href="/explore">
                 <Button
                   variant="ghost"
                   className="text-sm sm:text-base text-gray-600 hover:text-gray-900 font-medium"
@@ -329,110 +311,6 @@ export default function Home() {
           </ClientOnly>
         </div>
 
-        {/* Popular Experiences */}
-        {/* Popular Experiences */}
-<div className="px-4 sm:px-6 md:px-10 lg:px-16 w-full max-w-[1600px] mx-auto">
-  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 sm:gap-6">
-    {/* Heading and Subtext */}
-    <div>
-      <div className="flex items-center gap-2">
-        <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900">
-          Popular Experiences
-        </h2>
-        {!isLoading && experiences.length > 0 && (
-          <span className="text-base text-gray-500">
-            ({experiences.length})
-          </span>
-        )}
-      </div>
-      <p className="mt-1 text-sm sm:text-base text-gray-600">
-        Discover unique activities with local experts
-      </p>
-    </div>
-
-    {/* Controls */}
-    <div className="flex items-center gap-2">
-      {/* Scroll Arrows (hidden on small screens) */}
-      <div className="hidden md:flex items-center gap-2">
-        <Button
-          variant="outline"
-          size="icon"
-          className="rounded-full transition hover:bg-primary/5 hover:border-primary/30"
-          onClick={() => {
-            const container = document.getElementById('experiences-container')
-            if (container) container.scrollBy({ left: -400, behavior: 'smooth' })
-          }}
-        >
-          <ChevronLeft className="h-5 w-5" />
-        </Button>
-        <Button
-          variant="outline"
-          size="icon"
-          className="rounded-full transition hover:bg-primary/5 hover:border-primary/30"
-          onClick={() => {
-            const container = document.getElementById('experiences-container')
-            if (container) container.scrollBy({ left: 400, behavior: 'smooth' })
-          }}
-        >
-          <ChevronRight className="h-5 w-5" />
-        </Button>
-      </div>
-
-      {/* View All */}
-      <Link href="/experiences">
-        <Button
-          variant="ghost"
-          className="text-sm sm:text-base text-gray-600 hover:text-gray-900 font-medium"
-        >
-          View all experiences
-        </Button>
-      </Link>
-    </div>
-  </div>
-
-  {/* Content */}
-  <Suspense
-    fallback={
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-6">
-        {[1, 2, 3, 4].map((i) => (
-          <div key={i} className="animate-pulse">
-            <div className="rounded-xl bg-gray-200 h-[180px] md:h-[200px] w-full" />
-            <div className="mt-3 space-y-2">
-              <div className="h-4 bg-gray-200 rounded w-1/4" />
-              <div className="h-4 bg-gray-200 rounded w-3/4" />
-              <div className="h-4 bg-gray-200 rounded w-1/2" />
-            </div>
-          </div>
-        ))}
-      </div>
-    }
-  >
-    <div className="relative mt-6">
-      <div
-        id="experiences-container"
-        className="overflow-x-auto flex gap-4 snap-x scroll-smooth scrollbar-hide pr-2 sm:pr-4 md:pr-8 lg:pr-16"
-      >
-        {experiences.map((experience, index) => (
-          <ClientOnly key={experience.id}>
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: index * 0.05, duration: 0.3 }}
-              className="min-w-[280px] sm:min-w-[300px] md:min-w-[320px] snap-start flex-shrink-0"
-            >
-              <ExperienceCard
-                {...experience}
-                className="hover:z-10"
-              />
-            </motion.div>
-          </ClientOnly>
-        ))}
-      </div>
-    </div>
-  </Suspense>
-</div>
-
-
         {/* CTA Section */}
         <div className="py-16 px-4 md:px-8 lg:px-16">
           <ClientOnly>
@@ -450,7 +328,7 @@ export default function Home() {
                 <Link href="/planner">
                 <Button className="bg-primary hover:bg-primary/90 text-white px-6 py-2">Start Planning</Button>
                 </Link>
-                <Button variant="outline" className="border-primary text-primary hover:bg-primary/5">Contact an Expert</Button>
+                <Button onClick={() => toast('Contact an expert is coming soon')} variant="outline" className="border-primary text-primary hover:bg-primary/5">Contact an Expert</Button>
               </div>
             </motion.div>
           </ClientOnly>

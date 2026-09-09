@@ -80,15 +80,20 @@ const TripPlanner = () => {
   }, []);
 
   const filteredStops = stops.filter(stop => {
+    if (!stop || typeof stop !== 'object') return false;
     const matchesCategory = selectedCategory === 'All' || stop.category === selectedCategory;
-    const matchesSearch = stop.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         stop.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         stop.location.toLowerCase().includes(searchTerm.toLowerCase());
+    const search = searchTerm.toLowerCase();
+    const name = (stop.name || '').toLowerCase();
+    const description = (stop.description || '').toLowerCase();
+    const location = (stop.location || '').toLowerCase();
+    const matchesSearch = name.includes(search) ||
+                         description.includes(search) ||
+                         location.includes(search);
     return matchesCategory && matchesSearch;
   });
 
   const handleDragStart = (e, stop) => {
-    e.dataTransfer.setData('stopId', stop.id);
+    e.dataTransfer.setData('stopId', stop._id || stop.id);
   };
 
   const handleDragOver = (e) => {
@@ -98,7 +103,7 @@ const TripPlanner = () => {
   const handleDrop = (e, targetIndex) => {
     e.preventDefault();
     const draggedId = e.dataTransfer.getData('stopId');
-    const draggedIndex = stops.findIndex(stop => stop.id === draggedId);
+    const draggedIndex = stops.findIndex(stop => (stop._id || stop.id) === draggedId);
     
     if (draggedIndex !== -1 && draggedIndex !== targetIndex) {
       const newStops = [...stops];
@@ -134,7 +139,7 @@ const TripPlanner = () => {
     const stopData = {
       name: formData.get('name'),
       description: formData.get('description'),
-      images: formData.get('images').split(',').map(url => url.trim()).filter(url => url),
+      images: (formData.get('images') || '').toString().split(',').map(url => url.trim()).filter(url => url),
       category: formData.get('category'),
       location: formData.get('location'),
       startDate: formData.get('startDate'),
@@ -314,7 +319,7 @@ const TripPlanner = () => {
               <div>
                 <p className="text-sm text-gray-600">Avg Rating</p>
                 <p className="text-2xl font-bold text-gray-900">
-                  {stops.length > 0 ? (stops.reduce((acc, stop) => acc + stop.rating, 0) / stops.length).toFixed(1) : 0}
+                  {stops.length > 0 ? (stops.reduce((acc, stop) => acc + (stop.rating || 0), 0) / stops.length).toFixed(1) : 0}
                 </p>
               </div>
               <div className="bg-yellow-100 p-3 rounded-lg">
@@ -367,7 +372,7 @@ const TripPlanner = () => {
                 <div className="relative">
                   <div className="h-48 overflow-hidden">
                     <img
-                      src={stop.images[0] || 'https://placehold.co/600x400?text=No+Image'}
+                      src={stop.images?.[0] || 'https://placehold.co/600x400?text=No+Image'}
                       alt={stop.name}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       onError={(e) => {
@@ -492,7 +497,7 @@ const TripPlanner = () => {
                   const updateData = {
                     name: formData.get('name'),
                     description: formData.get('description'),
-                    images: formData.get('images').split(',').map(url => url.trim()).filter(url => url),
+images: (formData.get('images') || '').toString().split(',').map(url => url.trim()).filter(url => url),
                     category: formData.get('category'),
                     location: formData.get('location'),
                     startDate: formData.get('startDate'),

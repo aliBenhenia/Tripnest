@@ -25,16 +25,22 @@ export class ErrorBoundary extends Component<Props, State> {
     console.error('Uncaught error:', error, errorInfo)
   }
 
+  private handleRetry = () => {
+    this.setState({ hasError: false, error: undefined })
+  }
+
   public render() {
     if (this.state.hasError) {
       return (
         this.props.fallback || (
           <div className="flex flex-col items-center justify-center min-h-[200px] p-4">
             <h2 className="text-xl font-semibold text-red-600">Something went wrong</h2>
-            <p className="text-gray-600 mt-2">Please try again later</p>
+            <p className="text-gray-600 mt-2 max-w-md text-center break-words">
+              {this.state.error?.message || 'An unexpected error occurred'}
+            </p>
             <button
               className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
-              onClick={() => this.setState({ hasError: false })}
+              onClick={this.handleRetry}
             >
               Try again
             </button>
@@ -45,4 +51,4 @@ export class ErrorBoundary extends Component<Props, State> {
 
     return this.props.children
   }
-} 
+}

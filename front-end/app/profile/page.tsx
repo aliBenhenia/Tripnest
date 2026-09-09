@@ -1,32 +1,25 @@
 // ```jsx
 "use client";
 import React, { useState, useEffect } from 'react';
-import { Edit3, Save, X, Heart, MapPin, Calendar, Star, Camera, Settings, User, Globe, Award, TrendingUp, AlertCircle } from 'lucide-react';
+import { Edit3, Save, X, Heart, MapPin, Calendar, Star, Camera, Settings, User, Award, AlertCircle } from 'lucide-react';
 import { useAppDispatch } from '@/lib/redux/hooks';
 import { setUserSuccess } from '@/lib/redux/slices/userSlice';
 import axios from 'axios';
+import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
 // const API_URL = 'http://localhost:3001';
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 export default function ProfilePage() {
+  const router = useRouter();
   const token = typeof window !== 'undefined' ? localStorage.getItem('TOKEN_KEY') : null; 
   const [user, setUser] = useState({
-    username: 'ali benhnenia',
-    bio: 'Adventure seeker exploring the world one destination at a time. Love hiking, photography, and local cuisine.',
-    avatar: 'default-avatar.png',
-    createdAt: 'January 2023',
-    totalTrips: 12,
-    favoriteDestinations: ['Paris', 'Tokyo', 'New York'],
-    achievements: ['First Trip', 'Explorer', 'Photographer'],
-    followers: 1247,
-    following: 892,
-
+    username: '',
+    bio: '',
+    avatar: null,
+    createdAt: null,
   });
   
-  const [savedItems, setSavedItems] = useState([
-    { id: 1, title: 'Eiffel Tower', location: 'Paris, France', rating: 4.8, image: 'https://placehold.co/300x200/4F46E5/FFFFFF?text=Eiffel+Tower' },
-    { id: 2, title: 'Tokyo Skyline', location: 'Tokyo, Japan', rating: 4.9, image: 'https://placehold.co/300x200/EC4899/FFFFFF?text=Tokyo+Skyline' },
-    { id: 3, title: 'Central Park', location: 'New York, USA', rating: 4.7, image: 'https://placehold.co/300x200/10B981/FFFFFF?text=Central+Park' }
-  ]);
+  const [savedItems, setSavedItems] = useState([]);
   
   const [loading, setLoading] = useState(false);
   const [editMode, setEditMode] = useState(false);
@@ -40,6 +33,7 @@ export default function ProfilePage() {
     // fetch user profile data
     if (token) {
       fetchUserProfile();
+      fetchSavedItems();
       setUsername(user.username);
       setBio(user.bio);
     }
@@ -64,7 +58,7 @@ export default function ProfilePage() {
         const data = await res.json();
         const userData = data.data.user;
         // before set avatar prix with base url server
-        if (userData.avatar) {
+        if (userData.avatar && userData.avatar !== 'default-avatar.png') {
           setAvatarPreview(`${API_URL}${userData.avatar}`);
         }else {
           setAvatarPreview(null);
@@ -80,7 +74,19 @@ export default function ProfilePage() {
       } catch (error) {
         console.error("Error fetching user profile:", error);
         setServerError(true);
-        // toast.error("Unable to fetch user data. There was an issue fetching your profile data.");
+      }
+    };
+
+    const fetchSavedItems = async () => {
+      try {
+        const res = await axios.get(`${API_URL}/api/saves`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        const items = Array.isArray(res.data) ? res.data : [];
+        setSavedItems(items);
+      } catch (error) {
+        console.error("Error fetching saved items:", error);
+        setSavedItems([]);
       }
     };
 
@@ -202,17 +208,6 @@ export default function ProfilePage() {
           >
             <Heart size={18} />
             <span>Saved Places</span>
-          </button>
-          <button
-            onClick={() => setActiveTab('stats')}
-            className={`flex items-center space-x-2 px-4 py-2 rounded-md transition-all ${
-              activeTab === 'stats' 
-                ? 'bg-white shadow-sm text-blue-600' 
-                : 'text-gray-600 hover:text-gray-900'
-            }`}
-          >
-            <TrendingUp size={18} />
-            <span>Travel Stats</span>
           </button>
         </div>
 
@@ -336,11 +331,11 @@ export default function ProfilePage() {
                             <span className="flex items-center space-x-1">
                               <Calendar size={16} />
                               <span>
-                                Joined{ ' '}{new Date(user?.createdAt).toLocaleDateString('en-US', {
+                                Joined{ ' '}{user?.createdAt ? new Date(user.createdAt).toLocaleDateString('en-US', {
                                   year: 'numeric',
                                   month: 'long',
                                   day: 'numeric'
-                                })}
+                                }) : ''}
 
                               </span>
                             </span>
@@ -361,7 +356,7 @@ export default function ProfilePage() {
                             <MapPin className="text-blue-600" size={20} />
                             <span className="text-sm font-medium text-gray-600">Total Trips</span>
                           </div>
-                          <p className="text-2xl font-bold text-gray-900">{user?.totalTrips}</p>
+                          <p className="text-2xl font-bold text-gray-900">{user?.totalTrips || 0}</p>
                         </div>
                         <div className="bg-gradient-to-r from-green-50 to-emerald-50 p-4 rounded-lg">
                           <div className="flex items-center space-x-2 mb-1">
@@ -375,22 +370,13 @@ export default function ProfilePage() {
                             <Award className="text-purple-600" size={20} />
                             <span className="text-sm font-medium text-gray-600">Achievements</span>
                           </div>
-                          <p className="text-2xl font-bold text-gray-900">{user?.achievements.length}</p>
+                          <p className="text-2xl font-bold text-gray-900">{(user?.achievements || []).length}</p>
                         </div>
                       </div>
 
                       <div className="border-t pt-6">
-                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Social Stats</h3>
-                        <div className="flex space-x-6">
-                          <div className="text-center">
-                            <p className="text-2xl font-bold text-gray-900">{user?.followers}</p>
-                            <p className="text-sm text-gray-600">Followers</p>
-                          </div>
-                          <div className="text-center">
-                            <p className="text-2xl font-bold text-gray-900">{user?.following}</p>
-                            <p className="text-sm text-gray-600">Following</p>
-                          </div>
-                        </div>
+                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Saved Places</h3>
+                        <p className="text-sm text-gray-600">{savedItems.length} item{savedItems.length === 1 ? '' : 's'} saved. View and manage them on the <button onClick={() => router.push('/saved')} className="text-blue-600 hover:underline">Saved page</button>.</p>
                       </div>
                     </>
                   )}
@@ -412,34 +398,39 @@ export default function ProfilePage() {
                       <Heart size={48} className="mx-auto text-gray-300 mb-4" />
                       <h3 className="text-xl font-semibold text-gray-900 mb-2">No saved destinations yet</h3>
                       <p className="text-gray-600 mb-4">Start saving your favorite travel spots!</p>
-                      <button className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors">
+                      <button onClick={() => router.push('/explore')} className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors">
                         Explore Destinations
                       </button>
                     </div>
                   ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                       {savedItems.map((item) => (
-                        <div key={item.id} className="bg-gray-50 rounded-xl overflow-hidden hover:shadow-lg transition-shadow">
+                        <div key={item._id} className="bg-gray-50 rounded-xl overflow-hidden hover:shadow-lg transition-shadow">
                           <div className="h-48 overflow-hidden">
-                            <img 
-                              src={item.image} 
-                              alt={item.title}
-                              className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                            />
+                            {item.imageUrl ? (
+                              <img 
+                                src={item.imageUrl} 
+                                alt={item.name || 'Saved item'}
+                                className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                              />
+                            ) : (
+                              <div className="w-full h-full bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+                                <MapPin className="text-gray-400" size={32} />
+                              </div>
+                            )}
                           </div>
                           <div className="p-4">
                             <div className="flex items-center justify-between mb-2">
-                              <h3 className="font-semibold text-gray-900">{item.title}</h3>
-                              <div className="flex items-center space-x-1 text-yellow-500">
-                                <Star size={16} fill="currentColor" />
-                                <span className="text-sm font-medium">{item.rating}</span>
-                              </div>
+                              <h3 className="font-semibold text-gray-900">{item.name || 'Saved item'}</h3>
+                              <span className="text-xs px-2 py-0.5 bg-blue-100 text-blue-700 rounded-full capitalize">
+                                {item.type || 'item'}
+                              </span>
                             </div>
                             <div className="flex items-center space-x-1 text-gray-600 mb-3">
                               <MapPin size={14} />
-                              <span className="text-sm">{item.location}</span>
+                              <span className="text-sm line-clamp-1">{item.description || 'No description'}</span>
                             </div>
-                            <button className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">
+                            <button onClick={() => toast('Item details coming soon')} className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm font-medium">
                               View Details
                             </button>
                           </div>
@@ -450,67 +441,6 @@ export default function ProfilePage() {
                 </div>
               )}
 
-              {activeTab === 'stats' && (
-                <div className="bg-white rounded-2xl shadow-lg p-6 md:p-8">
-                  <h2 className="text-2xl font-bold text-gray-900 mb-6">Travel Statistics</h2>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                    <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-xl">
-                      <div className="flex items-center justify-between mb-4">
-                        <h3 className="font-semibold text-gray-900">Countries Visited</h3>
-                        <Globe className="text-blue-600" size={24} />
-                      </div>
-                      <p className="text-3xl font-bold text-blue-600 mb-2">15</p>
-                      <p className="text-gray-600 text-sm">Explore more destinations!</p>
-                    </div>
-                    
-                    <div className="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-xl">
-                      <div className="flex items-center justify-between mb-4">
-                        <h3 className="font-semibold text-gray-900">Favorite Destinations</h3>
-                        <Star className="text-green-600" size={24} />
-                      </div>
-                      <p className="text-3xl font-bold text-green-600 mb-2">{user?.favoriteDestinations.length}</p>
-                      <p className="text-gray-600 text-sm">Based on your saved places</p>
-                    </div>
-                  </div>
-
-                  <div className="mb-8">
-                    <h3 className="font-semibold text-gray-900 mb-4">Recent Achievements</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                      {user?.achievements.map((achievement, index) => (
-                        <div key={index} className="bg-gradient-to-r from-purple-50 to-pink-50 p-4 rounded-lg text-center">
-                          <Award className="mx-auto text-purple-600 mb-2" size={24} />
-                          <p className="font-medium text-gray-900">{achievement}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div>
-                    <h3 className="font-semibold text-gray-900 mb-4">Travel Progress</h3>
-                    <div className="space-y-4">
-                      <div>
-                        <div className="flex justify-between mb-1">
-                          <span className="text-sm font-medium text-gray-700">Trip Completion</span>
-                          <span className="text-sm font-medium text-gray-700">75%</span>
-                        </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div className="bg-blue-600 h-2 rounded-full" style={{ width: '75%' }}></div>
-                        </div>
-                      </div>
-                      <div>
-                        <div className="flex justify-between mb-1">
-                          <span className="text-sm font-medium text-gray-700">Photo Uploads</span>
-                          <span className="text-sm font-medium text-gray-700">42%</span>
-                        </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2">
-                          <div className="bg-green-600 h-2 rounded-full" style={{ width: '42%' }}></div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
             </div>
 
             {/* Sidebar */}
@@ -519,15 +449,15 @@ export default function ProfilePage() {
               <div className="bg-white rounded-2xl shadow-lg p-6">
                 <h3 className="font-semibold text-gray-900 mb-4">Quick Actions</h3>
                 <div className="space-y-3">
-                  <button className="w-full flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                  <button onClick={() => toast('Account settings coming soon')} className="w-full flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
                     <Settings className="text-gray-600" size={20} />
                     <span className="text-gray-700">Account Settings</span>
                   </button>
-                  <button className="w-full flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                  <button onClick={() => router.push('/saved')} className="w-full flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
                     <Heart className="text-gray-600" size={20} />
                     <span className="text-gray-700">Saved Places</span>
                   </button>
-                  <button className="w-full flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
+                  <button onClick={() => router.push('/planner')} className="w-full flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
                     <MapPin className="text-gray-600" size={20} />
                     <span className="text-gray-700">My Trips</span>
                   </button>
@@ -538,7 +468,7 @@ export default function ProfilePage() {
               <div className="bg-white rounded-2xl shadow-lg p-6">
                 <h3 className="font-semibold text-gray-900 mb-4">Favorite Destinations</h3>
                 <div className="space-y-3">
-                  {user?.favoriteDestinations.map((dest, index) => (
+                  {(user?.favoriteDestinations || []).map((dest, index) => (
                     <div key={index} className="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 transition-colors">
                       <MapPin className="text-blue-600" size={16} />
                       <span className="text-gray-700">{dest}</span>

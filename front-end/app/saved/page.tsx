@@ -30,7 +30,7 @@ import {
 } from 'antd';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
-import notify from '@/lib/notify';
+import toast from 'react-hot-toast';
 
 const { Title, Text } = Typography;
 
@@ -49,7 +49,7 @@ const SavedPage = () => {
       const storedToken = localStorage.getItem('TOKEN_KEY');
       setToken(storedToken);
       if (!storedToken) {
-        router.push('/login');
+        router.push('/auth/login');
       }
     };
 
@@ -106,9 +106,13 @@ const SavedPage = () => {
     }
   };
 
-  const filteredItems = savedItems.filter(item => {
-    const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         item.description.toLowerCase().includes(searchTerm.toLowerCase());
+  const filteredItems = (Array.isArray(savedItems) ? savedItems : []).filter(item => {
+    if (!item || typeof item !== 'object') return false;
+    const search = searchTerm.toLowerCase();
+    const name = (item.name || '').toLowerCase();
+    const description = (item.description || '').toLowerCase();
+    const matchesSearch = name.includes(search) ||
+                         description.includes(search);
     const matchesFilter = filterType === 'all' || item.type === filterType;
     return matchesSearch && matchesFilter;
   });
@@ -245,7 +249,7 @@ const SavedPage = () => {
                         </div>
                         <Badge 
                           color={getTypeColor(item.type)} 
-                          text={item.type.charAt(0).toUpperCase() + item.type.slice(1)}
+                          text={(item.type || 'item').charAt(0).toUpperCase() + (item.type || 'item').slice(1)}
                           className="text-xs"
                         />
                       </div>
@@ -263,8 +267,8 @@ const SavedPage = () => {
                     </div>
                     
                     <Text type="secondary" className="block mb-3 line-clamp-2">
-                      {item.description.length > 100 
-                        ? `${item.description.slice(0, 100)}...` 
+                      {(item.description || '').length > 100 
+                        ? `${(item.description || '').slice(0, 100)}...` 
                         : item.description}
                         
                     </Text>
@@ -305,10 +309,7 @@ const SavedPage = () => {
                         className="bg-blue-600 hover:bg-blue-700"
                         onClick={(e) => {
                           e.stopPropagation();
-                          notify({
-                            type: 'info',
-                            message: '📅 Planning feature coming soon!',
-                          });
+                          toast('Planning feature coming soon');
                         }}
                       >
                         Plan Visit

@@ -1,17 +1,15 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import { Search, Home, MapPin, Loader } from 'lucide-react'
+import { Search, Loader } from 'lucide-react'
 import Link from 'next/link'
-import axios from 'axios'
-import debounce from 'lodash.debounce'
+import { moroccanCities } from '@/lib/data'
 
 interface City {
   id: string
   name: string
-  region: string
-  country: string
-  image: string
+  description: string
+  slug: string
 }
 
 interface SearchBarProps {
@@ -27,60 +25,31 @@ export function SearchBar({ onSearch }: SearchBarProps) {
   const [error, setError] = useState('')
   const dropdownRef = useRef<HTMLDivElement>(null)
 
-  const fetchCities = async (query: string) => {
-    if (!query) return
-    setLoading(true)
-    setError('')
-    try {
-      const { data } = await axios.get(
-        `https://wft-geo-db.p.rapidapi.com/v1/geo/cities`,
-        {
-          headers: {
-            'X-RapidAPI-Key': "5b8a5a02f3msh2cbb0edd5b9cad9p1f7c83jsn0f12ae7e07fe",
-            'X-RapidAPI-Host': 'wft-geo-db.p.rapidapi.com',
-          },
-          params: {
-            namePrefix: query,
-            limit: 10,
-            sort: '-population',
-          },
-        }
-      )
-
-      const results = data.data.map((city: any) => ({
-        id: city.id,
-        name: city.city,
-        region: city.region,
-        country: city.country,
-        image: `https://source.unsplash.com/featured/160x160?${encodeURIComponent(city.city)}%20city&sig=${city.id}`
-
-      }))
-      setSearchResults(results)
-    } catch (err) {
-      setError('Failed to load results.')
-      setSearchResults([])
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const debouncedFetch = useRef(
-    debounce((query: string) => fetchCities(query), 500)
-  ).current
-
   useEffect(() => {
     if (!searchQuery.trim()) {
       setSearchResults([])
       setShowDropdown(false)
       setLoading(false)
+      setError('')
       onSearch('')
       return
     }
 
-    debouncedFetch(searchQuery.trim())
+    const q = searchQuery.trim().toLowerCase()
+    const results = moroccanCities
+      .filter(city => city.name.toLowerCase().includes(q))
+      .map(city => ({
+        id: String(city.id),
+        name: city.name,
+        description: city.description,
+        slug: city.slug,
+      }))
+    setSearchResults(results)
+    setLoading(false)
+    setError('')
     setShowDropdown(true)
     onSearch(searchQuery)
-  }, [searchQuery, onSearch, debouncedFetch])
+  }, [searchQuery, onSearch])
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -93,9 +62,9 @@ export function SearchBar({ onSearch }: SearchBarProps) {
   }, [])
 
   const trending = [
-    { name: 'Dubai' },
-    { name: 'Tokyo' },
-    { name: 'Istanbul' },
+    { name: 'Marrakech' },
+    { name: 'Chefchaouen' },
+    { name: 'Fes' },
   ]
 
   return (
@@ -104,8 +73,6 @@ export function SearchBar({ onSearch }: SearchBarProps) {
       <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 sm:gap-6 mb-5">
         {[
           { id: 'all', label: 'Search All', icon: <Search className="w-5 h-5 text-blue-500/80" /> },
-          { id: 'hotels', label: 'Hotels', icon: <Home className="w-5 h-5 text-rose-500/80" /> },
-          { id: 'things', label: 'Things to Do', icon: <MapPin className="w-5 h-5 text-emerald-500/80" /> },
         ].map(tab => (
           <button
             key={tab.id}
@@ -159,7 +126,7 @@ export function SearchBar({ onSearch }: SearchBarProps) {
               searchResults.map(city => (
                <Link
   key={city.id}
-  href={`/city/${city.name.toLowerCase().replace(/\s+/g, '-')}`}
+  href={`/city/${city.slug}`}
   className="flex px-4 py-3 mx-3 my-1 rounded-lg hover:bg-primary/10 transition cursor-pointer"
   onClick={() => {
     setShowDropdown(false)
@@ -168,7 +135,7 @@ export function SearchBar({ onSearch }: SearchBarProps) {
 >
   <div>
     <p className="font-semibold text-gray-800 text-left">{city.name}</p>
-    <p className="text-sm text-gray-500">{city.region}, {city.country}</p>
+    <p className="text-sm text-gray-500">{city.description}</p>
   </div>
 </Link>
               ))

@@ -8,10 +8,9 @@ const planner = require('./routes/planner');
 const stops = require('./routes/stops');
 const saves = require('./routes/saves');
 const path = require('path');
-const multer = require('multer');
-const fs = require('fs');
 const errHandler = require('./middleware/errHandler');
-const redis = require('redis'); // ADDED
+const { protect } = require('./middleware/authMiddleware');
+const { getCache, setCache } = require('./utils/cache');
 
 // Load env
 dotenv.config({ path: path.join(__dirname, '..', '.env') });
@@ -20,53 +19,6 @@ const PORT = 3001;
 const app = express();
 
 console.log(`Using port: ${PORT}`);
-
-// ==============================
-// 🔥 REDIS CACHE (REPLACED Map)
-// ==============================
-const redisClient = redis.createClient({
-  url: process.env.REDIS_URL || 'redis://localhost:6379'
-});
-
-redisClient.on('error', (err) => {
-  console.error('Redis error:', err);
-});
-
-// Connect Redis
-(async () => {
-  await redisClient.connect();
-  console.log('Redis connected');
-})();
-
-// Updated cache functions
-const getCache = async (key) => {
-  try {
-    const data = await redisClient.get(key);
-    return data ? JSON.parse(data) : null;
-  } catch (err) {
-    console.error('Redis get error:', err);
-    return null;
-  }
-};
-
-const setCache = async (key, value, ttl = 300) => { // ttl in seconds now
-  try {
-    await redisClient.setEx(key, ttl, JSON.stringify(value));
-  } catch (err) {
-    console.error('Redis set error:', err);
-  }
-};
-
-const clearCacheByPrefix = async (prefix) => {
-  try {
-    const keys = await redisClient.keys(`${prefix}*`);
-    if (keys.length > 0) {
-      await redisClient.del(keys);
-    }
-  } catch (err) {
-    console.error('Redis delete error:', err);
-  }
-};
 
 // ==============================
 // Middleware
@@ -87,44 +39,18 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use(errHandler);
-
-// ==============================
-// Multer config
-// ==============================
-const storage = multer.diskStorage({
-  destination(req, file, cb) {
-    const uploadDir = path.join(__dirname, '..', 'uploads');
-    if (!fs.existsSync(uploadDir)) {
-      fs.mkdirSync(uploadDir, { recursive: true });
-    }
-    cb(null, uploadDir);
-  },
-  filename(req, file, cb) {
-    const unique = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    cb(null, `avatar-${unique}${path.extname(file.originalname)}`);
-  }
-});
-
-const upload = multer({
-  storage,
-  limits: { fileSize: 5 * 1024 * 1024 },
-  fileFilter(req, file, cb) {
-    if (file.mimetype.startsWith('image')) cb(null, true);
-    else cb(new Error('Only images allowed'), false);
-  }
-});
-
 // ==============================
 // Static files
 // ==============================
 app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
 // ==============================
-// 🔥 UPDATED Cache Middleware
+// Redis cache middleware (GET only + user scoped)
 // ==============================
 const cacheMiddleware = (keyBuilder, ttlSeconds = 300) => {
   return async (req, res, next) => {
+    if (req.method !== 'GET' || !req.user) return next();
+
     const key = keyBuilder(req);
     const cached = await getCache(key);
 
@@ -147,33 +73,40 @@ const cacheMiddleware = (keyBuilder, ttlSeconds = 300) => {
 // ==============================
 app.use('/api/auth', authRoutes);
 
-// Cache user profile GET
-app.use(
-  '/api/users',
-  cacheMiddleware(req => `users:${req.user?.id || 'public'}:${req.originalUrl}`, 300),
-  userRoutes
-);
+// userRoutes is self-contained: public /check-email route first,
+// then protect() before every protected route (no caching here).
+app.use('/api/users', userRoutes);
 
-// Cache planner GET
+// Authenticate BEFORE caching so cache keys are user scoped
 app.use(
   '/api/planner',
-  cacheMiddleware(req => `planner:${req.user?.id || 'public'}:${req.originalUrl}`, 300),
+  protect,
+  cacheMiddleware(req => `planner:${req.user.id}:${req.originalUrl}`, 300),
   planner
 );
 
-// Cache stops
 app.use(
   '/api/stops',
-  cacheMiddleware(() => 'stops:all', 600),
+  protect,
+  cacheMiddleware(req => `stops:${req.user.id}:${req.originalUrl}`, 600),
   stops
 );
 
-// Cache saved trips
 app.use(
   '/api/saves',
-  cacheMiddleware(req => `saves:${req.user?.id}:${req.originalUrl}`, 300),
+  protect,
+  cacheMiddleware(req => `saves:${req.user.id}:${req.originalUrl}`, 300),
   saves
 );
+
+// ==============================
+// 404 + error handling (AFTER all routes)
+// ==============================
+app.use((req, res) => {
+  res.status(404).json({ message: `Route not found: ${req.method} ${req.originalUrl}` });
+});
+
+app.use(errHandler);
 
 // ==============================
 // MongoDB Connection
@@ -195,6 +128,7 @@ startServer();
 
 // Graceful shutdown
 process.on('SIGTERM', async () => {
+  const { redisClient } = require('./utils/cache');
   await redisClient.quit();
   process.exit(0);
 });

@@ -1,12 +1,12 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const { protect } = require('../middleware/authMiddleware');
+const { clearCacheByPrefix } = require('../utils/cache');
 
 // Trip Schema
 const tripSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  checkIn: { type: Date, required: true },
-  checkOut: { type: Date, required: true },
+  checkIn: { type: Date, default: null },
+  checkOut: { type: Date, default: null },
   destinations: { type: String, required: true },
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   status: { 
@@ -58,6 +58,7 @@ const activitySchema = new mongoose.Schema({
   time: { type: String, required: true },
   activity: { type: String, required: true },
   notes: { type: String, default: '' },
+  location: { type: String, default: '' },
   userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
   day: { type: Number, required: true },
   tripId: { type: mongoose.Schema.Types.ObjectId, ref: 'Trip', required: true }
@@ -83,8 +84,31 @@ const getUserId = (req) => {
 // API Routes
 const router = express.Router();
 
-// Protect all routes
-router.use(protect);
+// Invalidate the user's planner cache on any successful write
+router.use((req, res, next) => {
+  if (req.method !== 'GET' && req.user?.id) {
+    res.on('finish', () => {
+      if (res.statusCode < 400) {
+        clearCacheByPrefix(`planner:${req.user.id}:`);
+      }
+    });
+  }
+  next();
+});
+
+// Validate path params are valid MongoDB ObjectIds before hitting controllers
+router.param('id', (req, res, next, value) => {
+  if (!mongoose.Types.ObjectId.isValid(value)) {
+    return res.status(400).json({ message: `Invalid id: ${value}` });
+  }
+  next();
+});
+router.param('tripId', (req, res, next, value) => {
+  if (!mongoose.Types.ObjectId.isValid(value)) {
+    return res.status(400).json({ message: `Invalid tripId: ${value}` });
+  }
+  next();
+});
 
 // Trip Routes
 router.get('/trips', async (req, res) => {

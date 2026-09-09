@@ -41,6 +41,7 @@ import {
   TrendingUp
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import toast from "react-hot-toast";
 
 const DEFAULT_IMAGE =
   "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ac/No_image_available.svg/320px-No_image_available.svg.png";
@@ -189,7 +190,8 @@ export default function ExplorePage() {
   // Add to trip
   const addToTrip = (cityId) => {
     if (cityId === 0) return; // Prevent adding default city
-    console.log(`Added ${cities.find(c => c.id === cityId)?.title} to trip`);
+    const name = cities.find(c => c.id === cityId)?.title || 'City';
+    toast(`Add ${name} as a stop in the Trip Planner`);
   };
 
   // Handle map load
@@ -331,7 +333,7 @@ export default function ExplorePage() {
                 >
                   Featured
                 </button>
-                <button className="p-2 text-gray-600 hover:text-blue-500 hover:bg-blue-50 rounded-full">
+                <button onClick={() => toast('Filters settings coming soon')} className="p-2 text-gray-600 hover:text-blue-500 hover:bg-blue-50 rounded-full">
                   <Settings size={20} />
                 </button>
               </div>

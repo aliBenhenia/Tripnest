@@ -42,9 +42,9 @@ const userSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Place'
   }],
-  refreshToken: String,
-  passwordResetToken: String,
-  passwordResetExpires: Date,
+  refreshToken: { type: String, select: false },
+  passwordResetToken: { type: String, select: false },
+  passwordResetExpires: { type: Date, select: false },
   active: {
     type: Boolean,
     default: true,

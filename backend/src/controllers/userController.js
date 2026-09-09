@@ -71,6 +71,15 @@ exports.deleteAccount = catchAsync(async (req, res) => {
     data: null
   });
 });
+exports.checkEmail = catchAsync(async (req, res) => {
+  const { email } = req.body || {};
+  if (!email) {
+    return res.status(400).json({ exists: false, message: 'Email is required' });
+  }
+  const user = await userService.findUserByEmail(String(email).toLowerCase());
+  res.status(200).json({ exists: !!user });
+});
+
 exports.getPlaces = async (req, res) => {
   try {
     const cities = await fetchTopMoroccanCities();

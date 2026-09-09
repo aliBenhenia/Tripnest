@@ -1,7 +1,7 @@
 // saves.js
 const express = require('express');
 const mongoose = require('mongoose');
-const { protect } = require('../middleware/authMiddleware');
+const { clearCacheByPrefix } = require('../utils/cache');
 
 // =======================
 // Schema for saved items
@@ -19,7 +19,7 @@ const saveSchema = new mongoose.Schema({
 });
 
 // ✅ Unique combination of userId + activityId
-saveSchema.index({activityId: 1 }, { unique: true });
+saveSchema.index({ userId: 1, activityId: 1 }, { unique: true });
 
 // Prevent OverwriteModelError
 const SaveItem = mongoose.models.SaveItem || mongoose.model('SaveItem', saveSchema);
@@ -28,7 +28,26 @@ const SaveItem = mongoose.models.SaveItem || mongoose.model('SaveItem', saveSche
 // Router
 // =======================
 const saveRouter = express.Router();
-saveRouter.use(protect); // Protect all routes
+
+// Invalidate the user's saves cache on any successful write
+saveRouter.use((req, res, next) => {
+  if (req.method !== 'GET' && req.user?.id) {
+    res.on('finish', () => {
+      if (res.statusCode < 400) {
+        clearCacheByPrefix(`saves:${req.user.id}:`);
+      }
+    });
+  }
+  next();
+});
+
+// Validate path params are valid MongoDB ObjectIds before hitting controllers
+saveRouter.param('id', (req, res, next, value) => {
+  if (!mongoose.Types.ObjectId.isValid(value)) {
+    return res.status(400).json({ message: `Invalid id: ${value}` });
+  }
+  next();
+});
 
 // =======================
 // Get all saved items for authenticated user

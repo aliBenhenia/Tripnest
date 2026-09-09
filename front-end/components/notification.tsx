@@ -121,41 +121,8 @@ const NotificationButton = () => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  // Mock notification data
-  const notifications = [
-    {
-      id: 1,
-      title: "New Message Received",
-      description: "You have a new message from John Doe",
-      time: "2 minutes ago",
-      read: false,
-      type: "message"
-    },
-    {
-      id: 2,
-      title: "Payment Successful",
-      description: "Your payment of $299.99 has been processed",
-      time: "1 hour ago",
-      read: false,
-      type: "payment"
-    },
-    {
-      id: 3,
-      title: "System Update Available",
-      description: "A new version of the application is available",
-      time: "3 hours ago",
-      read: true,
-      type: "update"
-    },
-    {
-      id: 4,
-      title: "Task Completed",
-      description: "Your task 'Design Review' has been completed",
-      time: "1 day ago",
-      read: true,
-      type: "task"
-    }
-  ];
+  // Notification data
+  const notifications = [];
 
   // Close dropdown when clicking outside
   useEffect(() => {

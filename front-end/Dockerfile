@@ -8,7 +8,7 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies inside the container
-RUN npm install && npm install framer-motion
+RUN npm install --legacy-peer-deps && npm install framer-motion --legacy-peer-deps
 
 
 # Copy the rest of the application code

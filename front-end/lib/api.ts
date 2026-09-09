@@ -7,8 +7,8 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 // Base API URL
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
-// Token key in localStorage
-const TOKEN_KEY = 'GoMorocco_auth_token';
+// Token key in localStorage (must match authSlice/planner/trips pages)
+const TOKEN_KEY = 'TOKEN_KEY';
 
 // Create axios instance with default config
 const axiosInstance: AxiosInstance = axios.create({
@@ -66,39 +66,48 @@ export const api = {
   // Auth related endpoints
   auth: {
     signup: (userData: { name: string; email: string; password: string }) =>
-      fetchWithAuth('/api/auth/signup', {
+      fetchWithAuth('/api/auth/register', {
         method: 'POST',
-        data: userData, // Axios uses 'data' instead of 'body' and auto-stringifies JSON
+        data: userData,
       }),
-    signin: (credentials: { email: string; password: string }) =>
-      fetchWithAuth('/api/auth/signin', {
+    login: (credentials: { email: string; password: string }) =>
+      fetchWithAuth('/api/auth/login', {
         method: 'POST',
         data: credentials,
       }),
-    // Additional auth-related endpoints can be added here
   },
 
   // User related endpoints
   user: {
     getProfile: () => fetchWithAuth('/api/users/profile', { method: 'GET' }),
+    checkEmail: (email: string) =>
+      fetchWithAuth('/api/users/check-email', {
+        method: 'POST',
+        data: { email },
+      }),
     updateProfile: (userData: any) =>
-      fetchWithAuth('/api/users/profile', {
-        method: 'PUT',
+      fetchWithAuth('/api/users/update', {
+        method: 'PATCH',
         data: userData,
       }),
-    // Additional user-related endpoints can be added here
   },
 
-  // Example of how to add other API sections
+  // Trips (planner) related endpoints
   trips: {
-    getAll: () => fetchWithAuth('/api/trips', { method: 'GET' }),
-    getById: (id: string) => fetchWithAuth(`/api/trips/${id}`, { method: 'GET' }),
+    getAll: () => fetchWithAuth('/api/planner/trips', { method: 'GET' }),
+    getById: (id: string) => fetchWithAuth(`/api/planner/trips/${id}`, { method: 'GET' }),
     create: (tripData: any) =>
-      fetchWithAuth('/api/trips', {
+      fetchWithAuth('/api/planner/trips', {
         method: 'POST',
         data: tripData,
       }),
-    // Additional trip-related endpoints can be added here
+    update: (id: string, tripData: any) =>
+      fetchWithAuth(`/api/planner/trips/${id}`, {
+        method: 'PUT',
+        data: tripData,
+      }),
+    remove: (id: string) =>
+      fetchWithAuth(`/api/planner/trips/${id}`, { method: 'DELETE' }),
   },
 };
 

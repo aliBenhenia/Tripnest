@@ -110,7 +110,7 @@ exports.refreshToken = catchAsync(async (req, res, next) => {
   const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
 
   // Check if user still exists
-  const user = await User.findById(decoded.id);
+  const user = await User.findById(decoded.id).select('+refreshToken');
   if (!user || user.refreshToken !== refreshToken) {
     return next(new AppError('Invalid refresh token', 401));
   }
